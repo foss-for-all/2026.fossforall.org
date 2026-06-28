@@ -46,6 +46,14 @@ const navigation = {
 				{ type: 'link', key: 'about', label: '행사 소개', path: 'about' },
 				{ type: 'link', key: 'coc', label: '행동강령', path: 'coc' },
 			],
+    },
+    {
+			type: 'group',
+			key: 'sponsors',
+			label: '후원사 & 개인후원',
+			items: [
+				{ type: 'link', key: 'become-a-sponsor', label: '후원사로 참여하기', path: 'become-a-sponsor' },
+			],
 		},
 		{
 			type: 'link',
@@ -63,6 +71,14 @@ const navigation = {
 			items: [
 				{ type: 'link', key: 'about', label: 'About the event', path: 'about' },
 				{ type: 'link', key: 'coc', label: 'Code of Conduct', path: 'coc' },
+			],
+    },
+    {
+			type: 'group',
+			key: 'sponsors',
+			label: 'Sponsors & Patrons',
+			items: [
+				{ type: 'link', key: 'become-a-sponsor', label: 'Become a sponsor', path: 'become-a-sponsor' },
 			],
 		},
 		{
