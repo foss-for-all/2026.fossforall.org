@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import SiteHeader from '../components/site-header.astro';
 import type { Locale } from '../i18n/config';
+import { getNavigation } from '../i18n/navigation';
 import { useTranslations } from '../i18n/utils';
 
 interface Props {
@@ -19,6 +20,7 @@ const {
 } = Astro.props;
 
 const t = useTranslations(locale);
+const navItems = getNavigation(locale);
 const metaDescription = description ?? t.site.defaultDescription;
 ---
 
@@ -36,7 +38,7 @@ const metaDescription = description ?? t.site.defaultDescription;
 		<SiteHeader
 			locale={locale}
 			path={path}
-			navItems={t.nav}
+			navItems={navItems}
 			labels={{
 				headerTitle: t.site.headerTitle,
 				siteName: t.site.name,

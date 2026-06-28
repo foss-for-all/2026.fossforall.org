@@ -20,11 +20,6 @@ export const ui = {
       title: 'FOSS for All Conference',
       subtitle: 'Coexist with Open Source',
     },
-    nav: [
-      { label: '소개', href: '#about' },
-      { label: '세션', href: '#sessions' },
-      { label: '부스', href: '#booth' },
-    ],
     actions: {
       register: '등록하기',
       viewSchedule: '일정 보기',
@@ -82,11 +77,6 @@ export const ui = {
       title: 'FOSS for All Conference',
       subtitle: 'Coexist with Open Source',
     },
-    nav: [
-      { label: 'About', href: '#about' },
-      { label: 'Sessions', href: '#sessions' },
-      { label: 'Booth', href: '#booth' },
-    ],
     actions: {
       register: 'Register',
       viewSchedule: 'View Schedule',
