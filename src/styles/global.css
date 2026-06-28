@@ -128,3 +128,85 @@
     @apply font-sans;
     }
 }
+
+@layer components {
+  .mdx-content {
+    @apply text-foreground;
+  }
+
+  .mdx-content h1 {
+    @apply scroll-m-20 text-4xl font-extrabold tracking-tight text-balance;
+  }
+
+  .mdx-content h2 {
+    @apply mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0;
+  }
+
+  .mdx-content h3 {
+    @apply mt-8 scroll-m-20 text-2xl font-semibold tracking-tight;
+  }
+
+  .mdx-content h4 {
+    @apply mt-8 scroll-m-20 text-xl font-semibold tracking-tight;
+  }
+
+  .mdx-content p {
+    @apply leading-7 [&:not(:first-child)]:mt-6;
+  }
+
+  .mdx-content a {
+    @apply font-medium text-primary underline underline-offset-4;
+  }
+
+  .mdx-content blockquote {
+    @apply mt-6 border-l-2 pl-6 italic;
+  }
+
+  .mdx-content ul {
+    @apply my-6 ml-6 list-disc [&>li]:mt-2;
+  }
+
+  .mdx-content ol {
+    @apply my-6 ml-6 list-decimal [&>li]:mt-2;
+  }
+
+  .mdx-content code {
+    @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
+  }
+
+  .mdx-content pre {
+    @apply my-6 overflow-x-auto rounded-xl bg-muted p-4;
+  }
+
+  .mdx-content pre code {
+    @apply bg-transparent p-0 font-normal;
+  }
+
+  .mdx-content strong {
+    @apply font-semibold;
+  }
+
+  .mdx-content hr {
+    @apply my-8 border-border;
+  }
+
+  .mdx-content table {
+    @apply my-6 w-full overflow-hidden text-sm;
+  }
+
+  .mdx-content thead {
+    @apply border-b;
+  }
+
+  .mdx-content tr {
+    @apply border-b transition-colors;
+  }
+
+  .mdx-content th {
+    @apply h-10 px-2 text-left align-middle font-medium;
+  }
+
+  .mdx-content td {
+    @apply p-2 align-middle;
+  }
+}
