@@ -5,9 +5,9 @@ export const ui = {
     site: {
       name: 'FOSS for All Conference',
       headerTitle: 'FOSS for All Conference 2026',
-      title: 'FOSS for All Conference',
+      title: 'FOSS for All Conference 2026',
       description:
-        '11월 28일 AWS Korea 18F에서 열리는 FOSS for All Conference에서 오픈소스 발표, 커뮤니티 교류, 실무적인 아이디어를 만나보세요.',
+        '2026년 11월 28일 | 서울 센터필드 EAST 18층 AWS Korea',
       defaultDescription:
         'FOSS for All Conference는 오픈소스 빌더, 메인테이너, 팀이 함께 실무 세션과 커뮤니티 교류를 나누는 하루입니다.',
     },
@@ -70,9 +70,9 @@ export const ui = {
     site: {
       name: 'FOSS for All Conference',
       headerTitle: 'FOSS for All Conference 2026',
-      title: 'FOSS for All Conference',
+      title: 'FOSS for All Conference 2026',
       description:
-        'Join FOSS for All Conference on November 28th at AWS Korea 18F for a day of open-source talks, community exchange, and practical ideas.',
+        'November 28th, 2026 | AWS Korea (CenterField EAST 18F), Seoul, South Korea',
       defaultDescription:
         'FOSS for All Conference brings open-source builders, maintainers, and teams together for a day of practical sessions and community exchange.',
     },
