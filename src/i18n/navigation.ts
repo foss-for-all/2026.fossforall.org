@@ -38,7 +38,15 @@ export type NavigationItem = NavigationLink | NavigationGroup;
 
 const navigation = {
 	ko: [
-		{ type: 'link', key: 'home-about', label: '소개', href: '#about' },
+    {
+			type: 'group',
+			key: 'about',
+			label: '소개',
+			items: [
+				{ type: 'link', key: 'about', label: '행사 소개', path: 'about' },
+				{ type: 'link', key: 'coc', label: '행동강령', path: 'coc' },
+			],
+		},
 		{
 			type: 'group',
 			key: 'program',
@@ -65,7 +73,15 @@ const navigation = {
 		},
 	],
 	en: [
-		{ type: 'link', key: 'home-about', label: 'About', href: '#about' },
+    {
+			type: 'group',
+			key: 'about',
+			label: 'About',
+			items: [
+				{ type: 'link', key: 'about', label: 'About the event', path: 'about' },
+				{ type: 'link', key: 'coc', label: 'Code of Conduct', path: 'coc' },
+			],
+		},
 		{
 			type: 'group',
 			key: 'program',
@@ -93,12 +109,24 @@ const navigation = {
 	],
 } as const satisfies Record<Locale, NavigationSourceItem[]>;
 
+function resolveHref(locale: Locale, item: NavigationSourceLink) {
+	if (item.path) {
+		return getLocalizedPath(locale, item.path);
+	}
+
+	if (item.href?.startsWith('/') && !item.external) {
+		return getLocalizedPath(locale, item.href);
+	}
+
+	return item.href ?? '#';
+}
+
 function resolveLink(locale: Locale, item: NavigationSourceLink): NavigationLink {
 	return {
 		type: 'link',
 		key: item.key,
 		label: item.label,
-		href: item.path ? getLocalizedPath(locale, item.path) : item.href ?? '#',
+		href: resolveHref(locale, item),
 		external: item.external,
 	};
 }
