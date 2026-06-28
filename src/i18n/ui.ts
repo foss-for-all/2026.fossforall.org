@@ -22,9 +22,8 @@ export const ui = {
     },
     nav: [
       { label: '소개', href: '#about' },
-      { label: '연사', href: '#speakers' },
-      { label: '일정', href: '#schedule' },
-      { label: '장소', href: '#venue' },
+      { label: '세션', href: '#sessions' },
+      { label: '부스', href: '#booth' },
     ],
     actions: {
       register: '등록하기',
@@ -37,33 +36,24 @@ export const ui = {
     sections: [
       {
         id: 'about',
-        title: '실용적인 오픈소스 협업을 위한 컨퍼런스',
+        label: '컨퍼런스 소개',
+        title: '모두를 위한 오픈소스 컨퍼런스',
         body:
-          'FOSS for All Conference는 메인테이너, 기여자, 개발자 애드보킷, 엔지니어링 팀이 실제 프로젝트에 유용한 아이디어를 나누는 집중적인 하루를 만듭니다.',
+          'FOSS for All Conference는 잘 알려진 글로벌 오픈소스 프로젝트 뿐만 아니라, 잘 알려지지 않았지만 중요한 역할을 오픈소스 프로젝트는 물론, 오픈소스에 관심있는 누구나에게 열린 컨퍼런스 입니다.',
       },
       {
-        id: 'speakers',
-        title: '현장에서 일하는 사람들이 전하는 이야기',
+        id: 'sessions',
+        label: '세션',
+        title: '기조연설, 강연, 워크샵 등 다양한 프로그램',
         body:
-          '오픈소스로 제품을 만들고 건강한 생태계를 지속해 온 메인테이너, 커뮤니티 운영자, 플랫폼 엔지니어, 제품 관점의 빌더가 경험을 공유합니다.',
+          '기술, 거버넌스, 문서화, 커뮤니티 운영, 실제 도입 사례를 등 오픈소스에 관련한 다양한 주제로 프로그램이 준비 될 예정입니다.',
       },
       {
-        id: 'schedule',
-        title: '발표, 세션, 대화로 구성된 하루 일정',
+        id: 'booth',
+        label: '부스',
+        title: '다양한 기업과 커뮤니티를 직접 만나는 곳',
         body:
-          '일정은 메인테이너십, 도구, 거버넌스, 문서화, 실제 도입 사례를 포함해 기술적 깊이와 커뮤니티 주제를 균형 있게 다룹니다.',
-      },
-      {
-        id: 'venue',
-        title: 'AWS Korea 18F에서 만납니다',
-        body:
-          '서울 중심부에 위치한 행사장에서 발표, 복도 대화, 커뮤니티 연결을 위한 하루를 보냅니다.',
-      },
-      {
-        id: 'register',
-        title: '관심 등록을 미리 해주세요',
-        body:
-          '등록 정보는 곧 공개됩니다. 티켓, 연사, 전체 일정이 열릴 때 가장 먼저 소식을 받아보세요.',
+          '오픈소스 생태계에 적극 참여하는 다양한 후원사와, 국내외 다양한 오픈소스 커뮤니티를 부스를 통해 현장에서 만나고 소통 해 보세요!',
       },
     ],
     notFound: {
@@ -94,9 +84,8 @@ export const ui = {
     },
     nav: [
       { label: 'About', href: '#about' },
-      { label: 'Speakers', href: '#speakers' },
-      { label: 'Schedule', href: '#schedule' },
-      { label: 'Venue', href: '#venue' },
+      { label: 'Sessions', href: '#sessions' },
+      { label: 'Booth', href: '#booth' },
     ],
     actions: {
       register: 'Register',
@@ -109,33 +98,24 @@ export const ui = {
     sections: [
       {
         id: 'about',
-        title: 'Built for practical open-source collaboration',
+        label: 'About the Conference',
+        title: 'An FOSS Conference for Everyone',
         body:
-          'FOSS for All Conference brings together maintainers, contributors, developer advocates, and engineering teams for a focused day of ideas that are useful in real projects.',
+          'FOSS for All Conference is open not only to well-known global open source projects, but also to lesser-known projects with important roles, and to anyone interested in open source.',
       },
       {
-        id: 'speakers',
-        title: 'Speakers from the people doing the work',
+        id: 'sessions',
+        label: 'Sessions',
+        title: 'Keynotes, Talks, Workshops, and More',
         body:
-          'Expect maintainers, community organizers, platform engineers, and product-minded builders sharing lessons from shipping in the open and sustaining healthy ecosystems.',
+          'Programs will cover a wide range of open source topics, including technology, governance, documentation, community operations, and real-world adoption cases.',
       },
       {
-        id: 'schedule',
-        title: 'A one-day program with talks, sessions, and conversations',
+        id: 'booth',
+        label: 'Booth',
+        title: 'Meet Companies and Communities in Person',
         body:
-          'The schedule will balance technical depth with community topics, including maintainership, tooling, governance, documentation, and real-world adoption stories.',
-      },
-      {
-        id: 'venue',
-        title: 'Hosted at AWS Korea 18F',
-        body:
-          'The venue offers a central setting for a day of talks, hallway conversations, and community connection in Seoul.',
-      },
-      {
-        id: 'register',
-        title: 'Register your interest early',
-        body:
-          'Registration details will be announced soon. Join the early list to hear when tickets, speakers, and the full schedule go live.',
+          'Meet and connect on site with sponsors actively participating in the open source ecosystem and with open source communities from Korea and abroad through the booth area.',
       },
     ],
     notFound: {
