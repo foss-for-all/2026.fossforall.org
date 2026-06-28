@@ -21,7 +21,7 @@ export const ui = {
       subtitle: 'Coexist with Open Source',
     },
     actions: {
-      register: '등록하기',
+      register: '등록하기(준비중)',
       viewSchedule: '일정 보기',
       requestRegistrationInfo: '등록 정보 요청하기',
       previewProgram: '프로그램 미리보기',
@@ -78,7 +78,7 @@ export const ui = {
       subtitle: 'Coexist with Open Source',
     },
     actions: {
-      register: 'Register',
+      register: 'Register(TBA)',
       viewSchedule: 'View Schedule',
       requestRegistrationInfo: 'Request Registration Info',
       previewProgram: 'Preview the Program',
