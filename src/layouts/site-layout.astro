@@ -1,0 +1,30 @@
+---
+import '../styles/global.css';
+import SiteHeader from '../components/site-header.astro';
+
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const {
+	title,
+	description = 'FOSS for All Conference brings open-source builders, maintainers, and teams together for a day of practical sessions and community exchange.',
+} = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<meta name="description" content={description} />
+		<title>{title}</title>
+	</head>
+	<body class="min-h-screen bg-background text-foreground antialiased">
+		<SiteHeader />
+		<slot />
+	</body>
+</html>

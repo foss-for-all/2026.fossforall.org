@@ -1,17 +1,107 @@
 ---
+import SiteLayout from '../layouts/site-layout.astro';
+import { Badge } from '@/components/ui/badge';
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from '@/components/ui/card';
+import { HeroActions, RegisterActions } from '../components/home-actions';
+import F4ALineArtSvg from '../assets/f4a_line_art.svg';
+const sections = [
+	{
+		id: 'about',
+		title: 'Built for practical open-source collaboration',
+		body:
+			'FOSS for All Conference brings together maintainers, contributors, developer advocates, and engineering teams for a focused day of ideas that are useful in real projects.',
+	},
+	{
+		id: 'speakers',
+		title: 'Speakers from the people doing the work',
+		body:
+			'Expect maintainers, community organizers, platform engineers, and product-minded builders sharing lessons from shipping in the open and sustaining healthy ecosystems.',
+	},
+	{
+		id: 'schedule',
+		title: 'A one-day program with talks, sessions, and conversations',
+		body:
+			'The schedule will balance technical depth with community topics, including maintainership, tooling, governance, documentation, and real-world adoption stories.',
+	},
+	{
+		id: 'venue',
+		title: 'Hosted at AWS Korea 18F',
+		body:
+			'The venue offers a central setting for a day of talks, hallway conversations, and community connection in Seoul.',
+	},
+	{
+		id: 'register',
+		title: 'Register your interest early',
+		body:
+			'Registration details will be announced soon. Join the early list to hear when tickets, speakers, and the full schedule go live.',
+	},
+];
+
 
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<SiteLayout
+	title="FOSS for All Conference"
+	description="Join FOSS for All Conference on November 28th at AWS Korea 18F for a day of open-source talks, community exchange, and practical ideas."
+>
+	<main>
+		<section class="mx-auto grid min-h-[calc(100vh-5rem)] max-w-7xl gap-12 px-6 py-16 lg:grid-cols-[1.15fr_0.95fr] lg:items-center lg:px-8 lg:py-20">
+			<div class="order-2 lg:order-1">
+			<img src={F4ALineArtSvg.src}/>
+			</div>
+
+			<div class="order-1 flex flex-col gap-7 lg:order-2 lg:pl-6">
+				<Badge variant="outline" className="w-fit px-4 py-2 text-sm font-medium text-muted-foreground shadow-sm">
+					November 28th, 2026
+					<span class="mx-3 h-1 w-1 rounded-full bg-primary"></span>
+					AWS Korea 18F
+				</Badge>
+
+				<div class="space-y-5">
+					<h1 class="max-w-xl font-heading text-5xl leading-none font-black tracking-[-0.05em] text-balance sm:text-6xl lg:text-7xl">
+						FOSS for All Conference
+					</h1>
+					<h1 class="max-w-xl font-heading text-5xl leading-none font-medium tracking-[-0.05em] text-balance sm:text-6xl lg:text-7xl">
+					Coexist with Open Source
+					</h1>
+				</div>
+
+				<HeroActions />
+
+
+			</div>
+		</section>
+
+		<section class="mx-auto flex max-w-7xl flex-col gap-6 px-6 pb-20 lg:px-8">
+			{sections.map((section) => (
+				<Card id={section.id} className="scroll-mt-28 rounded-[2rem] bg-card/60 [--card-spacing:--spacing(8)] sm:[--card-spacing:--spacing(10)]">
+					<CardHeader>
+						<CardDescription className="text-sm font-semibold tracking-[0.24em] text-primary uppercase">
+							{section.id}
+						</CardDescription>
+						<CardTitle className="max-w-3xl font-heading text-3xl leading-tight tracking-[-0.04em] text-foreground sm:text-4xl">
+							{section.title}
+						</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<p class="max-w-3xl text-base leading-7 text-muted-foreground sm:text-lg">
+							{section.body}
+						</p>
+					</CardContent>
+					{section.id === 'register' && (
+						<CardFooter>
+							<RegisterActions />
+						</CardFooter>
+					)}
+				</Card>
+			))}
+		</section>
+	</main>
+</SiteLayout>
