@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import SiteFooter from '../components/site-footer.astro';
 import SiteHeader from '../components/site-header.astro';
 import type { Locale } from '../i18n/config';
 import { getNavigation } from '../i18n/navigation';
@@ -62,5 +63,6 @@ const metaDescription = description ?? t.site.defaultDescription;
 			}}
 		/>
 		<slot />
+		<SiteFooter locale={locale} />
 	</body>
 </html>
