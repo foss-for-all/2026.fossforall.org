@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { DesktopNav } from './desktop-nav';
 import { LanguageSwitcher } from './language-switcher';
 import { MobileNav } from './mobile-nav';
+import { ThemeToggle } from './theme-toggle';
 import type { Locale } from '../i18n/config';
 import type { NavigationItem } from '../i18n/navigation';
 import { getLanguageOptions } from '../i18n/utils';
@@ -17,12 +18,22 @@ interface Props {
 		register: string;
 		openNavigation: string;
 		language: string;
+		theme: string;
+		lightTheme: string;
+		darkTheme: string;
+		systemTheme: string;
 	};
 	navItems: NavigationItem[];
 }
 
 const { locale, path = '', labels, navItems } = Astro.props;
 const languageOptions = getLanguageOptions(locale, path);
+const themeLabels = {
+	theme: labels.theme,
+	lightTheme: labels.lightTheme,
+	darkTheme: labels.darkTheme,
+	systemTheme: labels.systemTheme,
+};
 ---
 
 <header class="sticky top-0 z-50 border-b border-border/80 bg-background/88 backdrop-blur supports-[backdrop-filter]:bg-background/72">
@@ -36,6 +47,7 @@ const languageOptions = getLanguageOptions(locale, path);
 		</div>
 
 		<div class="flex items-center gap-3">
+			<ThemeToggle client:load labels={themeLabels} />
 			<LanguageSwitcher client:load label={labels.language} options={languageOptions} />
 			<div class="md:hidden">
 				<MobileNav

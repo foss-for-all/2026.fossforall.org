@@ -31,6 +31,10 @@ export const ui = {
       previewProgram: '프로그램 미리보기',
       openNavigation: '내비게이션 메뉴 열기',
       language: '언어 변경',
+      theme: '테마 변경',
+      lightTheme: '라이트 모드',
+      darkTheme: '다크 모드',
+      systemTheme: '시스템 설정',
     },
     sections: [
       {
@@ -92,6 +96,10 @@ export const ui = {
       previewProgram: 'Preview the Program',
       openNavigation: 'Open navigation menu',
       language: 'Change language',
+      theme: 'Change theme',
+      lightTheme: 'Light mode',
+      darkTheme: 'Dark mode',
+      systemTheme: 'System',
     },
     sections: [
       {

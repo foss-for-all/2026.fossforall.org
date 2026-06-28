@@ -27,6 +27,15 @@ const metaDescription = description ?? t.site.defaultDescription;
 <html lang={locale}>
 	<head>
 		<meta charset="utf-8" />
+		<script is:inline>
+			try {
+				const theme = localStorage.getItem('theme');
+				const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+				document.documentElement.classList.toggle('dark', theme === 'dark' || (!theme && prefersDark));
+			} catch {
+				// Ignore storage access errors and keep the default light theme.
+			}
+		</script>
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width" />
@@ -46,6 +55,10 @@ const metaDescription = description ?? t.site.defaultDescription;
 				register: t.actions.register,
 				openNavigation: t.actions.openNavigation,
 				language: t.actions.language,
+				theme: t.actions.theme,
+				lightTheme: t.actions.lightTheme,
+				darkTheme: t.actions.darkTheme,
+				systemTheme: t.actions.systemTheme,
 			}}
 		/>
 		<slot />
