@@ -5,18 +5,20 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu"
 
-const navItems = [
-  { label: "About", href: "#about" },
-  { label: "Speakers", href: "#speakers" },
-  { label: "Schedule", href: "#schedule" },
-  { label: "Venue", href: "#venue" },
-]
+type NavItem = {
+  label: string
+  href: string
+}
 
-export function DesktopNav() {
+type DesktopNavProps = {
+  items: NavItem[]
+}
+
+export function DesktopNav({ items }: DesktopNavProps) {
   return (
     <NavigationMenu>
       <NavigationMenuList>
-        {navItems.map((item) => (
+        {items.map((item) => (
           <NavigationMenuItem key={item.href}>
             <NavigationMenuLink href={item.href}>{item.label}</NavigationMenuLink>
           </NavigationMenuItem>

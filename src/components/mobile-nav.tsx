@@ -12,29 +12,41 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 
-const navItems = [
-  { label: "About", href: "#about" },
-  { label: "Speakers", href: "#speakers" },
-  { label: "Schedule", href: "#schedule" },
-  { label: "Venue", href: "#venue" },
-]
+type NavItem = {
+  label: string
+  href: string
+}
 
-export function MobileNav() {
+type MobileNavProps = {
+  items: NavItem[]
+  title: string
+  description: string
+  registerLabel: string
+  openLabel: string
+}
+
+export function MobileNav({
+  items,
+  title,
+  description,
+  registerLabel,
+  openLabel,
+}: MobileNavProps) {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" size="icon" aria-label="Open navigation menu">
+        <Button variant="outline" size="icon" aria-label={openLabel}>
           <MenuIcon />
         </Button>
       </SheetTrigger>
       <SheetContent className="flex flex-col" side="right">
         <SheetHeader>
-          <SheetTitle>FOSS for All Conference</SheetTitle>
-          <SheetDescription>November 28th at AWS Korea 18F</SheetDescription>
+          <SheetTitle>{title}</SheetTitle>
+          <SheetDescription>{description}</SheetDescription>
         </SheetHeader>
 
         <nav className="mt-8 flex flex-col gap-2">
-          {navItems.map((item) => (
+          {items.map((item) => (
             <SheetClose asChild key={item.href}>
               <a
                 href={item.href}
@@ -49,7 +61,7 @@ export function MobileNav() {
         <SheetFooter>
           <SheetClose asChild>
             <Button asChild size="lg">
-              <a href="#register">Register</a>
+              <a href="#register">{registerLabel}</a>
             </Button>
           </SheetClose>
         </SheetFooter>

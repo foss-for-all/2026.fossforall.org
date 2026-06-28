@@ -1,0 +1,77 @@
+---
+import { Badge } from '@/components/ui/badge';
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from '@/components/ui/card';
+import F4ALineArtSvg from '../assets/f4a_line_art.svg';
+import SiteLayout from '../layouts/site-layout.astro';
+import type { Locale } from '../i18n/config';
+import { useTranslations } from '../i18n/utils';
+import { HeroActions, RegisterActions } from './home-actions';
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<SiteLayout locale={locale} title={t.site.title} description={t.site.description}>
+	<main>
+		<section class="mx-auto grid min-h-[calc(100vh-5rem)] max-w-7xl gap-12 px-6 py-16 lg:grid-cols-[1.15fr_0.95fr] lg:items-center lg:px-8 lg:py-20">
+			<div class="order-2 lg:order-1">
+				<img src={F4ALineArtSvg.src} alt="" />
+			</div>
+
+			<div class="order-1 flex flex-col gap-7 lg:order-2 lg:pl-6">
+				<Badge variant="outline" className="w-fit px-4 py-2 text-sm font-medium text-muted-foreground shadow-sm">
+					{t.event.date}
+					<span class="mx-3 h-1 w-1 rounded-full bg-primary"></span>
+					{t.event.venue}
+				</Badge>
+
+				<div class="space-y-5">
+					<h1 class="max-w-xl font-heading text-5xl leading-none font-black tracking-[-0.05em] text-balance sm:text-6xl lg:text-7xl">
+						{t.hero.title}
+					</h1>
+					<h1 class="max-w-xl font-heading text-5xl leading-none font-medium tracking-[-0.05em] text-balance sm:text-6xl lg:text-7xl">
+						{t.hero.subtitle}
+					</h1>
+				</div>
+
+				<HeroActions registerLabel={t.actions.register} scheduleLabel={t.actions.viewSchedule} />
+			</div>
+		</section>
+
+		<section class="mx-auto flex max-w-7xl flex-col gap-6 px-6 pb-20 lg:px-8">
+			{t.sections.map((section) => (
+				<Card id={section.id} className="scroll-mt-28 rounded-[2rem] bg-card/60 [--card-spacing:--spacing(8)] sm:[--card-spacing:--spacing(10)]">
+					<CardHeader>
+						<CardDescription className="text-sm font-semibold tracking-[0.24em] text-primary uppercase">
+							{section.id}
+						</CardDescription>
+						<CardTitle className="max-w-3xl font-heading text-3xl leading-tight tracking-[-0.04em] text-foreground sm:text-4xl">
+							{section.title}
+						</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<p class="max-w-3xl text-base leading-7 text-muted-foreground sm:text-lg">
+							{section.body}
+						</p>
+					</CardContent>
+					{section.id === 'register' && (
+						<CardFooter>
+							<RegisterActions requestLabel={t.actions.requestRegistrationInfo} previewLabel={t.actions.previewProgram} />
+						</CardFooter>
+					)}
+				</Card>
+			))}
+		</section>
+	</main>
+</SiteLayout>
