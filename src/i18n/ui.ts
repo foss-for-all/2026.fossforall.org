@@ -19,6 +19,10 @@ export const ui = {
     hero: {
       title: 'FOSS for All Conference',
       subtitle: 'Coexist with Open Source',
+      actions: [
+        { label: '등록하기(준비중)', href: '#register', variant: 'default' },
+        { label: '컨퍼런스 소개', href: '/about/', variant: 'outline' },
+      ],
     },
     actions: {
       register: '등록하기(준비중)',
@@ -76,6 +80,10 @@ export const ui = {
     hero: {
       title: 'FOSS for All Conference',
       subtitle: 'Coexist with Open Source',
+      actions: [
+        { label: 'Register(TBA)', href: '#register', variant: 'default' },
+        { label: 'About the Conference', href: '/en/about/', variant: 'outline' },
+      ],
     },
     actions: {
       register: 'Register(TBA)',
