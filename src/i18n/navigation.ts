@@ -48,28 +48,11 @@ const navigation = {
 			],
 		},
 		{
-			type: 'group',
-			key: 'program',
-			label: '프로그램',
-			items: [
-				{ type: 'link', key: 'sessions', label: '세션', href: '#sessions' },
-				{ type: 'link', key: 'booth', label: '부스', href: '#booth' },
-			],
-		},
-		{
-			type: 'group',
-			key: 'resources',
-			label: '자료',
-			items: [
-				{ type: 'link', key: 'about-page', label: '컨퍼런스 소개', path: 'about' },
-				{
-					type: 'link',
-					key: 'github',
-					label: 'GitHub',
-					href: 'https://github.com/fossforall',
-					external: true,
-				},
-			],
+			type: 'link',
+			key: 'fossforall',
+			label: 'fossforall.org',
+			href: 'https://fossforall.org',
+			external: true,
 		},
 	],
 	en: [
@@ -83,28 +66,11 @@ const navigation = {
 			],
 		},
 		{
-			type: 'group',
-			key: 'program',
-			label: 'Program',
-			items: [
-				{ type: 'link', key: 'sessions', label: 'Sessions', href: '#sessions' },
-				{ type: 'link', key: 'booth', label: 'Booth', href: '#booth' },
-			],
-		},
-		{
-			type: 'group',
-			key: 'resources',
-			label: 'Resources',
-			items: [
-				{ type: 'link', key: 'about-page', label: 'About the Conference', path: 'about' },
-				{
-					type: 'link',
-					key: 'github',
-					label: 'GitHub',
-					href: 'https://github.com/fossforall',
-					external: true,
-				},
-			],
+			type: 'link',
+			key: 'fossforall',
+			label: 'fossforall.org',
+			href: 'https://fossforall.org',
+			external: true,
 		},
 	],
 } as const satisfies Record<Locale, NavigationSourceItem[]>;
