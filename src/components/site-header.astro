@@ -1,6 +1,7 @@
 ---
 import { Button } from '@/components/ui/button';
 import { DesktopNav } from './desktop-nav';
+import { LanguageSwitcher } from './language-switcher';
 import { MobileNav } from './mobile-nav';
 import type { Locale } from '../i18n/config';
 import { getLanguageOptions } from '../i18n/utils';
@@ -14,6 +15,7 @@ interface Props {
 		eventSummary: string;
 		register: string;
 		openNavigation: string;
+		language: string;
 	};
 	navItems: Array<{ label: string; href: string }>;
 }
@@ -33,30 +35,17 @@ const languageOptions = getLanguageOptions(locale, path);
 		</div>
 
 		<div class="flex items-center gap-3">
-			<nav aria-label="Language" class="hidden items-center gap-1 text-sm md:flex">
-				{languageOptions.map((option) => (
-					<a
-						href={option.href}
-						aria-current={option.current ? 'page' : undefined}
-						class:list={[
-							'rounded-full px-3 py-2 transition-colors',
-							option.current
-								? 'bg-primary text-primary-foreground'
-								: 'text-muted-foreground hover:bg-accent hover:text-foreground',
-						]}
-					>
-						{option.label}
-					</a>
-				))}
-			</nav>
+			<LanguageSwitcher client:load label={labels.language} options={languageOptions} />
 			<div class="md:hidden">
 				<MobileNav
 					client:load
 					items={navItems}
+					languageOptions={languageOptions}
 					title={labels.siteName}
 					description={labels.eventSummary}
 					registerLabel={labels.register}
 					openLabel={labels.openNavigation}
+					languageLabel={labels.language}
 				/>
 			</div>
 			<Button asChild className="hidden rounded-full md:inline-flex">

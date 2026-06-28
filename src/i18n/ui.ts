@@ -32,6 +32,7 @@ export const ui = {
       requestRegistrationInfo: '등록 정보 요청하기',
       previewProgram: '프로그램 미리보기',
       openNavigation: '내비게이션 메뉴 열기',
+      language: '언어 변경',
     },
     sections: [
       {
@@ -103,6 +104,7 @@ export const ui = {
       requestRegistrationInfo: 'Request Registration Info',
       previewProgram: 'Preview the Program',
       openNavigation: 'Open navigation menu',
+      language: 'Change language',
     },
     sections: [
       {
