@@ -6,7 +6,7 @@ export async function getStaticPaths() {
 	const pages = await getCollection('pages', ({ data }) => data.locale === 'ko');
 
 	return pages.map((entry) => ({
-		params: { slug: entry.data.slug },
+		params: { slug: entry.data.path },
 		props: { entry },
 	}));
 }
