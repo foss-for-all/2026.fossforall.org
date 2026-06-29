@@ -8,6 +8,8 @@ import mdx from '@astrojs/mdx';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://2026.fossforall.org',
+
   i18n: {
     locales: ['ko', 'en'],
     defaultLocale: 'ko',
