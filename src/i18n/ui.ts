@@ -18,7 +18,7 @@ export const ui = {
     },
     hero: {
       title: 'FOSS for All Conference',
-      subtitle: 'First steps with Open Source',
+      subtitle: '오픈소스로 향하는 첫 걸음',
       actions: [
         { label: '등록하기(준비중)', href: '#register', variant: 'default' },
         { label: '컨퍼런스 소개', href: '/about/', variant: 'outline' },
@@ -83,7 +83,7 @@ export const ui = {
     },
     hero: {
       title: 'FOSS for All Conference',
-      subtitle: 'First steps with Open Source',
+      subtitle: 'Your Gateway to Open Source',
       actions: [
         { label: 'Register(TBA)', href: '#register', variant: 'default' },
         { label: 'About the Conference', href: '/en/about/', variant: 'outline' },
