@@ -36,6 +36,11 @@ export const ui = {
       darkTheme: '다크 모드',
       systemTheme: '시스템 설정',
     },
+    forum: {
+      label: '포럼',
+      title: '최근 소식',
+      viewAll: '소식 더 보기',
+    },
     sections: [
       {
         id: 'about',
@@ -100,6 +105,11 @@ export const ui = {
       lightTheme: 'Light mode',
       darkTheme: 'Dark mode',
       systemTheme: 'System',
+    },
+    forum: {
+      label: 'Forum',
+      title: 'Latest news',
+      viewAll: 'View more news',
     },
     sections: [
       {

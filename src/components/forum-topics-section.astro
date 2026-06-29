@@ -1,0 +1,76 @@
+---
+import {
+	Card,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from '@/components/ui/card';
+import { discourse } from '../config';
+import type { Locale } from '../i18n/config';
+import { useTranslations } from '../i18n/utils';
+
+interface Props {
+	locale: Locale;
+}
+
+interface DiscourseTopic {
+	id: number;
+	title: string;
+	fancy_title?: string;
+	slug: string;
+	created_at: string;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+let forumTopics: DiscourseTopic[] = [];
+
+try {
+	const response = await fetch(discourse.newsFeedUrl);
+
+	if (response.ok) {
+		const forumFeed = await response.json();
+		forumTopics = (forumFeed.topic_list?.topics ?? []).slice(0, 3);
+	}
+} catch {
+	forumTopics = [];
+}
+
+const dateFormatter = new Intl.DateTimeFormat(locale === 'ko' ? 'ko-KR' : 'en-US', {
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric',
+});
+---
+
+{forumTopics.length > 0 && (
+	<section class="mx-auto max-w-7xl px-6 pb-20 lg:px-8">
+		<div class="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+			<div>
+				<h2 class="mt-2 font-heading text-3xl leading-tight tracking-[-0.04em] text-foreground sm:text-4xl">
+					{t.forum.title}
+				</h2>
+			</div>
+			<a class="text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline" href={discourse.newsUrl} target="_blank" rel="noreferrer">
+				{t.forum.viewAll}
+			</a>
+		</div>
+
+		<div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+			{forumTopics.map((topic) => (
+				<a class="group block h-full" href={`${discourse.baseUrl}/t/${topic.slug}/${topic.id}`} target="_blank" rel="noreferrer">
+					<Card className="h-full transition-colors group-hover:border-primary/60 group-hover:bg-card/80">
+						<CardHeader>
+							<CardDescription>
+								{dateFormatter.format(new Date(topic.created_at))}
+							</CardDescription>
+							<CardTitle className="line-clamp-3 text-xl leading-tight tracking-[-0.02em] break-keep">
+								{topic.fancy_title ?? topic.title}
+							</CardTitle>
+						</CardHeader>
+					</Card>
+				</a>
+			))}
+		</div>
+	</section>
+)}

@@ -11,6 +11,7 @@ import F4ALineArtSvg from '../assets/f4a_line_art.svg';
 import SiteLayout from '../layouts/site-layout.astro';
 import type { Locale } from '../i18n/config';
 import { useTranslations } from '../i18n/utils';
+import ForumTopicsSection from './forum-topics-section.astro';
 import { HeroActions } from './home-actions';
 
 interface Props {
@@ -47,6 +48,8 @@ const t = useTranslations(locale);
 				<HeroActions actions={t.hero.actions} />
 			</div>
 		</section>
+
+		<ForumTopicsSection locale={locale} />
 
 		<section class="mx-auto grid max-w-7xl grid-cols-1 gap-6 px-6 pb-20 md:grid-cols-3 lg:px-8">
 			{t.sections.map((section) => (
