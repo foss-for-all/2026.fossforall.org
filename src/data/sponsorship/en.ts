@@ -173,7 +173,7 @@ export const en: SponsorshipContent = {
 			body: 'A 30-minute slot in the regular talk schedule. A good opportunity to present your experience with open source technology, a project your team maintains, or how your engineering organization works.',
 			bullets: [
 				'Proposal first, payment second. Submit a talk proposal, the program team reviews it, and you buy the add-on once it is accepted.',
-				'Talks must be about open source and follow the code of conduct. Heavy product pitching is not allowed.',
+				'Talks must be about open source and follow the <a href="/en/coc/">code of conduct</a>. Heavy product pitching is not allowed.',
 				'Slots are assigned in order of acceptance, and room size follows that order. Keynotes are not available.',
 				'Sponsor sessions are labelled as such on the website and in the program book.',
 				'The proposal deadline will be announced once it is agreed with the program team.',

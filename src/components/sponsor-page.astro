@@ -207,8 +207,8 @@ const secondaryAction =
 						</div>
 					</div>
 					<p class="mt-5 leading-7 text-muted-foreground break-keep">{c.addons.session.body}</p>
-					<ul class="mt-4 list-disc space-y-2 pl-5 text-sm leading-6 text-muted-foreground break-keep">
-						{c.addons.session.bullets.map((item) => <li>{item}</li>)}
+					<ul class="mt-4 list-disc space-y-2 pl-5 text-sm leading-6 text-muted-foreground break-keep [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-4">
+						{c.addons.session.bullets.map((item) => <li set:html={item} />)}
 					</ul>
 				</div>
 
