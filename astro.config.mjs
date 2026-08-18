@@ -13,8 +13,13 @@ export default defineConfig({
   i18n: {
     locales: ['ko', 'en'],
     defaultLocale: 'ko',
+    // A page without an English edition falls back to the Korean one instead of 404ing.
+    fallback: {
+      en: 'ko'
+    },
     routing: {
-      prefixDefaultLocale: false
+      prefixDefaultLocale: false,
+      fallbackType: 'redirect'
     }
   },
 

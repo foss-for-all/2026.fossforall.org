@@ -1,17 +1,29 @@
 ---
 import { getCollection } from 'astro:content';
 import MarkdownPage from '../../components/markdown-page.astro';
+import { getLocalizedPath } from '../../i18n/utils';
 
+// i18n.fallback covers file-based pages only, so the collection route mirrors it here:
+// a page with no English edition still gets a /en/ route that redirects to the Korean one.
 export async function getStaticPaths() {
-	const pages = await getCollection('pages', ({ data }) => data.locale === 'en');
+	const pages = await getCollection('pages');
+	const translated = new Set(
+		pages.filter(({ data }) => data.locale === 'en').map(({ data }) => data.path),
+	);
 
-	return pages.map((entry) => ({
-		params: { slug: entry.data.path },
-		props: { entry },
-	}));
+	return pages
+		.filter(({ data }) => data.locale === 'en' || !translated.has(data.path))
+		.map((entry) => ({
+			params: { slug: entry.data.path },
+			props: { entry },
+		}));
 }
 
 const { entry } = Astro.props;
+
+if (entry.data.locale !== 'en') {
+	return Astro.redirect(getLocalizedPath('ko', entry.data.path));
+}
 ---
 
 <MarkdownPage entry={entry} locale="en" />
