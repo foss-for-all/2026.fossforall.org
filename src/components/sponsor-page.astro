@@ -1,0 +1,434 @@
+---
+import { Image } from 'astro:assets';
+import { getSponsorship } from '../data/sponsorship';
+import type { Locale } from '../i18n/config';
+import SiteLayout from '../layouts/site-layout.astro';
+import p01A from '../assets/sponsor/p01-a.jpg';
+import p01B from '../assets/sponsor/p01-b.jpg';
+import p01Group from '../assets/sponsor/p01-group.jpg';
+import p02BoothTalk from '../assets/sponsor/p02-booth-talk.jpg';
+import p02Hall from '../assets/sponsor/p02-hall.jpg';
+import p02Keynote from '../assets/sponsor/p02-keynote.jpg';
+import p02Room from '../assets/sponsor/p02-room.jpg';
+import p04Booth from '../assets/sponsor/p04-booth.jpg';
+import p04Booths from '../assets/sponsor/p04-booths.jpg';
+import p04Comm1 from '../assets/sponsor/p04-comm-1.jpg';
+import p04Comm2 from '../assets/sponsor/p04-comm-2.jpg';
+import p09Group from '../assets/sponsor/p09-group.jpg';
+import BarList from './sponsor/bar-list.astro';
+import Callout from './sponsor/callout.astro';
+import LogoWall from './sponsor/logo-wall.astro';
+import ReasonGrid from './sponsor/reason-grid.astro';
+import SectionHead from './sponsor/section-head.astro';
+import StatGrid from './sponsor/stat-grid.astro';
+import TierMatrix from './sponsor/tier-matrix.astro';
+import Timeline from './sponsor/timeline.astro';
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const c = getSponsorship(locale);
+
+const recordPhotos = [p02BoothTalk, p02Keynote, p01A, p02Room, p02Hall, p01B];
+const sponsorBase = '/sponsor/sponsors-2025';
+const communityBase = '/sponsor/communities-2025';
+const tierWalls = c.partners.walls.slice(0, 3);
+const partnerWalls = c.partners.walls.slice(3);
+
+const mail = c.closing.mail;
+const withMailLink = (text: string) =>
+	text.replaceAll(
+		mail,
+		`<a class="text-primary underline underline-offset-4" href="mailto:${mail}">${mail}</a>`,
+	);
+
+const section = 'mx-auto max-w-5xl px-6 py-16 lg:px-8';
+const primaryAction =
+	'inline-flex h-11 items-center rounded-2xl bg-primary px-6 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/80';
+const secondaryAction =
+	'inline-flex h-11 items-center rounded-2xl border border-border px-6 text-sm font-medium transition-colors hover:bg-muted';
+---
+
+<SiteLayout locale={locale} path="become-a-sponsor" title={c.title} description={c.description}>
+	<main>
+		<section>
+			<div class="mx-auto max-w-5xl px-6 pt-16 pb-14 lg:px-8">
+				<p class="kicker text-primary">{c.hero.kicker}</p>
+				<h1 class="mt-5 max-w-3xl font-heading text-4xl font-black tracking-[-0.05em] text-balance sm:text-6xl">
+					{c.hero.heading}
+				</h1>
+				<p class="mt-4 font-heading text-2xl font-light tracking-[-0.03em] text-primary sm:text-3xl">
+					{c.hero.slogan}
+				</p>
+				<p class="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground break-keep">{c.hero.lead}</p>
+
+				<div class="mt-9 flex flex-wrap gap-3">
+					<a class={primaryAction} href={c.links.register} target="_blank" rel="noreferrer">
+						{c.hero.register}
+					</a>
+					<a class={secondaryAction} href={c.links.prospectus}>{c.hero.prospectus}</a>
+				</div>
+
+				<dl class="mt-12 grid gap-6 border-t border-border pt-8 sm:grid-cols-2 lg:grid-cols-4">
+					{
+						c.hero.facts.map((fact) => (
+							<div>
+								<dt class="kicker">{fact.label}</dt>
+								<dd class="mt-2 font-medium break-keep">{fact.value}</dd>
+							</div>
+						))
+					}
+				</dl>
+
+				<Image
+					class="mt-10 w-full object-cover"
+					src={p01Group}
+					alt=""
+					widths={[640, 960, 1280]}
+					sizes="(min-width: 1024px) 64rem, 100vw"
+				/>
+			</div>
+		</section>
+
+		<section class="border-t border-border">
+			<div class={section}>
+				<SectionHead num={c.why.num} title={c.why.title} lead={c.why.lead} />
+				<ReasonGrid reasons={c.why.reasons} />
+			</div>
+		</section>
+
+		<section class="border-t border-border">
+			<div class={section}>
+				<SectionHead num={c.record.num} title={c.record.title} lead={c.record.lead} />
+				<StatGrid stats={c.record.stats} />
+				<div class="mt-10 grid grid-cols-2 gap-3 md:grid-cols-3">
+					{
+						recordPhotos.map((photo) => (
+							<Image
+								class="h-40 w-full object-cover sm:h-48"
+								src={photo}
+								alt=""
+								widths={[320, 640]}
+								sizes="(min-width: 768px) 20rem, 45vw"
+							/>
+						))
+					}
+				</div>
+				<p class="mt-3 text-xs text-muted-foreground">{c.record.caption}</p>
+			</div>
+		</section>
+
+		<section class="border-t border-border">
+			<div class={section}>
+				<SectionHead num={c.audience.num} title={c.audience.title} lead={c.audience.lead} />
+				<StatGrid stats={c.audience.stats} cols="grid-cols-2 lg:grid-cols-4" />
+
+				<div class="mt-12 grid gap-10 md:grid-cols-2">
+					<BarList title={c.audience.jobsTitle} bars={c.audience.jobs} />
+					<BarList title={c.audience.affiliationTitle} bars={c.audience.affiliation} />
+				</div>
+				<p class="mt-6 text-xs leading-5 text-muted-foreground break-keep">{c.audience.note}</p>
+
+				<div class="mt-10 bg-muted/60 px-6 py-6">
+					<p class="kicker">{c.audience.channelsKicker}</p>
+					<div class="mt-5 grid gap-6 lg:grid-cols-[14rem_1fr] lg:items-center">
+						<div>
+							<p class="font-heading text-4xl font-semibold tracking-[-0.04em] tabular-nums">
+								{c.audience.channelsTotal.value}
+							</p>
+							<p class="mt-1 text-sm text-muted-foreground break-keep">{c.audience.channelsTotal.label}</p>
+						</div>
+						<dl class="grid grid-cols-2 gap-x-8 gap-y-2 sm:grid-cols-3">
+							{
+								c.audience.channels.map((channel) => (
+									<div class="flex items-baseline justify-between gap-3 border-b border-border/60 py-1">
+										<dt class="text-sm text-muted-foreground">{channel.name}</dt>
+										<dd class="text-sm font-semibold tabular-nums">{channel.value}</dd>
+									</div>
+								))
+							}
+						</dl>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="border-t border-border">
+			<div class={section}>
+				<SectionHead num={c.packages.num} title={c.packages.title} lead={c.packages.lead} />
+				<TierMatrix tiers={c.packages.tiers} matrix={c.packages.matrix} />
+
+				<div class="mt-10 grid gap-8 md:grid-cols-2">
+					<div>
+						<h3 class="text-lg font-semibold">{c.packages.pricingTitle}</h3>
+						<ul class="mt-3 list-disc space-y-2 pl-5 text-sm leading-6 text-muted-foreground break-keep">
+							{c.packages.pricing.map((item) => <li>{item}</li>)}
+						</ul>
+					</div>
+					<div>
+						<h3 class="text-lg font-semibold">{c.packages.availabilityTitle}</h3>
+						<ul class="mt-3 list-disc space-y-2 pl-5 text-sm leading-6 text-muted-foreground break-keep">
+							{c.packages.availability.map((item) => <li>{item}</li>)}
+						</ul>
+					</div>
+				</div>
+
+				<div class="mt-8">
+					<Callout><span set:html={withMailLink(c.packages.callout)} /></Callout>
+				</div>
+			</div>
+		</section>
+
+		<section class="border-t border-border">
+			<div class={section}>
+				<SectionHead num={c.addons.num} title={c.addons.title} lead={c.addons.lead} />
+
+				<div class="border-l-2 border-primary bg-muted/40 px-6 py-6">
+					<div class="flex flex-wrap items-start justify-between gap-4">
+						<div>
+							<h3 class="text-xl font-semibold break-keep">{c.addons.session.title}</h3>
+							<p class="mt-1 text-sm text-muted-foreground break-keep">{c.addons.session.meta}</p>
+						</div>
+						<div class="text-right">
+							<p class="font-heading text-xl font-semibold">{c.addons.session.price}</p>
+							<p class="text-sm text-muted-foreground">{c.addons.session.priceSub}</p>
+						</div>
+					</div>
+					<p class="mt-5 leading-7 text-muted-foreground break-keep">{c.addons.session.body}</p>
+					<ul class="mt-4 list-disc space-y-2 pl-5 text-sm leading-6 text-muted-foreground break-keep">
+						{c.addons.session.bullets.map((item) => <li>{item}</li>)}
+					</ul>
+				</div>
+
+				<div class="mt-6 grid gap-6 md:grid-cols-2">
+					{
+						[c.addons.booth, c.addons.inKind].map((item) => (
+							<div class="border border-border px-6 py-6">
+								<div class="flex flex-wrap items-start justify-between gap-3">
+									<div>
+										<h3 class="text-lg font-semibold break-keep">{item.title}</h3>
+										<p class="mt-1 text-sm text-muted-foreground break-keep">{item.meta}</p>
+									</div>
+									{'price' in item && <p class="font-heading text-lg font-semibold">{item.price}</p>}
+								</div>
+								<p class="mt-4 text-sm leading-6 text-muted-foreground break-keep">{item.body}</p>
+							</div>
+						))
+					}
+				</div>
+
+				<h3 class="mt-10 text-lg font-semibold">{c.addons.examplesTitle}</h3>
+				<p class="mt-2 text-sm leading-6 text-muted-foreground break-keep">{c.addons.examples}</p>
+
+				<div class="mt-10 grid grid-cols-2 gap-3">
+					{
+						[p04Booths, p04Booth].map((photo) => (
+							<Image
+								class="h-48 w-full object-cover sm:h-64"
+								src={photo}
+								alt=""
+								widths={[400, 800]}
+								sizes="(min-width: 768px) 30rem, 45vw"
+							/>
+						))
+					}
+				</div>
+				<p class="mt-3 text-xs text-muted-foreground">{c.addons.caption}</p>
+			</div>
+		</section>
+
+		<section class="border-t border-border">
+			<div class={section}>
+				<SectionHead num={c.benefits.num} title={c.benefits.title} />
+				<div class="space-y-10">
+					{
+						c.benefits.groups.map((group) => (
+							<div>
+								<h3 class="text-lg font-semibold">{group.title}</h3>
+								<dl class="mt-4 space-y-4">
+									{group.items.map((item) => (
+										<div class="border-t border-border pt-4">
+											<dt class="font-semibold break-keep">{item.term}</dt>
+											<dd class="mt-1 leading-7 text-muted-foreground break-keep">{item.body}</dd>
+										</div>
+									))}
+								</dl>
+							</div>
+						))
+					}
+				</div>
+
+				<div class="mt-10">
+					<Callout accent="#C8A24A">
+						<strong class="font-semibold text-foreground">{c.benefits.callout.term}.</strong>
+						{' '}{c.benefits.callout.body}
+					</Callout>
+				</div>
+			</div>
+		</section>
+
+		<section class="border-t border-border">
+			<div class={section}>
+				<SectionHead num={c.partners.num} title={c.partners.title} lead={c.partners.lead} />
+
+				<div class="space-y-10">
+					{tierWalls.map((wall) => <LogoWall label={wall.label} logos={wall.logos} base={sponsorBase} />)}
+				</div>
+
+				<div class="mt-10 grid gap-8 md:grid-cols-3">
+					{
+						partnerWalls.map((wall) => (
+							<LogoWall label={wall.label} logos={wall.logos} base={sponsorBase} k={3.6} />
+						))
+					}
+				</div>
+
+				<div class="mt-10">
+					<Callout>{c.partners.callout}</Callout>
+				</div>
+
+				<h3 class="mt-16 text-2xl font-semibold tracking-[-0.02em]">{c.partners.communitiesTitle}</h3>
+				<p class="mt-3 max-w-3xl leading-7 text-muted-foreground break-keep">{c.partners.communitiesLead}</p>
+
+				<ul class="mt-8 grid gap-8 sm:grid-cols-2">
+					{
+						c.partners.communities.map((community) => (
+							<li class="flex items-center gap-5">
+								<span class="flex size-24 shrink-0 items-center justify-center rounded-sm bg-white p-3">
+									<img
+										src={`${communityBase}/${community.file}`}
+										alt={community.name}
+										loading="lazy"
+										decoding="async"
+										class="max-h-full max-w-full object-contain"
+										style={`height:${(4.4 / Math.sqrt(community.ar)).toFixed(2)}rem`}
+									/>
+								</span>
+								<div>
+									<p class="font-semibold break-keep">{community.name}</p>
+									<p class="mt-1 text-sm leading-6 text-muted-foreground break-keep">{community.body}</p>
+								</div>
+							</li>
+						))
+					}
+				</ul>
+
+				<div class="mt-10 grid grid-cols-2 gap-3">
+					{
+						[p04Comm1, p04Comm2].map((photo) => (
+							<Image
+								class="h-48 w-full object-cover sm:h-64"
+								src={photo}
+								alt=""
+								widths={[400, 800]}
+								sizes="(min-width: 768px) 30rem, 45vw"
+							/>
+						))
+					}
+				</div>
+			</div>
+		</section>
+
+		<section class="border-t border-border">
+			<div class={section}>
+				<SectionHead num={c.process.num} title={c.process.title} />
+
+				<h3 class="text-lg font-semibold">{c.process.timelineTitle}</h3>
+				<div class="mt-5">
+					<Timeline stops={c.process.timeline} />
+				</div>
+
+				<h3 class="mt-14 text-lg font-semibold">{c.process.stepsTitle}</h3>
+				<ol class="mt-6 space-y-8">
+					{
+						c.process.steps.map((step) => (
+							<li class="grid gap-3 sm:grid-cols-[4rem_1fr] sm:gap-6">
+								<span class="font-mono text-xl font-semibold text-primary">{step.n}</span>
+								<div>
+									<h4 class="text-lg font-semibold break-keep">{step.title}</h4>
+									{step.body && <p class="mt-2 leading-7 text-muted-foreground break-keep">{step.body}</p>}
+									{step.bullets && (
+										<dl class="mt-3 space-y-2 text-sm leading-6 text-muted-foreground break-keep">
+											{step.bullets.map((bullet) => (
+												<div>
+													<dt class="inline font-semibold text-foreground">{bullet.term}:</dt>{' '}
+													<dd class="inline">{bullet.body}</dd>
+												</div>
+											))}
+										</dl>
+									)}
+								</div>
+							</li>
+						))
+					}
+				</ol>
+
+				<div class="mt-10">
+					<Callout><span set:html={withMailLink(c.process.callout)} /></Callout>
+				</div>
+			</div>
+		</section>
+
+		<section class="border-t border-border">
+			<div class={section}>
+				<SectionHead num={c.about.num} title={c.about.title} lead={c.about.lead} />
+				<p class="max-w-3xl leading-7 text-muted-foreground break-keep">{c.about.body}</p>
+
+				<dl class="mt-10 grid gap-8 sm:grid-cols-2">
+					{
+						c.about.items.map((item) => (
+							<div>
+								<dt class="font-semibold break-keep">{item.term}</dt>
+								<dd class="mt-2 text-sm leading-6 text-muted-foreground break-keep">{item.body}</dd>
+							</div>
+						))
+					}
+				</dl>
+
+				<p class="mt-8 bg-muted/60 px-6 py-4 text-sm">
+					<a class="text-primary underline underline-offset-4" href={c.about.homepage}>{c.about.homepage}</a>
+				</p>
+
+				<Image
+					class="mt-10 w-full object-cover"
+					src={p09Group}
+					alt=""
+					widths={[640, 960, 1280]}
+					sizes="(min-width: 1024px) 64rem, 100vw"
+				/>
+			</div>
+		</section>
+
+		<section class="border-t border-border">
+			<div class="mx-auto max-w-5xl px-6 py-20 lg:px-8">
+				<h2 class="font-heading text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">{c.closing.title}</h2>
+				<div class="mt-5 max-w-2xl space-y-1 leading-7 text-muted-foreground break-keep">
+					{c.closing.lines.map((line) => <p>{line}</p>)}
+				</div>
+
+				<div class="mt-10 border-t border-border pt-8">
+					<a
+						class="font-heading text-2xl font-semibold text-primary underline-offset-8 hover:underline sm:text-3xl"
+						href={`mailto:${c.closing.mail}`}
+					>
+						{c.closing.mail}
+					</a>
+					<p class="mt-3">
+						<a class="text-muted-foreground underline underline-offset-4" href={c.closing.site}>
+							{c.closing.siteLabel}
+						</a>
+					</p>
+				</div>
+
+				<div class="mt-10 flex flex-wrap gap-3">
+					<a class={primaryAction} href={c.links.register} target="_blank" rel="noreferrer">
+						{c.hero.register}
+					</a>
+					<a class={secondaryAction} href={c.links.prospectus}>{c.hero.prospectus}</a>
+				</div>
+			</div>
+		</section>
+	</main>
+</SiteLayout>

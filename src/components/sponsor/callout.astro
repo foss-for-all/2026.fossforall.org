@@ -1,0 +1,14 @@
+---
+interface Props {
+	accent?: string;
+}
+
+const { accent } = Astro.props;
+---
+
+<div
+	class="border-l-2 bg-muted/60 px-5 py-4 text-sm leading-6 text-muted-foreground break-keep"
+	style={accent ? `border-color:${accent}` : 'border-color:var(--primary)'}
+>
+	<slot />
+</div>

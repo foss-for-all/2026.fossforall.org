@@ -1,0 +1,77 @@
+---
+import type { MatrixRow, Tier } from '../../data/sponsorship/types';
+
+interface Props {
+	tiers: [Tier, Tier, Tier];
+	matrix: MatrixRow[];
+}
+
+const { tiers, matrix } = Astro.props;
+---
+
+<div class="grid gap-4 sm:grid-cols-3">
+	{
+		tiers.map((tier) => (
+			<div class="border border-border">
+				<div class="h-[3px] w-full" style={`background:${tier.accent}`} />
+				<div class="p-5">
+					<p class="font-mono text-sm font-semibold tracking-[0.1em] uppercase">{tier.name}</p>
+					<p class="mt-2 font-heading text-2xl font-semibold tracking-[-0.03em]">{tier.price}</p>
+					<p class="text-sm text-muted-foreground">{tier.priceSub}</p>
+					<p class="mt-1 text-sm font-semibold" style={`color:${tier.accent}`}>
+						{tier.slots}
+					</p>
+				</div>
+			</div>
+		))
+	}
+</div>
+
+<div class="mt-8 overflow-x-auto">
+	<table class="w-full min-w-2xl table-fixed border-collapse text-sm">
+		<colgroup>
+			<col class="w-2/5" />
+			<col class="w-1/5" />
+			<col class="w-1/5" />
+			<col class="w-1/5" />
+		</colgroup>
+		<thead class="sr-only">
+			<tr>
+				<th>&nbsp;</th>
+				{tiers.map((tier) => <th>{tier.name}</th>)}
+			</tr>
+		</thead>
+		<tbody>
+			{
+				matrix.map((row) =>
+					row.type === 'group' ? (
+						<tr>
+							<td colspan="4" class="kicker border-b border-foreground pt-6 pb-1 text-foreground">
+								{row.label}
+							</td>
+						</tr>
+					) : (
+						<tr class="border-b border-border">
+							<td class="py-3 pr-4 align-middle break-keep">{row.label}</td>
+							{row.values.map((value) => (
+								<td class="px-2 py-3 text-center align-middle text-muted-foreground break-keep">
+									{value === true ? (
+										<span class="text-primary" aria-label="included">
+											&#9679;
+										</span>
+									) : value === false ? (
+										<span class="text-border" aria-label="not included">
+											&#8211;
+										</span>
+									) : (
+										value
+									)}
+								</td>
+							))}
+						</tr>
+					),
+				)
+			}
+		</tbody>
+	</table>
+</div>

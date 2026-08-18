@@ -1,43 +1,25 @@
-# Astro Starter Kit: Minimal
+# 2026.fossforall.org
+
+FOSS for All Conference 2026 website. Astro, Tailwind, shadcn/ui. Korean at the root,
+English under `/en/`.
+
+## Build
 
 ```sh
-npm create astro@latest -- --template minimal
+npm install
+npm run dev      # localhost:4321
+npm run build    # ./dist
+npm run preview
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Content
 
-## 🚀 Project Structure
+- `src/content/pages/{ko,en}/*.mdx` prose pages, rendered by `src/pages/[slug].astro`
+- `src/data/sponsorship/` the sponsorship prospectus page, one typed object per locale
+- `src/i18n/` navigation, footer, and UI strings
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+The sponsorship page is the web edition of
+[sponsorship-prospectus](https://github.com/foss-for-all/sponsorship-prospectus), which
+stays the source for the PDF. Text, tier table, photos, and 2025 logos are copied from
+there by hand; `public/sponsorship-prospectus-{ko,en}.pdf` must be refreshed from the
+same release.

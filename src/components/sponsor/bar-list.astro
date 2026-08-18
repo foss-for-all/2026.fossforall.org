@@ -1,0 +1,28 @@
+---
+import type { Bar } from '../../data/sponsorship/types';
+
+interface Props {
+	title: string;
+	bars: Bar[];
+}
+
+const { title, bars } = Astro.props;
+const max = Math.max(...bars.map((bar) => bar.value));
+---
+
+<div>
+	<h3 class="text-lg font-semibold">{title}</h3>
+	<ul class="mt-4 space-y-3">
+		{
+			bars.map((bar) => (
+				<li class="grid grid-cols-[9rem_1fr_2.5rem] items-center gap-3 sm:grid-cols-[11rem_1fr_2.5rem]">
+					<span class="text-sm text-muted-foreground break-keep">{bar.label}</span>
+					<span class="h-4 bg-muted">
+						<span class="block h-full bg-primary" style={`width:${(bar.value / max) * 100}%`} />
+					</span>
+					<span class="text-right text-sm font-semibold tabular-nums">{bar.value}%</span>
+				</li>
+			))
+		}
+	</ul>
+</div>

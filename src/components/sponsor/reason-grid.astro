@@ -1,0 +1,37 @@
+---
+import { Building2, GitFork, Leaf, Megaphone, Mic, Presentation, Target, UserPlus } from 'lucide-react';
+import type { Reason, ReasonIcon } from '../../data/sponsorship/types';
+
+interface Props {
+	reasons: Reason[];
+}
+
+const { reasons } = Astro.props;
+
+const icons: Record<ReasonIcon, typeof Target> = {
+	audience: Target,
+	promotion: Presentation,
+	talent: UserPlus,
+	leadership: Mic,
+	branding: Megaphone,
+	ecosystem: GitFork,
+	esg: Leaf,
+	transparency: Building2,
+};
+---
+
+<div class="grid gap-x-10 gap-y-9 sm:grid-cols-2">
+	{
+		reasons.map((reason) => {
+			const Icon = icons[reason.icon];
+
+			return (
+				<div>
+					<Icon size={26} strokeWidth={1.5} className="text-primary" />
+					<h3 class="mt-4 text-lg font-semibold break-keep">{reason.title}</h3>
+					<p class="mt-2 leading-7 text-muted-foreground break-keep">{reason.body}</p>
+				</div>
+			);
+		})
+	}
+</div>
