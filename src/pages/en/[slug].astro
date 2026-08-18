@@ -3,7 +3,8 @@ import { getCollection } from 'astro:content';
 import MarkdownPage from '../../components/markdown-page.astro';
 import { getLocalizedPath } from '../../i18n/utils';
 
-// i18n.fallback covers file-based pages only, so the collection route mirrors it here:
+// Astro's i18n.fallback is not used: it overrides src/pages/en/404.astro with a redirect to a
+// route that does not exist. The fallback lives here instead, where the documents actually are:
 // a page with no English edition still gets a /en/ route that redirects to the Korean one.
 export async function getStaticPaths() {
 	const pages = await getCollection('pages');
