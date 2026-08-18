@@ -112,21 +112,23 @@ const secondaryAction =
 			<div class={section}>
 				<SectionHead num={c.record.num} title={c.record.title} lead={c.record.lead} />
 				<StatGrid stats={c.record.stats} />
-				<div class="mt-10 grid grid-cols-2 gap-3 md:grid-cols-3">
-					{
-						recordPhotos.map((photo) => (
-							<Image
-								class="h-40 w-full object-cover sm:h-48"
-								src={photo}
-								alt=""
-								quality={100}
-								widths={widthsFor(photo, [400, 640, 960])}
-								sizes="(min-width: 768px) 20rem, 45vw"
-							/>
-						))
-					}
-				</div>
-				<p class="mt-3 text-xs text-muted-foreground">{c.record.caption}</p>
+				<figure class="mt-10">
+					<div class="grid grid-cols-2 gap-3 md:grid-cols-3">
+						{
+							recordPhotos.map((photo) => (
+								<Image
+									class="h-40 w-full object-cover sm:h-48"
+									src={photo}
+									alt=""
+									quality={100}
+									widths={widthsFor(photo, [400, 640, 960])}
+									sizes="(min-width: 768px) 20rem, 45vw"
+								/>
+							))
+						}
+					</div>
+					<figcaption class="mt-3 text-xs text-muted-foreground">{c.record.caption}</figcaption>
+				</figure>
 			</div>
 		</section>
 
@@ -232,21 +234,23 @@ const secondaryAction =
 				<h3 class="mt-10 text-lg font-semibold">{c.addons.examplesTitle}</h3>
 				<p class="mt-2 text-sm leading-6 text-muted-foreground break-keep">{c.addons.examples}</p>
 
-				<div class="mt-10 grid grid-cols-2 gap-3">
-					{
-						[p04Booths, p04Booth].map((photo) => (
-							<Image
-								class="h-48 w-full object-cover sm:h-64"
-								src={photo}
-								alt=""
-								quality={100}
-								widths={widthsFor(photo, [480, 800, 1200])}
-								sizes="(min-width: 768px) 30rem, 45vw"
-							/>
-						))
-					}
-				</div>
-				<p class="mt-3 text-xs text-muted-foreground">{c.addons.caption}</p>
+				<figure class="mt-10">
+					<div class="grid grid-cols-2 gap-3">
+						{
+							[p04Booths, p04Booth].map((photo) => (
+								<Image
+									class="h-48 w-full object-cover sm:h-64"
+									src={photo}
+									alt=""
+									quality={100}
+									widths={widthsFor(photo, [480, 800, 1200])}
+									sizes="(min-width: 768px) 30rem, 45vw"
+								/>
+							))
+						}
+					</div>
+					<figcaption class="mt-3 text-xs text-muted-foreground">{c.addons.caption}</figcaption>
+				</figure>
 			</div>
 		</section>
 
