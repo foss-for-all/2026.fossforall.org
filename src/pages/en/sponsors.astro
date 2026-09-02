@@ -1,0 +1,13 @@
+---
+import SponsorSection from '../../components/sponsor-section.astro';
+import { getSponsors } from '../../data/sponsors';
+import SiteLayout from '../../layouts/site-layout.astro';
+
+const content = getSponsors('en');
+---
+
+<SiteLayout locale="en" path="sponsors" title={content.title} description={content.description}>
+	<main>
+		<SponsorSection locale="en" showIntro />
+	</main>
+</SiteLayout>

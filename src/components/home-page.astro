@@ -13,6 +13,7 @@ import type { Locale } from '../i18n/config';
 import { useTranslations } from '../i18n/utils';
 import ForumTopicsSection from './forum-topics-section.astro';
 import { HeroActions } from './home-actions';
+import SponsorSection from './sponsor-section.astro';
 
 interface Props {
 	locale: Locale;
@@ -70,5 +71,7 @@ const t = useTranslations(locale);
 				</Card>
 			))}
 		</section>
+
+		<SponsorSection locale={locale} showPageLink />
 	</main>
 </SiteLayout>

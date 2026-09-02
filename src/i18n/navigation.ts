@@ -52,6 +52,7 @@ const navigation = {
 			key: 'sponsors',
 			label: '후원사 & 개인후원',
 			items: [
+				{ type: 'link', key: 'sponsors', label: '후원사', path: 'sponsors' },
 				{ type: 'link', key: 'become-a-sponsor', label: '후원사로 참여하기', path: 'become-a-sponsor' },
 			],
 		},
@@ -78,6 +79,7 @@ const navigation = {
 			key: 'sponsors',
 			label: 'Sponsors & Patrons',
 			items: [
+				{ type: 'link', key: 'sponsors', label: 'Our sponsors', path: 'sponsors' },
 				{ type: 'link', key: 'become-a-sponsor', label: 'Become a sponsor', path: 'become-a-sponsor' },
 			],
 		},

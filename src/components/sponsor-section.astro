@@ -1,0 +1,51 @@
+---
+import { getSponsors } from "../data/sponsors";
+import type { Locale } from "../i18n/config";
+import { getLocalizedPath } from "../i18n/utils";
+import { SponsorGallery } from "./sponsor-gallery";
+
+interface Props {
+    locale: Locale;
+    showPageLink?: boolean;
+    showIntro?: boolean;
+}
+
+const { locale, showPageLink = false, showIntro = false } = Astro.props;
+const content = getSponsors(locale);
+---
+
+<section
+    class="mx-auto max-w-7xl px-6 py-20 lg:px-8"
+    aria-labelledby="sponsors-heading"
+>
+    <div
+        class="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between"
+    >
+        <div class="max-w-2xl space-y-3">
+            <h2
+                id="sponsors-heading"
+                class="mt-2 font-heading text-3xl leading-tight tracking-[-0.04em] text-foreground sm:text-4xl"
+            >
+                {content.title}
+            </h2>
+            {
+                showIntro && (
+                    <p class="text-lg leading-7 text-muted-foreground">
+                        {content.intro}
+                    </p>
+                )
+            }
+        </div>
+        {
+            showPageLink && (
+                <a
+                    href={getLocalizedPath(locale, "sponsors")}
+                    class="w-fit font-medium text-primary underline underline-offset-4"
+                >
+                    {content.viewAll}
+                </a>
+            )
+        }
+    </div>
+    <SponsorGallery client:load content={content} />
+</section>
