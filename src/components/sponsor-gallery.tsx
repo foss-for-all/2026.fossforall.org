@@ -1,5 +1,4 @@
 import { ExternalLink } from 'lucide-react';
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
 	Dialog,
@@ -9,12 +8,16 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
+	DialogTrigger,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { sponsorLevels, type Sponsor, type SponsorContent, type SponsorLevel } from '../data/sponsors';
 
+type GallerySponsor = Omit<Sponsor, 'logo'> & { logo: string };
+type GalleryContent = Omit<SponsorContent, 'sponsors'> & { sponsors: GallerySponsor[] };
+
 interface Props {
-	content: SponsorContent;
+	content: GalleryContent;
 }
 
 const tierStyles: Record<SponsorLevel, { container: string; image: string }> = {
@@ -33,11 +36,10 @@ const tierStyles: Record<SponsorLevel, { container: string; image: string }> = {
 };
 
 export function SponsorGallery({ content }: Props) {
-	const [selectedSponsor, setSelectedSponsor] = useState<Sponsor | null>(null);
 	const hasSponsors = content.sponsors.length > 0;
 
 	return (
-		<>
+		<div>
 			{hasSponsors ? (
 				<div className="space-y-10">
 					{sponsorLevels.map((level) => {
@@ -52,17 +54,38 @@ export function SponsorGallery({ content }: Props) {
 								</h3>
 								<div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 									{sponsors.map((sponsor) => (
-										<button
-											key={sponsor.name}
-											type="button"
-											onClick={() => setSelectedSponsor(sponsor)}
-											className={cn(
-												'flex w-full items-center justify-center rounded-2xl border bg-card p-6 shadow-sm transition-transform hover:-translate-y-1 hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-												tierStyles[level].container,
-											)}
-										>
-											<img src={sponsor.logo} alt={sponsor.name} className={cn('h-auto w-auto object-contain', tierStyles[level].image)} />
-										</button>
+										<Dialog key={sponsor.name}>
+											<DialogTrigger asChild>
+												<button
+													type="button"
+													className={cn(
+														'flex w-full items-center justify-center rounded-2xl border bg-card p-6 shadow-sm transition-transform hover:-translate-y-1 hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+														tierStyles[level].container,
+													)}
+												>
+													<img src={sponsor.logo} alt={sponsor.name} className={cn('h-auto w-auto object-contain', tierStyles[level].image)} />
+												</button>
+											</DialogTrigger>
+											<DialogContent>
+												<DialogCloseButton label={content.dialog.close} />
+												<div className="flex min-h-40 items-center justify-center rounded-xl border bg-white p-6">
+													<img src={sponsor.logo} alt={sponsor.name} className="max-h-28 max-w-full object-contain" />
+												</div>
+												<DialogHeader>
+													<p className="font-mono text-xs font-semibold tracking-[0.16em] text-primary uppercase">{content.levels[sponsor.level]}</p>
+													<DialogTitle>{sponsor.name}</DialogTitle>
+													<DialogDescription>{sponsor.description}</DialogDescription>
+												</DialogHeader>
+												<DialogFooter>
+													<Button asChild size="lg">
+														<a href={sponsor.website} target="_blank" rel="noreferrer">
+															{content.dialog.website}
+															<ExternalLink data-icon="inline-end" />
+														</a>
+													</Button>
+												</DialogFooter>
+											</DialogContent>
+										</Dialog>
 									))}
 								</div>
 							</section>
@@ -73,29 +96,6 @@ export function SponsorGallery({ content }: Props) {
 				<p className="rounded-2xl border border-dashed bg-muted/40 px-6 py-10 text-center text-muted-foreground">{content.empty}</p>
 			)}
 
-			<Dialog open={selectedSponsor !== null} onOpenChange={(open) => !open && setSelectedSponsor(null)}>
-				{selectedSponsor && (
-					<DialogContent>
-						<DialogCloseButton label={content.dialog.close} />
-						<div className="flex min-h-40 items-center justify-center rounded-xl border bg-white p-6">
-							<img src={selectedSponsor.logo} alt={selectedSponsor.name} className="max-h-28 max-w-full object-contain" />
-						</div>
-						<DialogHeader>
-							<p className="font-mono text-xs font-semibold tracking-[0.16em] text-primary uppercase">{content.levels[selectedSponsor.level]}</p>
-							<DialogTitle>{selectedSponsor.name}</DialogTitle>
-							<DialogDescription>{selectedSponsor.description}</DialogDescription>
-						</DialogHeader>
-						<DialogFooter>
-							<Button asChild size="lg">
-								<a href={selectedSponsor.website} target="_blank" rel="noreferrer">
-									{content.dialog.website}
-									<ExternalLink data-icon="inline-end" />
-								</a>
-							</Button>
-						</DialogFooter>
-					</DialogContent>
-				)}
-			</Dialog>
-		</>
+		</div>
 	);
 }

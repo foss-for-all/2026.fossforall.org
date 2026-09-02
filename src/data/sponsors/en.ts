@@ -1,3 +1,4 @@
+import grafanaLogo from '../../assets/sponsor-logos/grafana.svg';
 import type { SponsorContent } from './types';
 
 export const en: SponsorContent = {
@@ -16,5 +17,14 @@ export const en: SponsorContent = {
 		website: 'Visit sponsor website',
 		close: 'Close',
 	},
-	sponsors: [],
+	sponsors: [
+		{
+			name: 'Grafana Labs',
+			level: 'silver',
+			logo: grafanaLogo,
+			description:
+				"Grafana Labs delivers the open observability cloud, helping builders everywhere turn signals into action. We were founded on the principles of open source, open standards, open ecosystems, and open culture. Grafana Cloud, our fully managed observability platform, is flexible and built for scale, helping organizations run their software better, accelerate innovation, and move at the speed of their ambitions. We're also the team behind some of the world's most popular open source projects, including Grafana for dashboards and data visualization, and our horizontally scalable databases: Loki for logs, Mimir for metrics, and Tempo for traces.",
+			website: 'https://grafana.com/',
+		},
+	],
 };

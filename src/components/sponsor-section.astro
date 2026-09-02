@@ -12,6 +12,10 @@ interface Props {
 
 const { locale, showPageLink = false, showIntro = false } = Astro.props;
 const content = getSponsors(locale);
+const galleryContent = {
+	...content,
+	sponsors: content.sponsors.map(({ logo, ...sponsor }) => ({ ...sponsor, logo: logo.src })),
+};
 ---
 
 <section
@@ -47,5 +51,5 @@ const content = getSponsors(locale);
             )
         }
     </div>
-    <SponsorGallery client:load content={content} />
+    <SponsorGallery client:load content={galleryContent} />
 </section>
