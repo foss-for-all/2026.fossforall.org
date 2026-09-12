@@ -44,7 +44,15 @@ const navigation = {
 			label: '소개',
 			items: [
 				{ type: 'link', key: 'about', label: '행사 소개', path: 'about' },
-				{ type: 'link', key: 'coc', label: '행동강령', path: 'coc' },
+			],
+    },
+    {
+			type: 'group',
+			key: 'attend',
+			label: '참석하기',
+			items: [
+			  { type: 'link', key: 'coc', label: '행동강령', path: 'coc' },
+				{ type: 'link', key: 'visa-letter-request', label: '사증 초청장 요청', path: 'visa-letter-request' },
 			],
     },
     {
@@ -71,7 +79,15 @@ const navigation = {
 			label: 'About',
 			items: [
 				{ type: 'link', key: 'about', label: 'About the event', path: 'about' },
-				{ type: 'link', key: 'coc', label: 'Code of Conduct', path: 'coc' },
+			],
+    },
+    {
+			type: 'group',
+			key: 'attend',
+			label: 'Attend',
+			items: [
+			  { type: 'link', key: 'coc', label: 'Code of Conduct', path: 'coc' },
+				{ type: 'link', key: 'visa-letter-request', label: '사증 초청장 요청', path: 'visa-letter-request' },
 			],
     },
     {
