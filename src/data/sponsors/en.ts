@@ -1,5 +1,6 @@
 import grafanaLogo from '../../assets/sponsor-logos/grafana.svg';
 import stadiaMapsLogo from '../../assets/sponsor-logos/stadia-maps.svg';
+import tangledLogo from '../../assets/sponsor-logos/tangled.svg';
 import type { SponsorContent } from './types';
 
 export const en: SponsorContent = {
@@ -26,13 +27,21 @@ export const en: SponsorContent = {
 			description:
 				"Grafana Labs delivers the open observability cloud, helping builders everywhere turn signals into action. We were founded on the principles of open source, open standards, open ecosystems, and open culture. Grafana Cloud, our fully managed observability platform, is flexible and built for scale, helping organizations run their software better, accelerate innovation, and move at the speed of their ambitions. We're also the team behind some of the world's most popular open source projects, including Grafana for dashboards and data visualization, and our horizontally scalable databases: Loki for logs, Mimir for metrics, and Tempo for traces.",
 			website: 'https://grafana.com/',
-    },
-    {
-      name: 'Stadia Maps',
-      level: 'bronze',
-      logo: stadiaMapsLogo,
-      description: 'Stadia Maps offers location APIs for humans. Thousands of companies of all sizes use Stadia Maps to contextualize their data on a map, solve logistics problems, build fitness experiences, and more. We back our customers up with no-surprise billing, world-class reliability, strong privacy guarantees, and real human support.',
-      website: 'https://stadiamaps.com/',
-    }
+		},
+		{
+			name: 'Tangled',
+			level: 'silver',
+			logo: tangledLogo,
+			description:
+				"Tangled is a federated git collaboration platform built on the AT Protocol. You can run your own infrastructure and still be discoverable: your identity and your projects aren't tied to any one server. Review happens in stacks rather than one large diff, and a vouch network handles the bots so maintainers don't have to. Open source in its entirety, on an open protocol.",
+			website: 'https://tangled.org/',
+		},
+		{
+			name: 'Stadia Maps',
+			level: 'bronze',
+			logo: stadiaMapsLogo,
+			description: 'Stadia Maps offers location APIs for humans. Thousands of companies of all sizes use Stadia Maps to contextualize their data on a map, solve logistics problems, build fitness experiences, and more. We back our customers up with no-surprise billing, world-class reliability, strong privacy guarantees, and real human support.',
+			website: 'https://stadiamaps.com/',
+		}
 	],
 };
