@@ -20,8 +20,7 @@ export const ui = {
       title: 'FOSS for All Conference',
       subtitle: '오픈소스로 향하는 첫 걸음',
       actions: [
-        { label: '발표 제안', href: 'https://pretalx.fossforall.org/2026/cfp', variant: 'default' },
-        { label: '커뮤니티 부스 모집', href: 'https://pretalx.fossforall.org/2026-call-for-booths/cfp', variant: 'default' },
+        { label: '일정표', href: '/schedules', variant: 'default' },
         { label: '컨퍼런스 소개', href: '/about/', variant: 'outline' },
       ],
     },
@@ -91,8 +90,7 @@ export const ui = {
       title: 'FOSS for All Conference',
       subtitle: 'Your Gateway to Open Source',
       actions: [
-        { label: 'Submit proposal', href: 'https://pretalx.fossforall.org/2026/cfp', variant: 'default' },
-        { label: 'Apply for community booth', href: 'https://pretalx.fossforall.org/2026-call-for-booths/cfp', variant: 'default' },
+        { label: 'Schedules', href: '/schedules', variant: 'default' },
         { label: 'About the Conference', href: '/en/about/', variant: 'outline' },
       ],
     },

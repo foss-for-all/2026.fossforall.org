@@ -58,6 +58,14 @@ const navigation = {
     },
     {
 			type: 'group',
+			key: 'program',
+			label: '프로그램',
+			items: [
+			  { type: 'link', key: 'schedules', label: '일정표', path: 'schedules' },
+			],
+    },
+    {
+			type: 'group',
 			key: 'sponsors',
 			label: '후원사 & 개인후원',
 			items: [
@@ -90,6 +98,14 @@ const navigation = {
 			  { type: 'link', key: 'coc', label: 'Code of Conduct', path: 'coc' },
 				{ type: 'link', key: 'entry-to-korea', label: 'Entry to Korea', path: 'entry-to-korea' },
 				{ type: 'link', key: 'visa-letter-request', label: 'Request Visa Invitation Letter', path: 'visa-letter-request' },
+			],
+    },
+    {
+			type: 'group',
+			key: 'program',
+			label: 'Programs',
+			items: [
+			  { type: 'link', key: 'schedules', label: 'Schedules', path: 'schedules' },
 			],
     },
     {
