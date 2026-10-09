@@ -20,7 +20,7 @@ export const ui = {
       title: 'FOSS for All Conference',
       subtitle: '오픈소스로 향하는 첫 걸음',
       actions: [
-        { label: '일정표', href: '/schedules', variant: 'default' },
+        { label: '세션 목록', href: '/sessions', variant: 'default' },
         { label: '컨퍼런스 소개', href: '/about/', variant: 'outline' },
       ],
     },
@@ -90,7 +90,7 @@ export const ui = {
       title: 'FOSS for All Conference',
       subtitle: 'Your Gateway to Open Source',
       actions: [
-        { label: 'Schedules', href: '/schedules', variant: 'default' },
+        { label: 'Sessions', href: '/sessions', variant: 'default' },
         { label: 'About the Conference', href: '/en/about/', variant: 'outline' },
       ],
     },
