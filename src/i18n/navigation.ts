@@ -62,6 +62,7 @@ const navigation = {
 			label: '프로그램',
 			items: [
 			  { type: 'link', key: 'schedules', label: '일정표', path: 'schedules' },
+				{ type: 'link', key: 'sessions', label: '세션 목록', path: 'sessions' },
 			],
     },
     {
@@ -106,6 +107,7 @@ const navigation = {
 			label: 'Programs',
 			items: [
 			  { type: 'link', key: 'schedules', label: 'Schedules', path: 'schedules' },
+				{ type: 'link', key: 'sessions', label: 'Sessions', path: 'sessions' },
 			],
     },
     {

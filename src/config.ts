@@ -11,3 +11,8 @@ export const discourse = {
 	newsUrl: 'https://forum.fossforall.org/tags/c/news/notices/13/conf-2026/6',
 	newsFeedUrl: 'https://forum.fossforall.org/tags/c/news/notices/13/conf-2026/6.json',
 } as const;
+
+export const pretalx = {
+	baseUrl: 'https://pretalx.fossforall.org',
+	eventSlug: '2026',
+} as const;
