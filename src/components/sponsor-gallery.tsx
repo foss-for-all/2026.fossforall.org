@@ -13,7 +13,7 @@ import {
 import { cn } from '@/lib/utils';
 import { sponsorLevels, type Sponsor, type SponsorContent, type SponsorLevel } from '../data/sponsors';
 
-type GallerySponsor = Omit<Sponsor, 'logo'> & { logo: string };
+type GallerySponsor = Omit<Sponsor, 'logo' | 'logoDark'> & Record<'logo' | 'logoDark', string>;
 type GalleryContent = Omit<SponsorContent, 'sponsors'> & { sponsors: GallerySponsor[] };
 
 interface Props {
@@ -63,7 +63,8 @@ export function SponsorGallery({ content }: Props) {
 														tierStyles[level].container,
 													)}
 												>
-													<img src={sponsor.logo} alt={sponsor.name} className={cn('h-auto w-auto object-contain', tierStyles[level].image)} />
+													<img src={sponsor.logo} alt={sponsor.name} className={cn('h-auto w-auto object-contain dark:hidden', tierStyles[level].image)} />
+													<img src={sponsor.logoDark} alt={sponsor.name} className={cn('hidden h-auto w-auto object-contain dark:block', tierStyles[level].image)} />
 												</button>
 											</DialogTrigger>
 											<DialogContent>

@@ -14,7 +14,7 @@ const { locale, showPageLink = false, showIntro = false } = Astro.props;
 const content = getSponsors(locale);
 const galleryContent = {
 	...content,
-	sponsors: content.sponsors.map(({ logo, ...sponsor }) => ({ ...sponsor, logo: logo.src })),
+	sponsors: content.sponsors.map(({ logo, logoDark, ...sponsor }) => ({ ...sponsor, logo: logo.src, logoDark: (logoDark ?? logo).src })),
 };
 ---
 

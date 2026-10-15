@@ -1,6 +1,9 @@
 import grafanaLogo from '../../assets/sponsor-logos/grafana.svg';
 import stadiaMapsLogo from '../../assets/sponsor-logos/stadia-maps.svg';
 import tangledLogo from '../../assets/sponsor-logos/tangled.svg';
+import stadiaMapsDarkLogo from '../../assets/sponsor-logos/stadia-maps-dark.svg';
+import tangledDarkLogo from '../../assets/sponsor-logos/tangled-dark.svg';
+
 import type { SponsorContent } from './types';
 
 export const en: SponsorContent = {
@@ -32,6 +35,7 @@ export const en: SponsorContent = {
 			name: 'Tangled',
 			level: 'silver',
 			logo: tangledLogo,
+			logoDark: tangledDarkLogo,
 			description:
 				"Tangled is a federated git collaboration platform built on the AT Protocol. You can run your own infrastructure and still be discoverable: your identity and your projects aren't tied to any one server. Review happens in stacks rather than one large diff, and a vouch network handles the bots so maintainers don't have to. Open source in its entirety, on an open protocol.",
 			website: 'https://tangled.org/',
@@ -40,6 +44,7 @@ export const en: SponsorContent = {
 			name: 'Stadia Maps',
 			level: 'bronze',
 			logo: stadiaMapsLogo,
+			logoDark: stadiaMapsDarkLogo,
 			description: 'Stadia Maps offers location APIs for humans. Thousands of companies of all sizes use Stadia Maps to contextualize their data on a map, solve logistics problems, build fitness experiences, and more. We back our customers up with no-surprise billing, world-class reliability, strong privacy guarantees, and real human support.',
 			website: 'https://stadiamaps.com/',
 		}

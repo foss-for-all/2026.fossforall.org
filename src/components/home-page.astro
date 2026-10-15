@@ -7,7 +7,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
-import F4ALineArtSvg from '../assets/f4a_line_art.svg';
+import F4ALineArt from '../assets/f4a_line_art.svg';
 import SiteLayout from '../layouts/site-layout.astro';
 import type { Locale } from '../i18n/config';
 import { useTranslations } from '../i18n/utils';
@@ -27,7 +27,7 @@ const t = useTranslations(locale);
 	<main>
 		<section class="mx-auto grid min-h-[calc(100vh-5rem)] max-w-7xl gap-12 px-6 py-16 lg:grid-cols-[1.15fr_0.95fr] lg:items-center lg:px-8 lg:py-20">
 			<div class="order-2 lg:order-1">
-				<img src={F4ALineArtSvg.src} alt="" />
+				<F4ALineArt class="h-auto w-full text-foreground" aria-hidden="true" />
 			</div>
 
 			<div class="order-1 flex flex-col gap-7 lg:order-2 lg:pl-6">
