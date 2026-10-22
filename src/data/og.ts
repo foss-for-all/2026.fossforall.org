@@ -27,14 +27,17 @@ const fonts = Promise.all([font('Regular'), font('Bold')]).then(([regular, bold]
 	{ name: 'Pretendard', data: bold, weight: 700 as const },
 ]);
 
-const lineArt = sharp(Buffer.from(lineArtSvg.replaceAll('currentColor', '#0a0a0a'))).resize(240).png().toBuffer()
+// The logo is drawn large on the right; a speaker photo fills its blue ring.
+const logoSize = 600;
+const ring = { center: 0.5, inner: 0.352 };
+const logo = sharp(Buffer.from(lineArtSvg.replaceAll('currentColor', '#000000'))).resize(logoSize).png().toBuffer()
 	.then((png) => `data:image/png;base64,${png.toString('base64')}`);
 
 async function photo(url: string): Promise<string | undefined> {
 	try {
 		const response = await fetch(url, { signal: AbortSignal.timeout(15000) });
 		if (!response.ok) return undefined;
-		const png = await sharp(Buffer.from(await response.arrayBuffer())).resize(300, 300, { position: 'top' }).png().toBuffer();
+		const png = await sharp(Buffer.from(await response.arrayBuffer())).resize(440, 440, { position: 'top' }).png().toBuffer();
 		return `data:image/png;base64,${png.toString('base64')}`;
 	} catch { return undefined; }
 }
@@ -54,26 +57,33 @@ async function missingGlyphs(_code: string, text: string) {
 export async function renderCard({ locale, title, people, label, avatar }: Card): Promise<Buffer> {
 	const t = useTranslations(locale);
 	const image = avatar && await photo(avatar);
-	// Without a photo the text takes the full width rather than leaving a placeholder.
-	const titleSize = title.length > (image ? 40 : 60) ? 52 : 64;
-	const tree = h('div', { display: 'flex', width: ogSize.width, height: ogSize.height, background: '#ffffff', color: '#0a0a0a', fontFamily: 'Pretendard' }, h('div', { display: 'flex', flexDirection: 'column', position: 'absolute', top: 56, right: 64, bottom: 56, left: 64, gap: 40 }, [
-		h('div', { display: 'flex', alignItems: 'center', gap: 24 }, [
-			h('img', { width: 120, height: 120 }, undefined, { src: await lineArt, width: 120, height: 120 }),
+	const titleSize = title.length <= 20 ? 76 : title.length <= 40 ? 64 : 52;
+	const photoSize = Math.round(logoSize * ring.inner * 2);
+	// Bleed the logo off the right edge so the ring sits beside the text column.
+	const logoLeft = ogSize.width - logoSize + 90;
+	const logoTop = (ogSize.height - logoSize) / 2;
+	const tree = h('div', { display: 'flex', width: ogSize.width, height: ogSize.height, background: '#ffffff', color: '#000000', fontFamily: 'Pretendard' }, [
+		h('img', { position: 'absolute', left: logoLeft, top: logoTop, width: logoSize, height: logoSize }, undefined, { src: await logo, width: logoSize, height: logoSize }),
+		...(image ? [h('img', {
+			position: 'absolute', width: photoSize, height: photoSize, borderRadius: photoSize / 2, objectFit: 'cover',
+			left: logoLeft + logoSize * ring.center - photoSize / 2, top: logoTop + logoSize * ring.center - photoSize / 2,
+		}, undefined, { src: image, width: photoSize, height: photoSize })] : []),
+		h('div', { display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'absolute', top: 56, bottom: 56, left: 64, width: 600 }, [
 			h('div', { display: 'flex', flexDirection: 'column', gap: 4 }, [
-				h('div', { fontSize: 32, fontWeight: 700 }, t.site.title),
-				h('div', { fontSize: 24, color: '#525252' }, `${t.event.date} | ${t.event.venue}`),
-				h('div', { fontSize: 24, color: '#525252' }, `${ui.ko.hero.subtitle} · ${ui.en.hero.subtitle}`),
+				h('div', { fontSize: 30, fontWeight: 700 }, t.site.title),
+				h('div', { fontSize: 24, color: '#525252' }, `${t.event.date}, ${t.event.venue}`),
+			]),
+			h('div', { display: 'flex', flexDirection: 'column', gap: 14 }, [
+				h('div', { fontSize: 28, fontWeight: 700, color: '#2979ff' }, label),
+				h('div', { fontSize: titleSize, fontWeight: 700, lineHeight: 1.12, letterSpacing: -1.5, lineClamp: 3, display: 'block', wordBreak: 'keep-all' }, title),
+				h('div', { fontSize: 36, fontWeight: 700, color: '#333333', lineClamp: 2, display: 'block', wordBreak: 'keep-all' }, people),
+			]),
+			h('div', { display: 'flex', flexDirection: 'column', fontSize: 22, color: '#737373' }, [
+				h('div', {}, ui.ko.hero.subtitle),
+				h('div', {}, ui.en.hero.subtitle),
 			]),
 		]),
-		h('div', { display: 'flex', flex: 1, alignItems: 'center', gap: 48 }, [
-			h('div', { display: 'flex', flexDirection: 'column', flex: 1, gap: 16 }, [
-				h('div', { fontSize: 26, fontWeight: 700, color: '#2b7fff' }, label),
-				h('div', { fontSize: titleSize, fontWeight: 700, lineHeight: 1.15, lineClamp: 3, display: 'block', wordBreak: 'keep-all' }, title),
-				h('div', { fontSize: 36, fontWeight: 700, color: '#404040', lineClamp: 2, display: 'block', wordBreak: 'keep-all' }, people),
-			]),
-			...(image ? [h('img', { width: 300, height: 300, borderRadius: 150, objectFit: 'cover', flexShrink: 0 }, undefined, { src: image, width: 300, height: 300 })] : []),
-		]),
-	]));
+	]);
 	const svg = await satori(tree as never, { ...ogSize, fonts: await fonts, loadAdditionalAsset: missingGlyphs as never });
 	return sharp(Buffer.from(svg)).png().toBuffer();
 }
