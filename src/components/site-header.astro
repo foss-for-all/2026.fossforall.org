@@ -1,12 +1,11 @@
 ---
 import { DesktopNav } from './desktop-nav';
-import { LanguageSwitcher } from './language-switcher';
 import { MobileNav } from './mobile-nav';
 import { RegisterNavButton } from './register-nav-button';
 import { ThemeToggle } from './theme-toggle';
 import type { Locale } from '../i18n/config';
 import type { NavigationItem } from '../i18n/navigation';
-import { getLanguageOptions } from '../i18n/utils';
+import { getLanguageOptions, getLocalizedPath } from '../i18n/utils';
 
 interface Props {
 	locale: Locale;
@@ -37,8 +36,8 @@ const themeLabels = {
 ---
 
 <header class="sticky top-0 z-50 border-b border-border/80 bg-background/88 backdrop-blur supports-[backdrop-filter]:bg-background/72">
-	<div class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-4 lg:px-8">
-		<a href="/" class="text-sm font-black text-foreground">
+	<div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4 lg:px-8">
+		<a href={getLocalizedPath(locale)} class="text-sm font-black text-foreground">
 			{labels.headerTitle}
 		</a>
 
@@ -46,19 +45,33 @@ const themeLabels = {
 			<DesktopNav client:load items={navItems} />
 		</div>
 
-		<div class="flex items-center gap-3">
+		<div class="flex items-center gap-2 sm:gap-3">
 			<ThemeToggle client:load labels={themeLabels} />
-			<LanguageSwitcher client:load label={labels.language} options={languageOptions} />
+			<nav aria-label={labels.language} class="flex shrink-0 items-center text-sm font-medium whitespace-nowrap">
+				{languageOptions.map((option, index) => (
+					<>
+						{index > 0 && <span aria-hidden="true" class="px-1.5 text-border">|</span>}
+						<a
+							href={option.href}
+							hreflang={option.locale}
+							lang={option.locale}
+							data-locale={option.locale}
+							aria-current={option.current ? 'page' : undefined}
+							class={option.current ? 'text-foreground' : 'text-muted-foreground underline-offset-4 hover:text-foreground hover:underline'}
+						>
+							{option.label}
+						</a>
+					</>
+				))}
+			</nav>
 			<div class="md:hidden">
 				<MobileNav
 					client:load
 					items={navItems}
-					languageOptions={languageOptions}
 					title={labels.siteName}
 					description={labels.eventSummary}
 					registerLabel={labels.register}
 					openLabel={labels.openNavigation}
-					languageLabel={labels.language}
 				/>
 			</div>
 			<RegisterNavButton client:load label={labels.register} />
