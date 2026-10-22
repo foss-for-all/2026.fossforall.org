@@ -158,10 +158,10 @@ function loadProgram(): Promise<Program> {
 	return program;
 }
 
-// FOSDEM-style URL: the stable code, then whatever ASCII the title offers.
+// Whatever ASCII the title offers, then the stable code that keeps the URL unique.
 export function slugify(code: string, text: string): string {
 	const words = text.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-	return [code.toLowerCase(), words.slice(0, 60).replace(/-$/, '')].filter(Boolean).join('-');
+	return [words.slice(0, 60).replace(/-$/, ''), code.toLowerCase()].filter(Boolean).join('-');
 }
 
 function talkUrl(code: string) {
