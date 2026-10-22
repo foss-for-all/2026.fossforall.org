@@ -22,14 +22,14 @@ const biography = await renderMarkdown(speaker.biography);
 		</nav>
 		<header class="mt-6 flex flex-col gap-6 sm:flex-row sm:items-center">
 			<SpeakerAvatar speaker={speaker} size={160} />
-			<h1 class="font-heading text-4xl font-black tracking-[-0.04em] text-balance break-keep sm:text-5xl">{speaker.name}</h1>
+			<h1 class="font-heading text-4xl font-black tracking-[-0.04em] text-balance break-keep [overflow-wrap:anywhere] sm:text-5xl">{speaker.name}</h1>
 		</header>
 
-		<article class="mdx-content mt-10 max-w-none" set:html={biography} />
+		<article class="mdx-content mt-10 max-w-none break-keep [overflow-wrap:anywhere]" set:html={biography} />
 
 		<section class="mt-12" aria-labelledby="sessions-heading">
 			<h2 id="sessions-heading" class="font-heading text-2xl font-bold tracking-tight">{labels.speakerSessions}</h2>
-			<div class="mt-4 grid gap-4">
+			<div class="mt-4 grid grid-cols-1 gap-4">
 				{speaker.sessions.map((session) => <SessionCard session={session} locale={locale} />)}
 			</div>
 		</section>

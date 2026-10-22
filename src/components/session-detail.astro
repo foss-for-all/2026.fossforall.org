@@ -14,8 +14,8 @@ const labels = sessionLabels[locale];
 const languages = new Intl.DisplayNames([locale], { type: 'language' });
 const time = new Intl.DateTimeFormat(locale, { timeZone: 'Asia/Seoul', dateStyle: 'medium', timeStyle: 'short' });
 const endTime = new Intl.DateTimeFormat(locale, { timeZone: 'Asia/Seoul', timeStyle: 'short' });
-const abstract = await renderMarkdown(session.abstract);
-const description = await renderMarkdown(session.description);
+// One document, so footnote ids from the abstract and the description cannot collide.
+const body = await renderMarkdown([session.abstract, session.description].filter(Boolean).join('\n\n'));
 const meta = [
 	[labels.type, session.type],
 	[labels.track, session.track],
@@ -37,7 +37,7 @@ const links = [
 			<span aria-hidden="true" class="px-2">/</span>
 			<span>{session.type}</span>
 		</nav>
-		<h1 class="mt-3 font-heading text-4xl font-black tracking-[-0.04em] text-balance break-keep sm:text-5xl">{session.title}</h1>
+		<h1 class="mt-3 font-heading text-4xl font-black tracking-[-0.04em] text-balance break-keep [overflow-wrap:anywhere] sm:text-5xl">{session.title}</h1>
 
 		<dl class="mt-8 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 border-y py-6 text-sm">
 			{meta.map(([term, value]) => (
@@ -48,10 +48,7 @@ const links = [
 			))}
 		</dl>
 
-		<article class="mdx-content mt-10 max-w-none">
-			<div class="text-lg" set:html={abstract} />
-			<div class="mt-6" set:html={description} />
-		</article>
+		<article class="mdx-content mt-10 max-w-none break-keep [overflow-wrap:anywhere]" set:html={body} />
 
 		{session.speakers.length > 0 && (
 			<section class="mt-12" aria-labelledby="speakers-heading">
