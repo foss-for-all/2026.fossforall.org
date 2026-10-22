@@ -39,7 +39,7 @@ const localeHandoff =
 				<a href={getLocalizedPath(locale)}>{t.notFound.home}</a>
 			</Button>
 			<Button asChild variant="outline" size="lg" className="rounded-full">
-				<a href={getLocalizedPath(alternateLocale)}>{t.notFound.alternate}</a>
+				<a href={getLocalizedPath(alternateLocale)} hreflang={alternateLocale} data-locale={alternateLocale}>{t.notFound.alternate}</a>
 			</Button>
 		</div>
 	</main>
