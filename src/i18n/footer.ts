@@ -23,7 +23,7 @@ const footer = {
 			{
 				key: 'privacy',
 				label: '개인정보 처리방침',
-				href: 'https://fossforall.org/disclosures/privacy/2025.fossforall.org/',
+				href: 'https://fossforall.org/disclosures/privacy/2026.fossforall.org/',
 				external: true,
 			},
 			{
@@ -49,7 +49,7 @@ const footer = {
 			{
 				key: 'privacy',
 				label: 'Privacy Policy',
-				href: 'https://fossforall.org/disclosures/privacy/2025.fossforall.org/',
+				href: 'https://fossforall.org/en/disclosures/privacy/2026.fossforall.org/',
 				external: true,
 			},
 			{

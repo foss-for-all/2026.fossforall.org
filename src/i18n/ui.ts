@@ -112,7 +112,7 @@ export const ui = {
       {
         id: 'about',
         label: 'About the Conference',
-        title: 'An FOSS Conference for Everyone',
+        title: 'An Open Source Conference for Everyone',
         body:
           'FOSS for All Conference is open not only to well-known global open source projects, but also to lesser-known projects with important roles, and to anyone interested in open source.',
       },
