@@ -37,7 +37,7 @@ const localeRedirect =
 	locale === 'ko' && english
 		? `try {
 				const stored = localStorage.getItem('locale');
-				if (stored ? stored === 'en' : !/bot|crawl|spider/i.test(navigator.userAgent) &&
+				if (stored ? stored === 'en' : !/bot|crawl|spider|yeti|daum|slurp/i.test(navigator.userAgent) &&
 					!navigator.languages.some((language) => /^ko\\b/i.test(language))) location.replace('${english.href}');
 			} catch {}`
 		: null;
