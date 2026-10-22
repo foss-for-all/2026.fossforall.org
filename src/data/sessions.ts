@@ -158,10 +158,15 @@ function loadProgram(): Promise<Program> {
 	return program;
 }
 
-// Whatever ASCII the title offers, then the stable code that keeps the URL unique.
+// Keeps the title's own letters (Hangul, Hanja, kana, accents) like Namuwiki does; browsers percent-encode them.
+// Long titles keep their main title (before ":" or " - ") and are cut at a word boundary.
+// The code at the end keeps the URL unique.
 export function slugify(code: string, text: string): string {
-	const words = text.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-	return [words.slice(0, 60).replace(/-$/, ''), code.toLowerCase()].filter(Boolean).join('-');
+	const main = text.split(/:| - /)[0].trim() || text;
+	const words = main.normalize('NFC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '');
+	const chars = [...words];
+	const short = chars.length <= 50 ? words : chars.slice(0, 51).join('').replace(/-[^-]*$/, '');
+	return [short, code.toLowerCase()].filter(Boolean).join('-');
 }
 
 function talkUrl(code: string) {
