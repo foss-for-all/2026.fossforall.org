@@ -7,7 +7,7 @@ const { speaker, size, class: className } = Astro.props;
 ---
 
 {speaker.avatar ? (
-	<Image src={speaker.avatar} alt="" width={size} height={size} position="top" class:list={['shrink-0 rounded-full object-cover', className]} />
+	<Image src={speaker.avatar} alt="" width={size} height={size} densities={[1, 2]} position="top" class:list={['shrink-0 rounded-full object-cover', className]} />
 ) : (
 	<span aria-hidden="true" class:list={['flex shrink-0 items-center justify-center rounded-full bg-muted font-semibold text-muted-foreground', className]} style={`width:${size}px;height:${size}px`}>
 		{speaker.name.slice(0, 1)}
