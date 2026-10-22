@@ -4,12 +4,13 @@ import SiteFooter from '../components/site-footer.astro';
 import SiteHeader from '../components/site-header.astro';
 import type { Locale } from '../i18n/config';
 import { getNavigation } from '../i18n/navigation';
-import { useTranslations } from '../i18n/utils';
+import { getLanguageOptions, useTranslations } from '../i18n/utils';
 import { site } from '../config';
 
 interface Props {
 	locale: Locale;
 	path?: string;
+	alternates?: boolean;
 	title: string;
 	description?: string;
 }
@@ -17,6 +18,7 @@ interface Props {
 const {
 	locale,
 	path = '',
+	alternates = true,
 	title,
 	description,
 } = Astro.props;
@@ -27,6 +29,18 @@ const metaDescription = description ?? t.site.defaultDescription;
 const canonicalUrl = new URL(Astro.url.pathname, site.url);
 const socialImageUrl = new URL(site.socialImage, site.url);
 const ogLocale = locale === 'ko' ? 'ko_KR' : 'en_US';
+const languageOptions = alternates ? getLanguageOptions(locale, path) : [];
+const korean = languageOptions.find((option) => option.locale === 'ko');
+const english = languageOptions.find((option) => option.locale === 'en');
+// Crawlers are excluded so the Korean pages stay indexable.
+const localeRedirect =
+	locale === 'ko' && english
+		? `try {
+				const stored = localStorage.getItem('locale');
+				if (stored ? stored === 'en' : !/bot|crawl|spider/i.test(navigator.userAgent) &&
+					!navigator.languages.some((language) => /^ko\\b/i.test(language))) location.replace('${english.href}');
+			} catch {}`
+		: null;
 ---
 
 <html lang={locale}>
@@ -41,12 +55,26 @@ const ogLocale = locale === 'ko' ? 'ko_KR' : 'en_US';
 				// Ignore storage access errors and keep the default light theme.
 			}
 		</script>
+		{localeRedirect && <script is:inline set:html={localeRedirect} />}
+		<script is:inline>
+			document.addEventListener('click', (event) => {
+				const link = event.target instanceof Element && event.target.closest('a[data-locale]');
+				if (!link) return;
+				try {
+					localStorage.setItem('locale', link.dataset.locale);
+				} catch {
+					// Without storage the visitor may be redirected again on a later visit.
+				}
+			});
+		</script>
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={metaDescription} />
 		<link rel="canonical" href={canonicalUrl.href} />
+		{languageOptions.map((option) => <link rel="alternate" hreflang={option.locale} href={new URL(option.href, site.url).href} />)}
+		{korean && <link rel="alternate" hreflang="x-default" href={new URL(korean.href, site.url).href} />}
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content={canonicalUrl.href} />
 		<meta property="og:title" content={title} />
