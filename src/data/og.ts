@@ -90,7 +90,7 @@ export async function renderCard({ locale, title, people, label, avatar }: Card)
 			h('div', { fontSize: size, fontWeight: 700, lineHeight: 1.18, letterSpacing: -1, lineClamp: 4, display: 'block' }, words(title)),
 		]),
 		h('div', { position: 'absolute', top: nameTop, left: 60, width: textWidth, fontSize: 48, fontWeight: 700, color: '#333333', lineClamp: 1, display: 'block' }, words(people)),
-		h('div', { display: 'flex', flexDirection: 'column', alignItems: 'flex-end', position: 'absolute', right: 64, bottom: 36, fontSize: 20, color: '#737373' }, [
+		h('div', { display: 'flex', flexDirection: 'column', alignItems: 'flex-end', position: 'absolute', right: 64, bottom: 32, fontSize: 24, color: '#737373' }, [
 			h('div', {}, ui.ko.hero.subtitle),
 			h('div', {}, ui.en.hero.subtitle),
 		]),
