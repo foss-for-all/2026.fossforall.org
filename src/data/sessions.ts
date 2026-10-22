@@ -64,8 +64,7 @@ export function localizedName(name: LocalizedName | undefined, locale: Locale): 
 	return typeof name === 'string' ? name : name?.[locale] || name?.en || Object.values(name ?? {})[0] || '';
 }
 
-// Talk pages are public only once the talk is featured or in a released schedule.
-async function isPublic(url: string): Promise<boolean> {
+async function isReachable(url: string): Promise<boolean> {
 	try {
 		return (await fetch(url, { method: 'HEAD', redirect: 'manual', signal: AbortSignal.timeout(15000) })).ok;
 	} catch { return false; }
@@ -132,7 +131,8 @@ let program: Promise<Program> | undefined;
 
 // Every page shares one set of API requests per build.
 function loadProgram(): Promise<Program> {
-	return program ??= (async () => {
+	if (program) return program;
+	program = (async () => {
 		const [submissions, speakers, tracks, types, started] = await Promise.all([
 			fetchPages<Submission>('submissions/?state=confirmed&expand=resources,slots,slots.room'),
 			fetchPages<Speaker>('speakers/'),
@@ -140,12 +140,21 @@ function loadProgram(): Promise<Program> {
 			fetchPages<NamedItem>('submission-types/'),
 			hasStarted(),
 		]);
+		// Talk pages are public only once the talk is featured or in a released schedule.
 		const visible = new Set<string>();
 		await Promise.all(submissions.map(async ({ code }) => {
-			if (await isPublic(talkUrl(code))) visible.add(code);
+			if (await isReachable(talkUrl(code))) visible.add(code);
+		}));
+		// A broken avatar would fail the image build step.
+		const presenting = new Set(submissions.flatMap((submission) => submission.speakers));
+		await Promise.all(speakers.filter(({ code, avatar_url }) => presenting.has(code) && avatar_url).map(async (speaker) => {
+			if (!await isReachable(speaker.avatar_url!)) speaker.avatar_url = null;
 		}));
 		return { submissions, speakers, tracks, types, started, visible };
 	})();
+	// Do not keep a failed load for the life of the dev server.
+	program.catch(() => { program = undefined; });
+	return program;
 }
 
 function talkUrl(code: string) {
@@ -190,7 +199,8 @@ export async function getSessions(locale: Locale): Promise<{ groups: SessionGrou
 	try {
 		const data = await loadProgram();
 		const groups = new Map<number, SessionGroup>();
-		for (const submission of data.submissions) {
+		// Pretalx decides publication: unreleased talks stay off the site too.
+		for (const submission of data.submissions.filter(({ code }) => data.visible.has(code))) {
 			const session = toSession(submission, data, locale);
 			const id = submission.submission_type;
 			if (!groups.has(id)) groups.set(id, { id, name: session.type, keynote: session.keynote, sessions: [] });
