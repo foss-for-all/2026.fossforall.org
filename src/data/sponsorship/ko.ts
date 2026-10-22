@@ -184,6 +184,7 @@ export const ko: SponsorshipContent = {
 			title: '테이블 부스 단품',
 			meta: '수량 한정 / 선착순',
 			price: '50만원',
+			priceSub: 'USD 350',
 			body: '등급 후원 없이 부스만 원하시는 경우 선택하실 수 있습니다. 신청은 상시 받으며, 배정 가능한 부스 수가 확정되는 행사 1-2개월 전에 신청 순서대로 배정해 드립니다.',
 		},
 		inKind: {

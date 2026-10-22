@@ -11,7 +11,7 @@ export const en: SponsorshipContent = {
 		lead: 'Free and Open Source Software for All. A non-profit conference where projects and communities from Korea and abroad meet in one place.',
 		facts: [
 			{ label: 'Date', value: '28 Nov 2026 (Sat)' },
-			{ label: 'Venue', value: 'Centerfield EAST, Seoul' },
+			{ label: 'Venue', value: 'CenterField EAST, Gangnam, Seoul' },
 			{ label: 'Scale', value: 'About 200 attendees' },
 			{ label: 'Organizer', value: 'FOSS for All' },
 		],
@@ -37,7 +37,7 @@ export const en: SponsorshipContent = {
 			{
 				icon: 'talent',
 				title: 'Talent acquisition',
-				body: 'Developers who spend their own time on open source are hard to reach through ordinary hiring channels.',
+				body: 'Developers who spend their own time on open source are hard to reach through ordinary hiring channels. Booths and sessions offer a natural point of contact.',
 			},
 			{
 				icon: 'leadership',
@@ -47,12 +47,12 @@ export const en: SponsorshipContent = {
 			{
 				icon: 'branding',
 				title: 'Brand visibility',
-				body: 'Sponsor logos are displayed on banners, the website, attendee badges and break videos, and in media partner coverage.',
+				body: 'Sponsor logos are displayed on banners, the website, attendee badges, break videos, social media, and in media partner coverage.',
 			},
 			{
 				icon: 'ecosystem',
 				title: 'Real support for the ecosystem',
-				body: 'Nearly all software that companies ship today uses open source. Sponsoring is the most direct way to help keep that foundation healthy.',
+				body: 'Most software that companies ship today uses open source. Sponsoring is the most direct way to help keep that foundation healthy.',
 			},
 			{
 				icon: 'esg',
@@ -62,7 +62,7 @@ export const en: SponsorshipContent = {
 			{
 				icon: 'transparency',
 				title: 'Transparent spending',
-				body: 'FOSS for All is a registered non-profit in Korea and publishes its financial statements continuously. You can check where your money went at any time.',
+				body: 'FOSS for All is registered in Korea as an unincorporated association treated as a corporation and publishes its financial statements continuously. You can check where your money went at any time.',
 			},
 		],
 	},
@@ -158,7 +158,8 @@ export const en: SponsorshipContent = {
 			'Booths and sessions are limited and assigned in order of confirmation.',
 			'To move up a tier or adjust a package, talk to the sponsorship team.',
 		],
-		callout: 'Support not on this table is welcome. Write to sponsors@fossforall.org before applying.',
+		callout:
+			'Support not on this table is welcome. If you want to sponsor a specific program only or prefer a different package, please contact sponsors@fossforall.org before applying.',
 	},
 
 	addons: {
@@ -183,6 +184,7 @@ export const en: SponsorshipContent = {
 			title: 'Booth only',
 			meta: 'Limited / first come, first served',
 			price: 'USD 350',
+			priceSub: 'KRW 500,000',
 			body: 'For those who want a booth without a tier package. Applications are open throughout, and booths are assigned in order one to two months before the event, once the number available is settled with the venue.',
 		},
 		inKind: {
@@ -192,7 +194,7 @@ export const en: SponsorshipContent = {
 		},
 		examplesTitle: 'In-kind examples',
 		examples:
-			'Lunch and catering · coffee truck · swag · books · recording, audio and networking gear · venue WiFi · live interpretation and captions · tool licences for the organising team',
+			'Lunch and catering · coffee truck · swag · books · recording, audio and networking gear · venue WiFi · live interpretation and captions',
 		caption: 'Sponsor booths at the 2025 edition',
 	},
 
@@ -244,7 +246,7 @@ export const en: SponsorshipContent = {
 	partners: {
 		num: '07',
 		title: 'Who was with us',
-		lead: 'Thirteen companies and organizations sponsored FOSS for All Conference 2025: open source companies from Korea and abroad, a public agency, a community, and media partners.',
+		lead: 'Thirteen companies and organizations sponsored FOSS for All Conference 2025: open source companies from Korea and abroad, public institutions, communities, and media.',
 		walls: [
 			{
 				label: 'Gold',
@@ -281,9 +283,9 @@ export const en: SponsorshipContent = {
 			},
 		],
 		communitiesTitle: 'Communities',
-		communitiesLead: 'Eight open source communities ran booths at the 2025 edition, alongside the sponsor booths.',
+		communitiesLead: 'Eight open source communities ran booths at the 2025 edition, alongside the sponsor booths, and attendees moved freely between them.',
 		communities: [
-			{ file: 'coscup.svg', ar: 2.96, name: 'COSCUP', body: "Taiwan's annual conference, jointly organised by its open source communities." },
+			{ file: 'coscup.svg', ar: 2.96, name: 'COSCUP', body: "Taiwan's annual conference, jointly organised by its open source communities. They introduced Taiwan's community culture and ecosystem." },
 			{ file: 'debian.png', ar: 0.76, name: 'Debian', body: 'A free software operating system built by volunteers worldwide.' },
 			{
 				file: 'osm-korea.svg',
@@ -313,7 +315,7 @@ export const en: SponsorshipContent = {
 			},
 		],
 		callout:
-			'Thank you to every 2025 sponsor. We would be glad to have you with us again in 2026. Returning sponsors get first priority on tier slots, booths and sessions.',
+			'Thank you to every 2025 sponsor. We would be glad to have you with us again in 2026. Returning sponsors get the first opportunity to discuss tier slots and booth and session allocation.',
 	},
 
 	process: {
@@ -365,8 +367,8 @@ export const en: SponsorshipContent = {
 	about: {
 		num: '09',
 		title: 'About FOSS for All',
-		lead: 'An initiative for a sustainable free and open source software ecosystem.',
-		body: 'FOSS for All is an initiative created so that free and open source projects, communities, companies, contributors, and users, in Korea and elsewhere, can connect with each other and keep going. Projects face more than technical work: accounting, administration, running events, managing sponsorships, and legal review. FOSS for All exists so that a project does not have to found its own legal entity or repeat the same administrative work from scratch.',
+		lead: 'A non-profit organization working for a sustainable free and open source software ecosystem.',
+		body: 'FOSS for All is an initiative created so that free and open source projects, communities, companies, contributors, and users, in Korea and elsewhere, can connect with each other and keep going. Projects face more than technical work: accounting, administration, running events, managing sponsorships, and legal review. FOSS for All exists so that a project does not have to found its own legal entity or repeat the same administrative work from scratch, and can focus on what really matters.',
 		items: [
 			{
 				term: 'FOSS for All Conference',
@@ -378,7 +380,7 @@ export const en: SponsorshipContent = {
 			},
 			{
 				term: 'FOSS for All Microgrant',
-				body: 'A program that distributes small grants to open source projects and communities, aimed at giving early-stage projects real support.',
+				body: 'A program that distributes small grants to open source projects and communities in Korea and abroad, aimed at giving early-stage projects real support.',
 			},
 			{
 				term: 'Ecosystem network',

@@ -223,7 +223,12 @@ const secondaryAction =
 										<h3 class="text-lg font-semibold break-keep">{item.title}</h3>
 										<p class="mt-1 text-sm text-muted-foreground break-keep">{item.meta}</p>
 									</div>
-									{'price' in item && <p class="font-heading text-lg font-semibold">{item.price}</p>}
+									{'price' in item && (
+										<div class="text-right">
+											<p class="font-heading text-lg font-semibold">{item.price}</p>
+											<p class="text-sm text-muted-foreground">{item.priceSub}</p>
+										</div>
+									)}
 								</div>
 								<p class="mt-4 text-sm leading-6 text-muted-foreground break-keep">{item.body}</p>
 							</div>
