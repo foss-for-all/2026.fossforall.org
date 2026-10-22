@@ -1,9 +1,10 @@
 ---
 import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { pretalx } from '../config';
 import { getSessions, sessionLabels } from '../data/sessions';
 import type { Locale } from '../i18n/config';
-import { SessionList } from './session-list';
+import SessionList from './session-list.astro';
 
 interface Props { locale: Locale }
 const { locale } = Astro.props;
@@ -14,6 +15,6 @@ const labels = sessionLabels[locale];
 {groups.length > 0 ? <SessionList groups={groups} locale={locale} /> : (
 	<div class="rounded-2xl border border-dashed bg-muted/40 px-6 py-10 text-center">
 		<p class="text-muted-foreground">{unavailable ? labels.unavailable : labels.empty}</p>
-		<a class={buttonVariants({ variant: 'outline', className: 'mt-5' })} href={`${pretalx.baseUrl}/${pretalx.eventSlug}/schedule/`} target="_blank" rel="noopener noreferrer">{labels.program}</a>
+		<a class={cn(buttonVariants({ variant: 'outline' }), 'mt-5')} href={`${pretalx.baseUrl}/${pretalx.eventSlug}/schedule/`} target="_blank" rel="noopener noreferrer">{labels.program}</a>
 	</div>
 )}

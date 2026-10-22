@@ -1,0 +1,81 @@
+---
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { renderMarkdown } from '../data/markdown';
+import { sessionLabels, type Session } from '../data/sessions';
+import type { Locale } from '../i18n/config';
+import { getLocalizedPath } from '../i18n/utils';
+import SiteLayout from '../layouts/site-layout.astro';
+import SpeakerAvatar from './speaker-avatar.astro';
+
+interface Props { session: Session; locale: Locale }
+const { session, locale } = Astro.props;
+const labels = sessionLabels[locale];
+const languages = new Intl.DisplayNames([locale], { type: 'language' });
+const time = new Intl.DateTimeFormat(locale, { timeZone: 'Asia/Seoul', dateStyle: 'medium', timeStyle: 'short' });
+const endTime = new Intl.DateTimeFormat(locale, { timeZone: 'Asia/Seoul', timeStyle: 'short' });
+const abstract = await renderMarkdown(session.abstract);
+const description = await renderMarkdown(session.description);
+const meta = [
+	[labels.type, session.type],
+	[labels.track, session.track],
+	[labels.language, session.language && (languages.of(session.language) ?? session.language)],
+	[labels.time, session.start && `${time.format(new Date(session.start))}${session.end ? ` - ${endTime.format(new Date(session.end))}` : ''}`],
+	[labels.room, session.room],
+].filter(([, value]) => value);
+const links = [
+	[labels.video, session.video],
+	[labels.feedback, session.feedback],
+	[labels.pretalx, session.url],
+].filter(([, href]) => href);
+---
+
+<SiteLayout locale={locale} path={`sessions/${session.code}`} title={session.title} description={session.abstract.slice(0, 160)}>
+	<main class="mx-auto max-w-4xl px-6 py-16 lg:px-8">
+		<nav class="text-sm text-muted-foreground">
+			<a href={getLocalizedPath(locale, 'sessions')} class="hover:text-foreground hover:underline">{labels.title}</a>
+			<span aria-hidden="true" class="px-2">/</span>
+			<span>{session.type}</span>
+		</nav>
+		<h1 class="mt-3 font-heading text-4xl font-black tracking-[-0.04em] text-balance break-keep sm:text-5xl">{session.title}</h1>
+
+		<dl class="mt-8 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 border-y py-6 text-sm">
+			{meta.map(([term, value]) => (
+				<>
+					<dt class="font-semibold text-muted-foreground">{term}</dt>
+					<dd>{value}</dd>
+				</>
+			))}
+		</dl>
+
+		<article class="mdx-content mt-10 max-w-none">
+			<div class="text-lg" set:html={abstract} />
+			<div class="mt-6" set:html={description} />
+		</article>
+
+		{session.speakers.length > 0 && (
+			<section class="mt-12" aria-labelledby="speakers-heading">
+				<h2 id="speakers-heading" class="font-heading text-2xl font-bold tracking-tight">{labels.speakers}</h2>
+				<ul class="mt-4 grid gap-3 sm:grid-cols-2">
+					{session.speakers.map((speaker) => (
+						<li>
+							<a href={getLocalizedPath(locale, `speakers/${speaker.code}`)} class="flex items-center gap-4 rounded-xl border bg-card p-4 transition-colors hover:border-primary/60">
+								<SpeakerAvatar speaker={speaker} size={56} />
+								<span class="font-semibold">{speaker.name}</span>
+							</a>
+						</li>
+					))}
+				</ul>
+			</section>
+		)}
+
+		{links.length > 0 && (
+			<section class="mt-12" aria-labelledby="links-heading">
+				<h2 id="links-heading" class="font-heading text-2xl font-bold tracking-tight">{labels.links}</h2>
+				<div class="mt-4 flex flex-wrap gap-2">
+					{links.map(([label, href]) => <a class={cn(buttonVariants({ variant: 'outline' }))} href={href} target="_blank" rel="noopener noreferrer">{label}</a>)}
+				</div>
+			</section>
+		)}
+	</main>
+</SiteLayout>

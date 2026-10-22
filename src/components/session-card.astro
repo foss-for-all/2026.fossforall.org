@@ -1,0 +1,25 @@
+---
+import { Badge } from '@/components/ui/badge';
+import { sessionLabels, type Session } from '../data/sessions';
+import type { Locale } from '../i18n/config';
+import { getLocalizedPath } from '../i18n/utils';
+import SpeakerAvatar from './speaker-avatar.astro';
+
+interface Props { session: Session; locale: Locale }
+const { session, locale } = Astro.props;
+const labels = sessionLabels[locale];
+const languages = new Intl.DisplayNames([locale], { type: 'language' });
+---
+
+<a href={getLocalizedPath(locale, `sessions/${session.code}`)} class="flex flex-col gap-4 rounded-xl border bg-card p-6 text-card-foreground shadow-sm transition-colors hover:border-primary/60">
+	<h3 class="text-xl leading-snug font-semibold tracking-tight break-keep">{session.title}</h3>
+	<ul class="flex flex-col gap-2 text-sm text-muted-foreground">
+		{session.speakers.length > 0 ? session.speakers.map((speaker) => (
+			<li class="flex items-center gap-2"><SpeakerAvatar speaker={speaker} size={24} />{speaker.name}</li>
+		)) : <li>{labels.unknownSpeaker}</li>}
+	</ul>
+	<div class="flex flex-wrap gap-2">
+		{session.track && <Badge variant="secondary">{session.track}</Badge>}
+		{session.language && <Badge variant="outline">{languages.of(session.language) ?? session.language}</Badge>}
+	</div>
+</a>
