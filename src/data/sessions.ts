@@ -55,10 +55,12 @@ async function isPublic(url: string): Promise<boolean> {
 
 // Pretalx accepts feedback only after a talk has started.
 async function hasStarted(): Promise<boolean> {
-	const response = await fetch(`${pretalx.baseUrl}/api/events/${pretalx.eventSlug}/`, { signal: AbortSignal.timeout(15000) });
-	if (!response.ok) return false;
-	const { date_from }: { date_from: string } = await response.json();
-	return new Date() >= new Date(`${date_from}T00:00:00+09:00`);
+	try {
+		const response = await fetch(`${pretalx.baseUrl}/api/events/${pretalx.eventSlug}/`, { signal: AbortSignal.timeout(15000) });
+		if (!response.ok) return false;
+		const { date_from }: { date_from: string } = await response.json();
+		return new Date() >= new Date(`${date_from}T00:00:00+09:00`);
+	} catch { return false; }
 }
 
 async function fetchPages<T>(endpoint: string): Promise<T[]> {
@@ -147,6 +149,8 @@ export async function getSessions(locale: Locale): Promise<{ groups: SessionGrou
 		};
 		return { groups: [...groups.values()].sort((a, b) => rank(a) - rank(b) || a.name.localeCompare(b.name, locale)), unavailable: false };
 	} catch (error) {
+		// Fail CI builds so a transient outage does not replace the deployed list.
+		if (process.env.CI) throw error;
 		console.warn('Unable to load sessions:', error instanceof Error ? error.message : 'Unknown error');
 		return { groups: [], unavailable: true };
 	}

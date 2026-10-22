@@ -23,8 +23,9 @@ const labels = {
 
 const eventUrl = `${pretalx.baseUrl}/${pretalx.eventSlug}/`;
 // The widget fails to load until a schedule version is released.
+// Network errors fail CI builds so a transient outage does not hide a released schedule.
 const released = await fetch(`${eventUrl}schedule/widgets/schedule.json`, { method: 'HEAD', signal: AbortSignal.timeout(15000) })
-	.then((response) => response.ok, () => false);
+	.then((response) => response.ok, (error) => { if (process.env.CI) throw error; return false; });
 ---
 
 {released ? (
