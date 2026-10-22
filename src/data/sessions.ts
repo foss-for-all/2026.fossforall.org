@@ -19,7 +19,8 @@ export interface Session {
 	speakers: string[];
 	track: string;
 	language: string;
-	url: string;
+	url?: string;
+	feedback?: string;
 	video?: string;
 }
 export interface SessionGroup { id: number; name: string; sessions: Session[] }
@@ -43,6 +44,21 @@ export const sessionLabels = {
 
 export function localizedName(name: LocalizedName | undefined, locale: Locale): string {
 	return typeof name === 'string' ? name : name?.[locale] || name?.en || Object.values(name ?? {})[0] || '';
+}
+
+// Talk pages are public only once the talk is featured or in a released schedule.
+async function isPublic(url: string): Promise<boolean> {
+	try {
+		return (await fetch(url, { method: 'HEAD', redirect: 'manual', signal: AbortSignal.timeout(15000) })).ok;
+	} catch { return false; }
+}
+
+// Pretalx accepts feedback only after a talk has started.
+async function hasStarted(): Promise<boolean> {
+	const response = await fetch(`${pretalx.baseUrl}/api/events/${pretalx.eventSlug}/`, { signal: AbortSignal.timeout(15000) });
+	if (!response.ok) return false;
+	const { date_from }: { date_from: string } = await response.json();
+	return new Date() >= new Date(`${date_from}T00:00:00+09:00`);
 }
 
 async function fetchPages<T>(endpoint: string): Promise<T[]> {
@@ -94,14 +110,18 @@ function videoUrl(resources: Submission['resources']): string | undefined {
 
 export async function getSessions(locale: Locale): Promise<{ groups: SessionGroup[]; unavailable: boolean }> {
 	try {
-		const [submissions, speakers, tracks, types] = await Promise.all([
+		const [submissions, speakers, tracks, types, started] = await Promise.all([
 			fetchPages<Submission>('submissions/?state=confirmed&expand=resources'),
 			fetchPages<Speaker>('speakers/'),
 			fetchPages<NamedItem>('tracks/'),
 			fetchPages<NamedItem>('submission-types/'),
+			hasStarted(),
 		]);
+		const urls = submissions.map((submission) => `${pretalx.baseUrl}/${pretalx.eventSlug}/talk/${encodeURIComponent(submission.code)}/`);
+		const visible = await Promise.all(urls.map(isPublic));
 		const groups = new Map<number, SessionGroup>();
-		for (const submission of submissions) {
+		for (const [index, submission] of submissions.entries()) {
+			const url = visible[index] ? urls[index] : undefined;
 			const id = submission.submission_type;
 			if (!groups.has(id)) groups.set(id, {
 				id, name: localizedName(types.find((type) => type.id === id)?.name, locale) || sessionLabels[locale].unknownType,
@@ -112,7 +132,8 @@ export async function getSessions(locale: Locale): Promise<{ groups: SessionGrou
 				speakers: submission.speakers.map((code) => speakers.find((speaker) => speaker.code === code)?.name || sessionLabels[locale].unknownSpeaker),
 				track: localizedName(tracks.find((track) => track.id === submission.track)?.name, locale),
 				language: submission.content_locale || '',
-				url: `${pretalx.baseUrl}/${pretalx.eventSlug}/talk/${encodeURIComponent(submission.code)}/`,
+				url,
+				feedback: url && started ? `${url}feedback/` : undefined,
 				video: videoUrl(submission.resources),
 			});
 		}

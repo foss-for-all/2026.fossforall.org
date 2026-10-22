@@ -24,11 +24,11 @@ export function SessionList({ groups, locale }: { groups: SessionGroup[]; locale
 						{session.track && <Badge variant="secondary">{session.track}</Badge>}
 						{session.language && <Badge variant="outline"><Languages aria-hidden="true" className="size-3" />{languageName(session.language)}</Badge>}
 					</CardContent>
-					<CardFooter className="flex flex-wrap gap-2">
-						<Button asChild variant="outline"><a href={session.url} target="_blank" rel="noopener noreferrer"><ExternalLink aria-hidden="true" />{labels.details}</a></Button>
-						<Button asChild><a href={`${session.url}feedback/`} target="_blank" rel="noopener noreferrer"><MessageSquare aria-hidden="true" />{labels.feedback}</a></Button>
+					{(session.url || session.feedback || session.video) && <CardFooter className="flex flex-wrap gap-2">
+						{session.url && <Button asChild variant="outline"><a href={session.url} target="_blank" rel="noopener noreferrer"><ExternalLink aria-hidden="true" />{labels.details}</a></Button>}
+						{session.feedback && <Button asChild><a href={session.feedback} target="_blank" rel="noopener noreferrer"><MessageSquare aria-hidden="true" />{labels.feedback}</a></Button>}
 						{session.video && <Button asChild variant="secondary"><a href={session.video} target="_blank" rel="noopener noreferrer"><Play aria-hidden="true" />{labels.video}</a></Button>}
-					</CardFooter>
+					</CardFooter>}
 				</Card>)}
 			</div>
 		</section>)}
