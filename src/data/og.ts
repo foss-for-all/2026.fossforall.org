@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises';
-import lineArtSvg from '../assets/f4a_line_art.svg?raw';
+import logoSvg from '../assets/f4a-logo.svg?raw';
 import satori from 'satori';
 import sharp from 'sharp';
 import type { Locale } from '../i18n/config';
@@ -27,11 +27,8 @@ const fonts = Promise.all([font('Regular'), font('Bold')]).then(([regular, bold]
 	{ name: 'Pretendard', data: bold, weight: 700 as const },
 ]);
 
-// The logo is drawn large on the right; a speaker photo fills its blue ring.
-const logoSize = 600;
-const ring = { center: 0.5, inner: 0.352 };
-const logo = sharp(Buffer.from(lineArtSvg.replaceAll('currentColor', '#000000'))).resize(logoSize).png().toBuffer()
-	.then((png) => `data:image/png;base64,${png.toString('base64')}`);
+const dataUri = (png: Buffer) => `data:image/png;base64,${png.toString('base64')}`;
+const logo = sharp(Buffer.from(logoSvg)).resize(440).png().toBuffer().then(dataUri);
 
 async function photo(url: string): Promise<string | undefined> {
 	try {
@@ -58,35 +55,46 @@ async function missingGlyphs(_code: string, text: string) {
 // word joiners inside each word leave spaces as the only break points.
 const words = (text: string) => text.split(' ').map((word) => [...word].join('\u2060')).join(' ');
 
+// Shrink long titles until they fit the text column instead of truncating them.
+function titleSize(title: string): number {
+	const width = [...title].reduce((sum, char) => sum + (/[\u1100-\u11ff\u3000-\u9fff\uac00-\ud7af]/.test(char) ? 1 : 0.56), 0);
+	// Largest size whose estimated line count fits both 3 lines and the space between header and footer.
+	return [88, 76, 66, 58, 52, 46, 42, 38].find((size) => {
+		const lines = Math.ceil((width * size) / (textWidth * 0.85));
+		return lines <= 3 && lines * size * 1.18 <= 230;
+	}) ?? 38;
+}
+
+const textWidth = 640;
+const circle = 360;
+
 export async function renderCard({ locale, title, people, label, avatar }: Card): Promise<Buffer> {
 	const t = useTranslations(locale);
 	const image = avatar && await photo(avatar);
-	const titleSize = title.length <= 20 ? 76 : title.length <= 40 ? 64 : 52;
-	const photoSize = Math.round(logoSize * ring.inner * 2);
-	// Bleed the logo off the right edge so the ring sits beside the text column.
-	const logoLeft = ogSize.width - logoSize + 90;
-	const logoTop = (ogSize.height - logoSize) / 2;
+	const size = titleSize(title);
+	const border = 12;
 	const tree = h('div', { display: 'flex', width: ogSize.width, height: ogSize.height, background: '#ffffff', color: '#000000', fontFamily: 'Pretendard' }, [
-		h('img', { position: 'absolute', left: logoLeft, top: logoTop, width: logoSize, height: logoSize }, undefined, { src: await logo, width: logoSize, height: logoSize }),
-		...(image ? [h('img', {
-			position: 'absolute', width: photoSize, height: photoSize, borderRadius: photoSize / 2, objectFit: 'cover',
-			left: logoLeft + logoSize * ring.center - photoSize / 2, top: logoTop + logoSize * ring.center - photoSize / 2,
-		}, undefined, { src: image, width: photoSize, height: photoSize })] : []),
-		h('div', { display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'absolute', top: 56, bottom: 56, left: 64, width: 600 }, [
-			h('div', { display: 'flex', flexDirection: 'column', gap: 4 }, [
-				h('div', { fontSize: 30, fontWeight: 700 }, t.site.title),
-				h('div', { fontSize: 24, color: '#525252' }, `${t.event.date}, ${t.event.venue}`),
+		h('div', { display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'absolute', top: 52, bottom: 52, left: 60, width: textWidth }, [
+			h('div', { display: 'flex', alignItems: 'center', gap: 18 }, [
+				h('img', { width: 76, height: 76 }, undefined, { src: await logo, width: 76, height: 76 }),
+				h('div', { display: 'flex', flexDirection: 'column', gap: 2 }, [
+					h('div', { fontSize: 36, fontWeight: 700 }, t.site.title),
+					h('div', { fontSize: 28, color: '#525252' }, `${t.event.date}, ${t.event.venue}`),
+				]),
 			]),
-			h('div', { display: 'flex', flexDirection: 'column', gap: 14 }, [
-				h('div', { fontSize: 28, fontWeight: 700, color: '#2979ff' }, label),
-				h('div', { fontSize: titleSize, fontWeight: 700, lineHeight: 1.12, letterSpacing: -1.5, lineClamp: 3, display: 'block' }, words(title)),
-				h('div', { fontSize: 36, fontWeight: 700, color: '#333333', lineClamp: 2, display: 'block' }, words(people)),
+			h('div', { display: 'flex', flexDirection: 'column' }, [
+				h('div', { fontSize: 32, fontWeight: 700, color: '#262626', marginBottom: 10 }, label),
+				h('div', { fontSize: size, fontWeight: 700, lineHeight: 1.18, letterSpacing: -1, lineClamp: 3, display: 'block' }, words(title)),
+				h('div', { fontSize: 44, fontWeight: 700, color: '#333333', lineClamp: 2, display: 'block', marginTop: Math.max(22, Math.round(size * 0.4)) }, words(people)),
 			]),
-			h('div', { display: 'flex', flexDirection: 'column', fontSize: 22, color: '#737373' }, [
+			h('div', { display: 'flex', flexDirection: 'column', fontSize: 26, color: '#737373' }, [
 				h('div', {}, ui.ko.hero.subtitle),
 				h('div', {}, ui.en.hero.subtitle),
 			]),
 		]),
+		image
+			? h('img', { position: 'absolute', right: 64, top: (ogSize.height - circle) / 2, width: circle, height: circle, borderRadius: circle / 2, border: `${border}px solid #2979ff`, objectFit: 'cover' }, undefined, { src: image, width: circle, height: circle })
+			: h('img', { position: 'absolute', right: 64, top: (ogSize.height - circle) / 2, width: circle, height: circle }, undefined, { src: await logo, width: circle, height: circle }),
 	]);
 	const svg = await satori(tree as never, { ...ogSize, fonts: await fonts, loadAdditionalAsset: missingGlyphs as never });
 	return sharp(Buffer.from(svg)).png().toBuffer();
