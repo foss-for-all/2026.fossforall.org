@@ -12,6 +12,7 @@ import SiteLayout from '../layouts/site-layout.astro';
 import type { Locale } from '../i18n/config';
 import { useTranslations } from '../i18n/utils';
 import ForumTopicsSection from './forum-topics-section.astro';
+import KeynoteSection from './keynote-section.astro';
 import { HeroActions } from './home-actions';
 import SponsorSection from './sponsor-section.astro';
 
@@ -49,6 +50,8 @@ const t = useTranslations(locale);
 				<HeroActions actions={t.hero.actions} />
 			</div>
 		</section>
+
+		<KeynoteSection locale={locale} />
 
 		<ForumTopicsSection locale={locale} />
 

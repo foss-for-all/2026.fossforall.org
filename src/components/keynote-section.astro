@@ -1,0 +1,30 @@
+---
+import { getSessions, sessionLabels } from '../data/sessions';
+import type { Locale } from '../i18n/config';
+import { getLocalizedPath } from '../i18n/utils';
+import SpeakerAvatar from './speaker-avatar.astro';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const labels = sessionLabels[locale];
+const { groups } = await getSessions(locale);
+const keynotes = groups.filter((group) => group.keynote).flatMap((group) => group.sessions);
+---
+
+{keynotes.length > 0 && (
+	<section class="mx-auto max-w-7xl px-6 py-20 lg:px-8" aria-labelledby="keynotes-heading">
+		<div class="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+			<h2 id="keynotes-heading" class="font-heading text-3xl leading-tight tracking-[-0.04em] sm:text-4xl">{labels.keynotes}</h2>
+			<a href={getLocalizedPath(locale, 'sessions')} class="w-fit font-medium text-primary underline underline-offset-4">{labels.allSessions}</a>
+		</div>
+		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+			{keynotes.flatMap((session) => session.speakers.map((speaker) => (
+				<a href={getLocalizedPath(locale, `sessions/${session.code}`)} class="flex flex-col items-center gap-4 rounded-2xl border bg-card p-6 text-center shadow-sm transition-transform hover:-translate-y-1">
+					<SpeakerAvatar speaker={speaker} size={128} />
+					<span class="text-lg font-semibold break-keep">{speaker.name}</span>
+					<span class="text-sm text-muted-foreground break-keep">{session.title}</span>
+				</a>
+			)))}
+		</div>
+	</section>
+)}
