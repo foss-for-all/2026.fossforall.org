@@ -18,7 +18,9 @@ Session pages (`/sessions/`, `/sessions/<code>/`, `/speakers/<code>/` and their 
 copies) and the home keynote section are built from the 2026 Pretalx event. Set
 `PRETALX_TOKEN` in your local `.env` or build environment to authenticate API requests
 (API v2). Only talks whose Pretalx page is public (featured or in a released schedule)
-are published; speaker photos are copied into the build. CI rebuilds every 6 hours and
+are published; speaker photos are copied into the build. Each session and speaker page
+gets a generated link preview image under `/og/`; Han characters missing from Pretendard
+are fetched from Google Fonts at build time and are left out if that fails. CI rebuilds every 6 hours and
 fails instead of deploying when Pretalx is unreachable. Without API access, local builds
 show a localized message and link to Pretalx.
 
