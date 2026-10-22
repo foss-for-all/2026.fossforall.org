@@ -8,7 +8,6 @@ export type Sponsor = {
 	name: string;
 	level: SponsorLevel;
 	logo: ImageMetadata;
-	logoDark?: ImageMetadata;
 	description: string;
 	website: string;
 };

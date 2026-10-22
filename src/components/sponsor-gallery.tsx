@@ -13,7 +13,7 @@ import {
 import { cn } from '@/lib/utils';
 import { sponsorLevels, type Sponsor, type SponsorContent, type SponsorLevel } from '../data/sponsors';
 
-type GallerySponsor = Omit<Sponsor, 'logo' | 'logoDark'> & Record<'logo' | 'logoDark', string>;
+type GallerySponsor = Omit<Sponsor, 'logo'> & { logo: string };
 type GalleryContent = Omit<SponsorContent, 'sponsors'> & { sponsors: GallerySponsor[] };
 
 interface Props {
@@ -59,12 +59,11 @@ export function SponsorGallery({ content }: Props) {
 												<button
 													type="button"
 													className={cn(
-														'flex w-full items-center justify-center rounded-2xl border bg-card p-6 shadow-sm transition-transform hover:-translate-y-1 hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+														'flex w-full items-center justify-center rounded-2xl border bg-white p-6 shadow-sm transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
 														tierStyles[level].container,
 													)}
 												>
-													<img src={sponsor.logo} alt={sponsor.name} className={cn('h-auto w-auto object-contain dark:hidden', tierStyles[level].image)} />
-													<img src={sponsor.logoDark} alt={sponsor.name} className={cn('hidden h-auto w-auto object-contain dark:block', tierStyles[level].image)} />
+													<img src={sponsor.logo} alt={sponsor.name} className={cn('h-auto w-auto object-contain', tierStyles[level].image)} />
 												</button>
 											</DialogTrigger>
 											<DialogContent>
