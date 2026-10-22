@@ -54,6 +54,10 @@ async function missingGlyphs(_code: string, text: string) {
 	} catch { return []; }
 }
 
+// Satori's keep-all still breaks at script and punctuation boundaries ("Team\n의");
+// word joiners inside each word leave spaces as the only break points.
+const words = (text: string) => text.split(' ').map((word) => [...word].join('\u2060')).join(' ');
+
 export async function renderCard({ locale, title, people, label, avatar }: Card): Promise<Buffer> {
 	const t = useTranslations(locale);
 	const image = avatar && await photo(avatar);
@@ -75,8 +79,8 @@ export async function renderCard({ locale, title, people, label, avatar }: Card)
 			]),
 			h('div', { display: 'flex', flexDirection: 'column', gap: 14 }, [
 				h('div', { fontSize: 28, fontWeight: 700, color: '#2979ff' }, label),
-				h('div', { fontSize: titleSize, fontWeight: 700, lineHeight: 1.12, letterSpacing: -1.5, lineClamp: 3, display: 'block', wordBreak: 'keep-all' }, title),
-				h('div', { fontSize: 36, fontWeight: 700, color: '#333333', lineClamp: 2, display: 'block', wordBreak: 'keep-all' }, people),
+				h('div', { fontSize: titleSize, fontWeight: 700, lineHeight: 1.12, letterSpacing: -1.5, lineClamp: 3, display: 'block' }, words(title)),
+				h('div', { fontSize: 36, fontWeight: 700, color: '#333333', lineClamp: 2, display: 'block' }, words(people)),
 			]),
 			h('div', { display: 'flex', flexDirection: 'column', fontSize: 22, color: '#737373' }, [
 				h('div', {}, ui.ko.hero.subtitle),
