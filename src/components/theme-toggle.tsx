@@ -33,14 +33,12 @@ function applyTheme(theme: Theme) {
 
 export function ThemeToggle({ labels }: ThemeToggleProps) {
   const [theme, setTheme] = useState<Theme>("system")
-  const [effectiveTheme, setEffectiveTheme] = useState<"light" | "dark">("light")
 
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme")
     const initialTheme = storedTheme === "light" || storedTheme === "dark" ? storedTheme : "system"
 
     setTheme(initialTheme)
-    setEffectiveTheme(initialTheme === "system" ? getSystemTheme() : initialTheme)
     applyTheme(initialTheme)
   }, [])
 
@@ -50,9 +48,7 @@ export function ThemeToggle({ labels }: ThemeToggleProps) {
     function handleSystemThemeChange() {
       if (theme !== "system") return
 
-      const nextTheme = getSystemTheme()
-      setEffectiveTheme(nextTheme)
-      document.documentElement.classList.toggle("dark", nextTheme === "dark")
+      applyTheme("system")
     }
 
     media.addEventListener("change", handleSystemThemeChange)
@@ -69,8 +65,6 @@ export function ThemeToggle({ labels }: ThemeToggleProps) {
       localStorage.setItem("theme", nextTheme)
     }
 
-    const nextEffectiveTheme = nextTheme === "system" ? getSystemTheme() : nextTheme
-    setEffectiveTheme(nextEffectiveTheme)
     applyTheme(nextTheme)
   }
 
@@ -80,13 +74,12 @@ export function ThemeToggle({ labels }: ThemeToggleProps) {
     { value: "system", label: labels.systemTheme, icon: MonitorIcon },
   ] as const
 
-  const TriggerIcon = effectiveTheme === "dark" ? MoonIcon : SunIcon
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon" aria-label={labels.theme}>
-          <TriggerIcon />
+          <SunIcon className="dark:hidden" />
+          <MoonIcon className="hidden dark:block" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
