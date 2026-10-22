@@ -65,20 +65,25 @@ export function localizedName(name: LocalizedName | undefined, locale: Locale): 
 	return typeof name === 'string' ? name : name?.[locale] || name?.en || Object.values(name ?? {})[0] || '';
 }
 
-async function isReachable(url: string): Promise<boolean> {
-	try {
-		return (await fetch(url, { method: 'HEAD', redirect: 'manual', signal: AbortSignal.timeout(15000) })).ok;
-	} catch { return false; }
+// Only an explicit "not there" hides content; any other failure throws, so CI keeps the deployed site.
+async function exists(url: string): Promise<boolean> {
+	const response = await fetch(url, { method: 'HEAD', redirect: 'manual', signal: AbortSignal.timeout(15000) });
+	if (response.ok) return true;
+	if ([403, 404, 410].includes(response.status)) return false;
+	throw new Error(`${url} returned ${response.status}`);
 }
 
 // Pretalx accepts feedback only after a talk has started.
 async function hasStarted(): Promise<boolean> {
 	try {
 		const response = await fetch(`${pretalx.baseUrl}/api/events/${pretalx.eventSlug}/`, { signal: AbortSignal.timeout(15000) });
-		if (!response.ok) return false;
+		if (!response.ok) throw new Error(`Pretalx event returned ${response.status}`);
 		const { date_from }: { date_from: string } = await response.json();
 		return new Date() >= new Date(`${date_from}T00:00:00+09:00`);
-	} catch { return false; }
+	} catch (error) {
+		if (process.env.CI) throw error;
+		return false;
+	}
 }
 
 async function fetchPages<T>(endpoint: string): Promise<T[]> {
@@ -134,6 +139,8 @@ let program: Promise<Program> | undefined;
 function loadProgram(): Promise<Program> {
 	if (program) return program;
 	program = (async () => {
+		// Without a token the API returns nothing, which would publish an empty programme.
+		if (process.env.CI && !import.meta.env.PRETALX_TOKEN) throw new Error('PRETALX_TOKEN is not set');
 		const [submissions, speakers, tracks, types, started] = await Promise.all([
 			fetchPages<Submission>('submissions/?state=confirmed&expand=resources,slots,slots.room'),
 			fetchPages<Speaker>('speakers/'),
@@ -144,12 +151,12 @@ function loadProgram(): Promise<Program> {
 		// Talk pages are public only once the talk is featured or in a released schedule.
 		const visible = new Set<string>();
 		await Promise.all(submissions.map(async ({ code }) => {
-			if (await isReachable(talkUrl(code))) visible.add(code);
+			if (await exists(talkUrl(code))) visible.add(code);
 		}));
 		// A broken avatar would fail the image build step.
 		const presenting = new Set(submissions.flatMap((submission) => submission.speakers));
 		await Promise.all(speakers.filter(({ code, avatar_url }) => presenting.has(code) && avatar_url).map(async (speaker) => {
-			if (!await isReachable(speaker.avatar_url!)) speaker.avatar_url = null;
+			if (!await exists(speaker.avatar_url!).catch(() => false)) speaker.avatar_url = null;
 		}));
 		return { submissions, speakers, tracks, types, started, visible };
 	})();
@@ -162,8 +169,8 @@ function loadProgram(): Promise<Program> {
 // Long titles keep their main title (before ":" or " - ") and are cut at a word boundary.
 // The code at the end keeps the URL unique.
 export function slugify(code: string, text: string): string {
-	const main = text.split(/:| - /)[0].trim() || text;
-	const words = main.normalize('NFC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '');
+	const clean = (part: string) => part.normalize('NFC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '');
+	const words = clean(text.split(/:| - /)[0]) || clean(text);
 	const chars = [...words];
 	const short = chars.length <= 50 ? words : chars.slice(0, 51).join('').replace(/-[^-]*$/, '');
 	return [short, code.toLowerCase()].filter(Boolean).join('-');

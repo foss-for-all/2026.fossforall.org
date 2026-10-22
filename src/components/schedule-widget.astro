@@ -23,9 +23,13 @@ const labels = {
 
 const eventUrl = `${pretalx.baseUrl}/${pretalx.eventSlug}/`;
 // The widget fails to load until a schedule version is released.
-// Network errors fail CI builds so a transient outage does not hide a released schedule.
+// Anything but 200 or 404 fails CI builds so a transient outage does not hide a released schedule.
 const released = await fetch(`${eventUrl}schedule/widgets/schedule.json`, { method: 'HEAD', signal: AbortSignal.timeout(15000) })
-	.then((response) => response.ok, (error) => { if (process.env.CI) throw error; return false; });
+	.then((response) => {
+		if (response.ok || response.status === 404) return response.ok;
+		throw new Error(`Pretalx schedule returned ${response.status}`);
+	})
+	.catch((error) => { if (process.env.CI) throw error; return false; });
 ---
 
 {released ? (
