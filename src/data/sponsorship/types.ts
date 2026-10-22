@@ -84,7 +84,7 @@ export type SponsorshipContent = {
 		title: string;
 		lead: string;
 		session: { title: string; meta: string; price: string; priceSub: string; body: string; bullets: string[] };
-		booth: { title: string; meta: string; price: string; body: string };
+		booth: { title: string; meta: string; price: string; priceSub: string; body: string };
 		inKind: { title: string; meta: string; body: string };
 		examplesTitle: string;
 		examples: string;
