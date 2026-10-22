@@ -1,12 +1,18 @@
 ---
 import SpeakerDetail from '../../components/speaker-detail.astro';
 import { getSpeakers } from '../../data/sessions';
+import { getLocalizedPath } from '../../i18n/utils';
 
 export async function getStaticPaths() {
-	return (await getSpeakers('ko')).map((speaker) => ({ params: { slug: speaker.slug }, props: { speaker } }));
+	return (await getSpeakers('ko')).flatMap((speaker) => [
+		{ params: { slug: speaker.slug }, props: { speaker, redirect: false } },
+		// The bare code keeps links working after a name change; the 404 page maps old slugs here.
+		...(speaker.slug === speaker.code.toLowerCase() ? [] : [{ params: { slug: speaker.code.toLowerCase() }, props: { speaker, redirect: true } }]),
+	]);
 }
 
-const { speaker } = Astro.props;
+const { speaker, redirect } = Astro.props;
+if (redirect) return Astro.redirect(encodeURI(getLocalizedPath('ko', `speakers/${speaker.slug}`)));
 ---
 
 <SpeakerDetail locale="ko" speaker={speaker} />

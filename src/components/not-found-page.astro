@@ -12,11 +12,15 @@ const { locale } = Astro.props;
 const t = useTranslations(locale);
 const alternateLocale = getAlternateLocale(locale);
 
-// Static hosts serve the default-locale 404 for every missing path, whatever its prefix,
-// so English URLs hand off to the English copy from here.
+// Static hosts serve the default-locale 404 for every missing path, whatever its prefix.
+// Session and speaker URLs end in a Pretalx code, so outdated slugs go to the code's redirect page;
+// other English URLs hand off to the English copy.
 const localeHandoff =
 	locale === defaultLocale
-		? `if (location.pathname.startsWith('/en/')) location.replace('${getLocalizedPath('en', '404')}');`
+		? `const match = location.pathname.match(/^(\\/en)?\\/(sessions|speakers)\\/(?:[^/]*-)?([a-z0-9]{6})\\/?$/i);
+			const code = match && \`\${match[1] ?? ''}/\${match[2]}/\${match[3].toLowerCase()}/\`;
+			if (code && location.pathname !== code) location.replace(code);
+			else if (location.pathname.startsWith('/en/')) location.replace('${getLocalizedPath('en', '404')}');`
 		: null;
 ---
 

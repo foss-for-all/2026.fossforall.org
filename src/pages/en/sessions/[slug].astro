@@ -1,13 +1,19 @@
 ---
 import SessionDetail from '../../../components/session-detail.astro';
 import { getSessions } from '../../../data/sessions';
+import { getLocalizedPath } from '../../../i18n/utils';
 
 export async function getStaticPaths() {
 	const { groups } = await getSessions('en');
-	return groups.flatMap((group) => group.sessions).map((session) => ({ params: { slug: session.slug }, props: { session } }));
+	return groups.flatMap((group) => group.sessions).flatMap((session) => [
+		{ params: { slug: session.slug }, props: { session, redirect: false } },
+		// The bare code keeps links working after a title change; the 404 page maps old slugs here.
+		...(session.slug === session.code.toLowerCase() ? [] : [{ params: { slug: session.code.toLowerCase() }, props: { session, redirect: true } }]),
+	]);
 }
 
-const { session } = Astro.props;
+const { session, redirect } = Astro.props;
+if (redirect) return Astro.redirect(encodeURI(getLocalizedPath('en', `sessions/${session.slug}`)));
 ---
 
 <SessionDetail locale="en" session={session} />
