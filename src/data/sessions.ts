@@ -48,7 +48,7 @@ export const sessionLabels = {
 		unavailable: '세션 목록을 불러올 수 없습니다. Pretalx에서 프로그램을 확인해 주세요.',
 		program: 'Pretalx에서 프로그램 보기', unknownType: '세션', unknownSpeaker: '발표자 추후 공개',
 		type: '유형', track: '트랙', language: '언어', time: '시간', room: '장소',
-		speakers: '발표자', links: '링크', speakerSessions: '발표', keynotes: '기조연사', allSessions: '전체 세션 보기',
+		speakers: '발표자', speaker: '발표자', links: '링크', speakerSessions: '발표', keynotes: '기조연사', allSessions: '전체 세션 보기',
 	},
 	en: {
 		title: 'Sessions', description: 'Explore the conference sessions and meet our speakers.',
@@ -57,7 +57,7 @@ export const sessionLabels = {
 		unavailable: 'The session list is currently unavailable. Please check the program on Pretalx.',
 		program: 'View program on Pretalx', unknownType: 'Session', unknownSpeaker: 'Speaker to be announced',
 		type: 'Type', track: 'Track', language: 'Language', time: 'Time', room: 'Room',
-		speakers: 'Speakers', links: 'Links', speakerSessions: 'Sessions', keynotes: 'Keynote Speakers', allSessions: 'View all sessions',
+		speakers: 'Speakers', speaker: 'Speaker', links: 'Links', speakerSessions: 'Sessions', keynotes: 'Keynote Speakers', allSessions: 'View all sessions',
 	},
 } as const;
 
