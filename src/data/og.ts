@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises';
-import logoSvg from '../assets/f4a-logo.svg?raw';
+import lineArtSvg from '../assets/f4a_line_art.svg?raw';
 import satori from 'satori';
 import sharp from 'sharp';
 import type { Locale } from '../i18n/config';
@@ -28,7 +28,11 @@ const fonts = Promise.all([font('Regular'), font('Bold')]).then(([regular, bold]
 ]);
 
 const dataUri = (png: Buffer) => `data:image/png;base64,${png.toString('base64')}`;
-const logo = sharp(Buffer.from(logoSvg)).resize(440).png().toBuffer().then(dataUri);
+const lineArt = Buffer.from(lineArtSvg.replaceAll('currentColor', '#000000'));
+const logo = sharp(lineArt).resize(184).png().toBuffer().then(dataUri);
+// Without a photo the circle shows the logo's own artwork, cropped to its blue ring (r = 0.3765).
+const ringArt = sharp(lineArt).resize(1000).png().toBuffer()
+	.then((png) => sharp(png).extract({ left: 124, top: 124, width: 752, height: 752 }).resize(440).png().toBuffer()).then(dataUri);
 
 async function photo(url: string): Promise<string | undefined> {
 	try {
@@ -98,7 +102,7 @@ export async function renderCard({ locale, title, people, label, avatar }: Card)
 		]),
 		image
 			? h('img', { position: 'absolute', right: 64, top: circleTop, width: circle, height: circle, borderRadius: circle / 2, border: `${border}px solid #2979ff`, objectFit: 'cover' }, undefined, { src: image, width: circle, height: circle })
-			: h('img', { position: 'absolute', right: 64, top: circleTop, width: circle, height: circle }, undefined, { src: await logo, width: circle, height: circle }),
+			: h('img', { position: 'absolute', right: 64, top: circleTop, width: circle, height: circle, borderRadius: circle / 2 }, undefined, { src: await ringArt, width: circle, height: circle }),
 	]);
 	const svg = await satori(tree as never, { ...ogSize, fonts: await fonts, loadAdditionalAsset: missingGlyphs as never });
 	return sharp(Buffer.from(svg)).png().toBuffer();
