@@ -19,7 +19,7 @@ const keynotes = groups.filter((group) => group.keynote).flatMap((group) => grou
 		</div>
 		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
 			{keynotes.flatMap((session) => session.speakers.map((speaker) => (
-				<a href={getLocalizedPath(locale, `sessions/${session.code}`)} class="flex flex-col items-center gap-4 rounded-2xl border bg-card p-6 text-center shadow-sm transition-transform hover:-translate-y-1">
+				<a href={getLocalizedPath(locale, `sessions/${session.slug}`)} class="flex flex-col items-center gap-4 rounded-2xl border bg-card p-6 text-center shadow-sm transition-transform hover:-translate-y-1">
 					<SpeakerAvatar speaker={speaker} size={128} />
 					<span class="text-lg font-semibold break-keep">{speaker.name}</span>
 					<span class="text-sm text-muted-foreground break-keep">{session.title}</span>

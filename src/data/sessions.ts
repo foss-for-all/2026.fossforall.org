@@ -18,9 +18,10 @@ interface Submission {
 interface Speaker { code: string; name: string; biography?: string | null; avatar_url?: string | null }
 interface NamedItem { id: number; name: LocalizedName }
 interface Program { submissions: Submission[]; speakers: Speaker[]; tracks: NamedItem[]; types: NamedItem[]; started: boolean; visible: Set<string> }
-export interface SessionSpeaker { code: string; name: string; biography: string; avatar?: string }
+export interface SessionSpeaker { code: string; slug: string; name: string; biography: string; avatar?: string }
 export interface Session {
 	code: string;
+	slug: string;
 	title: string;
 	type: string;
 	keynote: boolean;
@@ -157,6 +158,12 @@ function loadProgram(): Promise<Program> {
 	return program;
 }
 
+// FOSDEM-style URL: the stable code, then whatever ASCII the title offers.
+export function slugify(code: string, text: string): string {
+	const words = text.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+	return [code.toLowerCase(), words.slice(0, 60).replace(/-$/, '')].filter(Boolean).join('-');
+}
+
 function talkUrl(code: string) {
 	return `${pretalx.baseUrl}/${pretalx.eventSlug}/talk/${encodeURIComponent(code)}/`;
 }
@@ -175,6 +182,7 @@ function toSession(submission: Submission, data: Program, locale: Locale): Sessi
 	const url = data.visible.has(submission.code) ? talkUrl(submission.code) : undefined;
 	return {
 		code: submission.code,
+		slug: slugify(submission.code, submission.title),
 		title: submission.title,
 		type: localizedName(typeName, locale) || sessionLabels[locale].unknownType,
 		keynote: typeRank(typeName) === 0,
@@ -182,7 +190,7 @@ function toSession(submission: Submission, data: Program, locale: Locale): Sessi
 		description: submission.description ?? '',
 		speakers: submission.speakers.flatMap((code) => {
 			const speaker = data.speakers.find((candidate) => candidate.code === code);
-			return speaker ? [{ code, name: speaker.name, biography: speaker.biography ?? '', avatar: speaker.avatar_url ?? undefined }] : [];
+			return speaker ? [{ code, slug: slugify(code, speaker.name), name: speaker.name, biography: speaker.biography ?? '', avatar: speaker.avatar_url ?? undefined }] : [];
 		}),
 		track: localizedName(data.tracks.find((track) => track.id === submission.track)?.name, locale),
 		language: submission.content_locale || '',
