@@ -3,6 +3,7 @@ import lineArtSvg from '../assets/f4a_line_art.svg?raw';
 import satori from 'satori';
 import sharp from 'sharp';
 import type { Locale } from '../i18n/config';
+import { ui } from '../i18n/ui';
 import { useTranslations } from '../i18n/utils';
 
 export const ogSize = { width: 1200, height: 630 } as const;
@@ -57,11 +58,12 @@ export async function renderCard({ locale, title, people, label, avatar }: Card)
 		h('div', { display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }, [
 			h('div', { display: 'flex', flexDirection: 'column', gap: 6 }, [
 				h('div', { fontSize: 30, fontWeight: 700 }, t.site.title),
-				h('div', { fontSize: 24, color: '#525252' }, `${t.event.date} · ${t.event.venue}`),
+				h('div', { fontSize: 24, color: '#525252' }, `${t.event.date} | ${t.event.venue}`),
+				h('div', { fontSize: 24, color: '#525252' }, `${ui.ko.hero.subtitle} · ${ui.en.hero.subtitle}`),
 			]),
 			h('div', { display: 'flex', flexDirection: 'column', gap: 18, paddingRight: 32 }, [
 				h('div', { fontSize: 24, fontWeight: 700, color: '#2b7fff' }, label),
-				h('div', { fontSize: 56, fontWeight: 700, lineHeight: 1.15, lineClamp: 3, display: 'block', wordBreak: 'keep-all' }, title),
+				h('div', { fontSize: 52, fontWeight: 700, lineHeight: 1.15, lineClamp: 3, display: 'block', wordBreak: 'keep-all' }, title),
 				h('div', { fontSize: 32, color: '#404040', wordBreak: 'keep-all' }, people),
 			]),
 			h('div', { fontSize: 24, color: '#525252' }, '2026.fossforall.org'),
