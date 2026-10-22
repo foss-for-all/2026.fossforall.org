@@ -1,0 +1,43 @@
+---
+import { pretalx } from '../config';
+import type { Locale } from '../i18n/config';
+import { getLocalizedPath } from '../i18n/utils';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+
+const labels = {
+	ko: {
+		pending: '일정표는 일정이 확정되면 공개됩니다. 그동안 세션 목록을 확인해 주세요.',
+		sessions: '세션 목록 보기',
+		noscript: '일정표를 보려면 JavaScript가 필요합니다. JavaScript 없이 보려면',
+		here: '여기를 누르세요',
+	},
+	en: {
+		pending: 'The schedule will be published once it is finalized. In the meantime, check out the session list.',
+		sessions: 'View sessions',
+		noscript: 'JavaScript is disabled in your browser. To access our schedule without JavaScript,',
+		here: 'click here',
+	},
+}[locale];
+
+const eventUrl = `${pretalx.baseUrl}/${pretalx.eventSlug}/`;
+// The widget fails to load until a schedule version is released.
+const released = await fetch(`${eventUrl}schedule/widgets/schedule.json`, { method: 'HEAD', signal: AbortSignal.timeout(15000) })
+	.then((response) => response.ok, () => false);
+---
+
+{released ? (
+	<div class="overflow-hidden rounded-2xl border">
+		<script is:inline src={`${eventUrl}widgets/schedule.js`}></script>
+		<pretalx-schedule event-url={eventUrl} locale={locale} format="list" style="--pretalx-clr-primary: var(--primary)"></pretalx-schedule>
+		<noscript>
+			<p class="p-6">{labels.noscript} <a href={`${eventUrl}schedule/`} target="_blank" rel="noopener noreferrer">{labels.here}</a>.</p>
+		</noscript>
+	</div>
+) : (
+	<div class="rounded-2xl border border-dashed bg-muted/40 px-6 py-10 text-center">
+		<p class="text-muted-foreground">{labels.pending}</p>
+		<a href={getLocalizedPath(locale, 'sessions')}>{labels.sessions}</a>
+	</div>
+)}
