@@ -27,7 +27,7 @@ const fonts = Promise.all([font('Regular'), font('Bold')]).then(([regular, bold]
 	{ name: 'Pretendard', data: bold, weight: 700 as const },
 ]);
 
-const lineArt = sharp(Buffer.from(lineArtSvg.replaceAll('currentColor', '#0a0a0a'))).resize(200).png().toBuffer()
+const lineArt = sharp(Buffer.from(lineArtSvg.replaceAll('currentColor', '#0a0a0a'))).resize(240).png().toBuffer()
 	.then((png) => `data:image/png;base64,${png.toString('base64')}`);
 
 async function photo(url: string): Promise<string | undefined> {
@@ -54,25 +54,24 @@ async function missingGlyphs(_code: string, text: string) {
 export async function renderCard({ locale, title, people, label, avatar }: Card): Promise<Buffer> {
 	const t = useTranslations(locale);
 	const image = avatar && await photo(avatar);
-	const tree = h('div', { display: 'flex', width: ogSize.width, height: ogSize.height, background: '#ffffff', color: '#0a0a0a', fontFamily: 'Pretendard' }, h('div', { display: 'flex', position: 'absolute', top: 64, right: 64, bottom: 64, left: 64 }, [
-		h('div', { display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }, [
-			h('div', { display: 'flex', flexDirection: 'column', gap: 6 }, [
-				h('div', { fontSize: 30, fontWeight: 700 }, t.site.title),
+	// Without a photo the text takes the full width rather than leaving a placeholder.
+	const titleSize = title.length > (image ? 40 : 60) ? 52 : 64;
+	const tree = h('div', { display: 'flex', width: ogSize.width, height: ogSize.height, background: '#ffffff', color: '#0a0a0a', fontFamily: 'Pretendard' }, h('div', { display: 'flex', flexDirection: 'column', position: 'absolute', top: 56, right: 64, bottom: 56, left: 64, gap: 40 }, [
+		h('div', { display: 'flex', alignItems: 'center', gap: 24 }, [
+			h('img', { width: 120, height: 120 }, undefined, { src: await lineArt, width: 120, height: 120 }),
+			h('div', { display: 'flex', flexDirection: 'column', gap: 4 }, [
+				h('div', { fontSize: 32, fontWeight: 700 }, t.site.title),
 				h('div', { fontSize: 24, color: '#525252' }, `${t.event.date} | ${t.event.venue}`),
 				h('div', { fontSize: 24, color: '#525252' }, `${ui.ko.hero.subtitle} · ${ui.en.hero.subtitle}`),
 			]),
-			h('div', { display: 'flex', flexDirection: 'column', gap: 18, paddingRight: 32 }, [
-				h('div', { fontSize: 24, fontWeight: 700, color: '#2b7fff' }, label),
-				h('div', { fontSize: 52, fontWeight: 700, lineHeight: 1.15, lineClamp: 3, display: 'block', wordBreak: 'keep-all' }, title),
-				h('div', { fontSize: 32, color: '#404040', wordBreak: 'keep-all' }, people),
-			]),
-			h('div', { fontSize: 24, color: '#525252' }, '2026.fossforall.org'),
 		]),
-		h('div', { display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between', width: 300, flexShrink: 0 }, [
-			image
-				? h('img', { width: 300, height: 300, borderRadius: 150, objectFit: 'cover' }, undefined, { src: image, width: 300, height: 300 })
-				: h('div', { width: 300, height: 300 }),
-			h('img', { width: 160, height: 160 }, undefined, { src: await lineArt, width: 160, height: 160 }),
+		h('div', { display: 'flex', flex: 1, alignItems: 'center', gap: 48 }, [
+			h('div', { display: 'flex', flexDirection: 'column', flex: 1, gap: 16 }, [
+				h('div', { fontSize: 26, fontWeight: 700, color: '#2b7fff' }, label),
+				h('div', { fontSize: titleSize, fontWeight: 700, lineHeight: 1.15, lineClamp: 3, display: 'block', wordBreak: 'keep-all' }, title),
+				h('div', { fontSize: 36, fontWeight: 700, color: '#404040', lineClamp: 2, display: 'block', wordBreak: 'keep-all' }, people),
+			]),
+			...(image ? [h('img', { width: 300, height: 300, borderRadius: 150, objectFit: 'cover', flexShrink: 0 }, undefined, { src: image, width: 300, height: 300 })] : []),
 		]),
 	]));
 	const svg = await satori(tree as never, { ...ogSize, fonts: await fonts, loadAdditionalAsset: missingGlyphs as never });
