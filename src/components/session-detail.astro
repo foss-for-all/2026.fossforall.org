@@ -30,7 +30,7 @@ const links = [
 ].filter(([, href]) => href);
 ---
 
-<SiteLayout locale={locale} path={`sessions/${session.slug}`} title={session.title} description={await summarize(session.abstract || session.description)}>
+<SiteLayout locale={locale} path={`sessions/${session.slug}`} image={`/og/${locale}/sessions/${session.slug}.png`} title={session.title} description={await summarize(session.abstract || session.description)}>
 	<main class="mx-auto max-w-4xl px-6 py-16 lg:px-8">
 		<nav class="text-sm text-muted-foreground">
 			<a href={getLocalizedPath(locale, 'sessions')} class="hover:text-foreground hover:underline">{labels.title}</a>
