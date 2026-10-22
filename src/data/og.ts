@@ -59,17 +59,17 @@ const words = (text: string) => text.split(' ').map((word) => [...word].join('\u
 function titleSize(title: string): number {
 	const width = [...title].reduce((sum, char) => sum + (/[\u1100-\u11ff\u3000-\u9fff\uac00-\ud7af]/.test(char) ? 1 : 0.56), 0);
 	// Largest size whose estimated line count fits both 4 lines and the space under the header.
-	return [96, 84, 72, 64, 56, 50, 44, 40].find((size) => {
+	return [104, 92, 80, 70, 62, 56, 50, 44].find((size) => {
 		const lines = Math.ceil((width * size) / (textWidth * 0.85));
-		return lines <= 4 && lines * size * 1.18 <= 246;
-	}) ?? 40;
+		return lines <= 4 && lines * size * 1.18 <= 240;
+	}) ?? 44;
 }
 
 const textWidth = 640;
 const circle = 360;
 // Leaves room for the slogan under the circle.
-const circleTop = 104;
-const nameTop = 480;
+const circleTop = 116;
+const nameTop = 474;
 
 export async function renderCard({ locale, title, people, label, avatar }: Card): Promise<Buffer> {
 	const t = useTranslations(locale);
@@ -78,18 +78,18 @@ export async function renderCard({ locale, title, people, label, avatar }: Card)
 	const border = 12;
 	const tree = h('div', { display: 'flex', width: ogSize.width, height: ogSize.height, background: '#ffffff', color: '#000000', fontFamily: 'Pretendard' }, [
 		h('div', { display: 'flex', alignItems: 'center', gap: 20, position: 'absolute', top: 52, left: 60 }, [
-			h('img', { width: 84, height: 84 }, undefined, { src: await logo, width: 84, height: 84 }),
+			h('img', { width: 92, height: 92 }, undefined, { src: await logo, width: 92, height: 92 }),
 			h('div', { display: 'flex', flexDirection: 'column', gap: 2 }, [
-				h('div', { fontSize: 40, fontWeight: 700 }, t.site.title),
-				h('div', { fontSize: 30, color: '#525252' }, `${t.event.date}, ${t.event.venue}`),
+				h('div', { fontSize: 44, fontWeight: 700 }, t.site.title),
+				h('div', { fontSize: 33, color: '#525252' }, `${t.event.date}, ${t.event.venue}`),
 			]),
 		]),
 		// Title grows upward from a fixed bottom so every speaker name sits on the same line.
-		h('div', { display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', position: 'absolute', top: 150, left: 60, width: textWidth, height: nameTop - 28 - 150 }, [
+		h('div', { display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', position: 'absolute', top: 160, left: 60, width: textWidth, height: nameTop - 28 - 160 }, [
 			h('div', { fontSize: 36, fontWeight: 700, color: '#262626', marginBottom: 12 }, label),
 			h('div', { fontSize: size, fontWeight: 700, lineHeight: 1.18, letterSpacing: -1, lineClamp: 4, display: 'block' }, words(title)),
 		]),
-		h('div', { position: 'absolute', top: nameTop, left: 60, width: textWidth, fontSize: 48, fontWeight: 700, color: '#333333', lineClamp: 1, display: 'block' }, words(people)),
+		h('div', { position: 'absolute', top: nameTop, left: 60, width: textWidth, fontSize: 54, fontWeight: 700, color: '#333333', lineClamp: 1, display: 'block' }, words(people)),
 		h('div', { display: 'flex', flexDirection: 'column', alignItems: 'flex-end', position: 'absolute', right: 64, bottom: 32, fontSize: 24, color: '#737373' }, [
 			h('div', {}, ui.ko.hero.subtitle),
 			h('div', {}, ui.en.hero.subtitle),
