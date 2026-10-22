@@ -58,15 +58,18 @@ const words = (text: string) => text.split(' ').map((word) => [...word].join('\u
 // Shrink long titles until they fit the text column instead of truncating them.
 function titleSize(title: string): number {
 	const width = [...title].reduce((sum, char) => sum + (/[\u1100-\u11ff\u3000-\u9fff\uac00-\ud7af]/.test(char) ? 1 : 0.56), 0);
-	// Largest size whose estimated line count fits both 3 lines and the space between header and footer.
-	return [88, 76, 66, 58, 52, 46, 42, 38].find((size) => {
+	// Largest size whose estimated line count fits both 4 lines and the space under the header.
+	return [96, 84, 72, 64, 56, 50, 44, 40].find((size) => {
 		const lines = Math.ceil((width * size) / (textWidth * 0.85));
-		return lines <= 3 && lines * size * 1.18 <= 230;
-	}) ?? 38;
+		return lines <= 4 && lines * size * 1.18 <= 246;
+	}) ?? 40;
 }
 
 const textWidth = 640;
 const circle = 360;
+// Leaves room for the slogan under the circle.
+const circleTop = 104;
+const nameTop = 480;
 
 export async function renderCard({ locale, title, people, label, avatar }: Card): Promise<Buffer> {
 	const t = useTranslations(locale);
@@ -74,27 +77,26 @@ export async function renderCard({ locale, title, people, label, avatar }: Card)
 	const size = titleSize(title);
 	const border = 12;
 	const tree = h('div', { display: 'flex', width: ogSize.width, height: ogSize.height, background: '#ffffff', color: '#000000', fontFamily: 'Pretendard' }, [
-		h('div', { display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'absolute', top: 52, bottom: 52, left: 60, width: textWidth }, [
-			h('div', { display: 'flex', alignItems: 'center', gap: 18 }, [
-				h('img', { width: 76, height: 76 }, undefined, { src: await logo, width: 76, height: 76 }),
-				h('div', { display: 'flex', flexDirection: 'column', gap: 2 }, [
-					h('div', { fontSize: 36, fontWeight: 700 }, t.site.title),
-					h('div', { fontSize: 28, color: '#525252' }, `${t.event.date}, ${t.event.venue}`),
-				]),
-			]),
-			h('div', { display: 'flex', flexDirection: 'column' }, [
-				h('div', { fontSize: 32, fontWeight: 700, color: '#262626', marginBottom: 10 }, label),
-				h('div', { fontSize: size, fontWeight: 700, lineHeight: 1.18, letterSpacing: -1, lineClamp: 3, display: 'block' }, words(title)),
-				h('div', { fontSize: 44, fontWeight: 700, color: '#333333', lineClamp: 2, display: 'block', marginTop: Math.max(22, Math.round(size * 0.4)) }, words(people)),
-			]),
-			h('div', { display: 'flex', flexDirection: 'column', fontSize: 26, color: '#737373' }, [
-				h('div', {}, ui.ko.hero.subtitle),
-				h('div', {}, ui.en.hero.subtitle),
+		h('div', { display: 'flex', alignItems: 'center', gap: 20, position: 'absolute', top: 52, left: 60 }, [
+			h('img', { width: 84, height: 84 }, undefined, { src: await logo, width: 84, height: 84 }),
+			h('div', { display: 'flex', flexDirection: 'column', gap: 2 }, [
+				h('div', { fontSize: 40, fontWeight: 700 }, t.site.title),
+				h('div', { fontSize: 30, color: '#525252' }, `${t.event.date}, ${t.event.venue}`),
 			]),
 		]),
+		// Title grows upward from a fixed bottom so every speaker name sits on the same line.
+		h('div', { display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', position: 'absolute', top: 150, left: 60, width: textWidth, height: nameTop - 28 - 150 }, [
+			h('div', { fontSize: 36, fontWeight: 700, color: '#262626', marginBottom: 12 }, label),
+			h('div', { fontSize: size, fontWeight: 700, lineHeight: 1.18, letterSpacing: -1, lineClamp: 4, display: 'block' }, words(title)),
+		]),
+		h('div', { position: 'absolute', top: nameTop, left: 60, width: textWidth, fontSize: 48, fontWeight: 700, color: '#333333', lineClamp: 1, display: 'block' }, words(people)),
+		h('div', { display: 'flex', flexDirection: 'column', alignItems: 'flex-end', position: 'absolute', right: 64, bottom: 36, fontSize: 20, color: '#737373' }, [
+			h('div', {}, ui.ko.hero.subtitle),
+			h('div', {}, ui.en.hero.subtitle),
+		]),
 		image
-			? h('img', { position: 'absolute', right: 64, top: (ogSize.height - circle) / 2, width: circle, height: circle, borderRadius: circle / 2, border: `${border}px solid #2979ff`, objectFit: 'cover' }, undefined, { src: image, width: circle, height: circle })
-			: h('img', { position: 'absolute', right: 64, top: (ogSize.height - circle) / 2, width: circle, height: circle }, undefined, { src: await logo, width: circle, height: circle }),
+			? h('img', { position: 'absolute', right: 64, top: circleTop, width: circle, height: circle, borderRadius: circle / 2, border: `${border}px solid #2979ff`, objectFit: 'cover' }, undefined, { src: image, width: circle, height: circle })
+			: h('img', { position: 'absolute', right: 64, top: circleTop, width: circle, height: circle }, undefined, { src: await logo, width: circle, height: circle }),
 	]);
 	const svg = await satori(tree as never, { ...ogSize, fonts: await fonts, loadAdditionalAsset: missingGlyphs as never });
 	return sharp(Buffer.from(svg)).png().toBuffer();
