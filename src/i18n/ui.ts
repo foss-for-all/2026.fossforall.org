@@ -1,3 +1,4 @@
+import { site } from '../config';
 import type { Locale } from './config';
 
 export const ui = {
@@ -20,16 +21,13 @@ export const ui = {
       title: 'FOSS for All Conference',
       subtitle: '오픈소스로 향하는 첫 걸음',
       actions: [
-        { label: '세션 목록', href: '/sessions', variant: 'default' },
-        { label: '티켓 구매', href: 'https://ticketa.co/e/ytbqha4p', variant: 'default', external: true },
+        { label: '세션 목록', href: '/sessions/', variant: 'default' },
+        { label: '티켓 구매', href: site.ticketUrl, variant: 'default', external: true },
         { label: '컨퍼런스 소개', href: '/about/', variant: 'outline' },
       ],
     },
     actions: {
-      register: '등록하기(준비중)',
-      viewSchedule: '일정 보기',
-      requestRegistrationInfo: '등록 정보 요청하기',
-      previewProgram: '프로그램 미리보기',
+      register: '티켓 구매',
       openNavigation: '내비게이션 메뉴 열기',
       language: '언어 변경',
       theme: '테마 변경',
@@ -91,16 +89,13 @@ export const ui = {
       title: 'FOSS for All Conference',
       subtitle: 'Your Gateway to Open Source',
       actions: [
-        { label: 'Sessions', href: '/sessions', variant: 'default' },
-        { label: 'Buy Tickets', href: 'https://ticketa.co/e/ytbqha4p', variant: 'default', external: true },
+        { label: 'Sessions', href: '/en/sessions/', variant: 'default' },
+        { label: 'Buy Tickets', href: site.ticketUrl, variant: 'default', external: true },
         { label: 'About the Conference', href: '/en/about/', variant: 'outline' },
       ],
     },
     actions: {
-      register: 'Register(TBA)',
-      viewSchedule: 'View Schedule',
-      requestRegistrationInfo: 'Request Registration Info',
-      previewProgram: 'Preview the Program',
+      register: 'Buy Tickets',
       openNavigation: 'Open navigation menu',
       language: 'Change language',
       theme: 'Change theme',
