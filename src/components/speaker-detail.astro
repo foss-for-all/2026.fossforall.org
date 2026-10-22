@@ -1,5 +1,5 @@
 ---
-import { renderMarkdown } from '../data/markdown';
+import { renderMarkdown, summarize } from '../data/markdown';
 import { sessionLabels, type SpeakerProfile } from '../data/sessions';
 import type { Locale } from '../i18n/config';
 import { getLocalizedPath } from '../i18n/utils';
@@ -13,7 +13,7 @@ const labels = sessionLabels[locale];
 const biography = await renderMarkdown(speaker.biography);
 ---
 
-<SiteLayout locale={locale} path={`speakers/${speaker.code}`} title={speaker.name} description={speaker.biography.slice(0, 160)}>
+<SiteLayout locale={locale} path={`speakers/${speaker.code}`} title={speaker.name} description={await summarize(speaker.biography)}>
 	<main class="mx-auto max-w-4xl px-6 py-16 lg:px-8">
 		<nav class="text-sm text-muted-foreground">
 			<a href={getLocalizedPath(locale, 'sessions')} class="hover:text-foreground hover:underline">{labels.title}</a>

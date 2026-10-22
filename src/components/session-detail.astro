@@ -1,7 +1,7 @@
 ---
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { renderMarkdown } from '../data/markdown';
+import { renderMarkdown, summarize } from '../data/markdown';
 import { sessionLabels, type Session } from '../data/sessions';
 import type { Locale } from '../i18n/config';
 import { getLocalizedPath } from '../i18n/utils';
@@ -30,7 +30,7 @@ const links = [
 ].filter(([, href]) => href);
 ---
 
-<SiteLayout locale={locale} path={`sessions/${session.code}`} title={session.title} description={session.abstract.slice(0, 160)}>
+<SiteLayout locale={locale} path={`sessions/${session.code}`} title={session.title} description={await summarize(session.abstract || session.description)}>
 	<main class="mx-auto max-w-4xl px-6 py-16 lg:px-8">
 		<nav class="text-sm text-muted-foreground">
 			<a href={getLocalizedPath(locale, 'sessions')} class="hover:text-foreground hover:underline">{labels.title}</a>
