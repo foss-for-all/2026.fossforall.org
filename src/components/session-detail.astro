@@ -30,7 +30,7 @@ const links = [
 ].filter(([, href]) => href);
 ---
 
-<SiteLayout locale={locale} path={`sessions/${session.code}`} title={session.title} description={await summarize(session.abstract || session.description)}>
+<SiteLayout locale={locale} path={`sessions/${session.slug}`} title={session.title} description={await summarize(session.abstract || session.description)}>
 	<main class="mx-auto max-w-4xl px-6 py-16 lg:px-8">
 		<nav class="text-sm text-muted-foreground">
 			<a href={getLocalizedPath(locale, 'sessions')} class="hover:text-foreground hover:underline">{labels.title}</a>
@@ -59,7 +59,7 @@ const links = [
 				<ul class="mt-4 grid gap-3 sm:grid-cols-2">
 					{session.speakers.map((speaker) => (
 						<li>
-							<a href={getLocalizedPath(locale, `speakers/${speaker.code}`)} class="flex items-center gap-4 rounded-xl border bg-card p-4 transition-colors hover:border-primary/60">
+							<a href={getLocalizedPath(locale, `speakers/${speaker.slug}`)} class="flex items-center gap-4 rounded-xl border bg-card p-4 transition-colors hover:border-primary/60">
 								<SpeakerAvatar speaker={speaker} size={56} />
 								<span class="font-semibold">{speaker.name}</span>
 							</a>

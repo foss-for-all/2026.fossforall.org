@@ -1,0 +1,19 @@
+---
+import SessionDetail from '../../components/session-detail.astro';
+import { getSessions } from '../../data/sessions';
+import { getLocalizedPath } from '../../i18n/utils';
+
+export async function getStaticPaths() {
+	const { groups } = await getSessions('ko');
+	return groups.flatMap((group) => group.sessions).flatMap((session) => [
+		{ params: { slug: session.slug }, props: { session, redirect: false } },
+		// The bare code is a short link that survives title changes.
+		...(session.slug === session.code.toLowerCase() ? [] : [{ params: { slug: session.code.toLowerCase() }, props: { session, redirect: true } }]),
+	]);
+}
+
+const { session, redirect } = Astro.props;
+if (redirect) return Astro.redirect(getLocalizedPath('ko', `sessions/${session.slug}`));
+---
+
+<SessionDetail locale="ko" session={session} />

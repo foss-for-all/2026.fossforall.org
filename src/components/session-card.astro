@@ -11,7 +11,7 @@ const labels = sessionLabels[locale];
 const languages = new Intl.DisplayNames([locale], { type: 'language' });
 ---
 
-<a href={getLocalizedPath(locale, `sessions/${session.code}`)} class="flex flex-col gap-4 rounded-xl border bg-card p-6 text-card-foreground shadow-sm transition-colors hover:border-primary/60">
+<a href={getLocalizedPath(locale, `sessions/${session.slug}`)} class="flex flex-col gap-4 rounded-xl border bg-card p-6 text-card-foreground shadow-sm transition-colors hover:border-primary/60">
 	<h3 class="text-xl leading-snug font-semibold tracking-tight break-keep">{session.title}</h3>
 	<ul class="flex flex-col gap-2 text-sm text-muted-foreground">
 		{session.speakers.length > 0 ? session.speakers.map((speaker) => (
