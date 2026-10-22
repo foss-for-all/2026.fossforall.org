@@ -1,0 +1,22 @@
+---
+import type { SessionGroup } from '../data/sessions';
+import type { Locale } from '../i18n/config';
+import SessionCard from './session-card.astro';
+
+interface Props { groups: SessionGroup[]; locale: Locale }
+const { groups, locale } = Astro.props;
+---
+
+<div class="space-y-12">
+	{groups.map((group, index) => (
+		<>
+			{index > 0 && groups[index - 1].keynote && !group.keynote && <hr class="border-border" />}
+			<section aria-labelledby={`session-type-${group.id}`}>
+				<h2 id={`session-type-${group.id}`} class="mb-5 font-heading text-2xl font-bold tracking-tight sm:text-3xl">{group.name}</h2>
+				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+					{group.sessions.map((session) => <SessionCard session={session} locale={locale} />)}
+				</div>
+			</section>
+		</>
+	))}
+</div>

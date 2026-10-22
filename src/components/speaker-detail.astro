@@ -1,0 +1,37 @@
+---
+import { renderMarkdown } from '../data/markdown';
+import { sessionLabels, type SpeakerProfile } from '../data/sessions';
+import type { Locale } from '../i18n/config';
+import { getLocalizedPath } from '../i18n/utils';
+import SiteLayout from '../layouts/site-layout.astro';
+import SessionCard from './session-card.astro';
+import SpeakerAvatar from './speaker-avatar.astro';
+
+interface Props { speaker: SpeakerProfile; locale: Locale }
+const { speaker, locale } = Astro.props;
+const labels = sessionLabels[locale];
+const biography = await renderMarkdown(speaker.biography);
+---
+
+<SiteLayout locale={locale} path={`speakers/${speaker.code}`} title={speaker.name} description={speaker.biography.slice(0, 160)}>
+	<main class="mx-auto max-w-4xl px-6 py-16 lg:px-8">
+		<nav class="text-sm text-muted-foreground">
+			<a href={getLocalizedPath(locale, 'sessions')} class="hover:text-foreground hover:underline">{labels.title}</a>
+			<span aria-hidden="true" class="px-2">/</span>
+			<span>{labels.speakers}</span>
+		</nav>
+		<header class="mt-6 flex flex-col gap-6 sm:flex-row sm:items-center">
+			<SpeakerAvatar speaker={speaker} size={160} />
+			<h1 class="font-heading text-4xl font-black tracking-[-0.04em] text-balance break-keep sm:text-5xl">{speaker.name}</h1>
+		</header>
+
+		<article class="mdx-content mt-10 max-w-none" set:html={biography} />
+
+		<section class="mt-12" aria-labelledby="sessions-heading">
+			<h2 id="sessions-heading" class="font-heading text-2xl font-bold tracking-tight">{labels.speakerSessions}</h2>
+			<div class="mt-4 grid gap-4">
+				{speaker.sessions.map((session) => <SessionCard session={session} locale={locale} />)}
+			</div>
+		</section>
+	</main>
+</SiteLayout>

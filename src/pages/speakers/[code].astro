@@ -1,0 +1,12 @@
+---
+import SpeakerDetail from '../../components/speaker-detail.astro';
+import { getSpeakers } from '../../data/sessions';
+
+export async function getStaticPaths() {
+	return (await getSpeakers('ko')).map((speaker) => ({ params: { code: speaker.code }, props: { speaker } }));
+}
+
+const { speaker } = Astro.props;
+---
+
+<SpeakerDetail locale="ko" speaker={speaker} />

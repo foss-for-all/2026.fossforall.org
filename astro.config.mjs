@@ -10,6 +10,11 @@ import mdx from '@astrojs/mdx';
 export default defineConfig({
   site: 'https://2026.fossforall.org',
 
+  // Speaker photos are copied into the build so pages survive a Pretalx outage.
+  image: {
+    domains: ['pretalx.fossforall.org'],
+  },
+
   i18n: {
     locales: ['ko', 'en'],
     defaultLocale: 'ko',
