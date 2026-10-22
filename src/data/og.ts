@@ -55,26 +55,29 @@ async function missingGlyphs(_code: string, text: string) {
 // word joiners inside each word leave spaces as the only break points.
 const words = (text: string) => text.split(' ').map((word) => [...word].join('\u2060')).join(' ');
 
-// Shrink long titles until they fit the text column instead of truncating them.
-function titleSize(title: string): number {
-	const width = [...title].reduce((sum, char) => sum + (/[\u1100-\u11ff\u3000-\u9fff\uac00-\ud7af]/.test(char) ? 1 : 0.56), 0);
-	// Largest size whose estimated line count fits both 4 lines and the space under the header.
-	return [104, 92, 80, 70, 62, 56, 50, 44].find((size) => {
+// Shrink long text until it fits instead of truncating it.
+function fit(text: string, sizes: number[], maxLines: number, maxHeight: number): number {
+	const width = [...text].reduce((sum, char) => sum + (/[\u1100-\u11ff\u3000-\u9fff\uac00-\ud7af]/.test(char) ? 1 : 0.56), 0);
+	return sizes.find((size) => {
 		const lines = Math.ceil((width * size) / (textWidth * 0.85));
-		return lines <= 4 && lines * size * 1.18 <= 240;
-	}) ?? 44;
+		return lines <= maxLines && lines * size * 1.18 <= maxHeight;
+	}) ?? sizes.at(-1)!;
 }
 
 const textWidth = 640;
 const circle = 360;
 // Leaves room for the slogan under the circle.
 const circleTop = 116;
-const nameTop = 474;
+// Label and name are pinned; the title is centred in the band between them.
+const labelTop = 176;
+const titleTop = 224;
+const nameTop = 468;
 
 export async function renderCard({ locale, title, people, label, avatar }: Card): Promise<Buffer> {
 	const t = useTranslations(locale);
 	const image = avatar && await photo(avatar);
-	const size = titleSize(title);
+	const size = fit(title, [104, 92, 80, 70, 62, 56, 50, 44, 40], 4, nameTop - 20 - titleTop);
+	const peopleSize = fit(people, [54, 48, 42, 38, 34, 30, 28, 26], 3, 104);
 	const border = 12;
 	const tree = h('div', { display: 'flex', width: ogSize.width, height: ogSize.height, background: '#ffffff', color: '#000000', fontFamily: 'Pretendard' }, [
 		h('div', { display: 'flex', alignItems: 'center', gap: 20, position: 'absolute', top: 52, left: 60 }, [
@@ -84,12 +87,11 @@ export async function renderCard({ locale, title, people, label, avatar }: Card)
 				h('div', { fontSize: 33, color: '#525252' }, `${t.event.date}, ${t.event.venue}`),
 			]),
 		]),
-		// Title grows upward from a fixed bottom so every speaker name sits on the same line.
-		h('div', { display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', position: 'absolute', top: 160, left: 60, width: textWidth, height: nameTop - 28 - 160 }, [
-			h('div', { fontSize: 36, fontWeight: 700, color: '#262626', marginBottom: 12 }, label),
+		h('div', { position: 'absolute', top: labelTop, left: 60, fontSize: 36, fontWeight: 700, color: '#262626' }, label),
+		h('div', { display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'absolute', top: titleTop, left: 60, width: textWidth, height: nameTop - 20 - titleTop }, [
 			h('div', { fontSize: size, fontWeight: 700, lineHeight: 1.18, letterSpacing: -1, lineClamp: 4, display: 'block' }, words(title)),
 		]),
-		h('div', { position: 'absolute', top: nameTop, left: 60, width: textWidth, fontSize: 54, fontWeight: 700, color: '#333333', lineClamp: 1, display: 'block' }, words(people)),
+		h('div', { position: 'absolute', top: nameTop, left: 60, width: textWidth, fontSize: peopleSize, fontWeight: 700, lineHeight: 1.18, color: '#333333', lineClamp: 3, display: 'block' }, words(people)),
 		h('div', { display: 'flex', flexDirection: 'column', alignItems: 'flex-end', position: 'absolute', right: 64, bottom: 32, fontSize: 24, color: '#737373' }, [
 			h('div', {}, ui.ko.hero.subtitle),
 			h('div', {}, ui.en.hero.subtitle),
