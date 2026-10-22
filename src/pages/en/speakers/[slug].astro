@@ -1,18 +1,12 @@
 ---
 import SpeakerDetail from '../../../components/speaker-detail.astro';
 import { getSpeakers } from '../../../data/sessions';
-import { getLocalizedPath } from '../../../i18n/utils';
 
 export async function getStaticPaths() {
-	return (await getSpeakers('en')).flatMap((speaker) => [
-		{ params: { slug: speaker.slug }, props: { speaker, redirect: false } },
-		// The bare code is a short link that survives name changes.
-		...(speaker.slug === speaker.code.toLowerCase() ? [] : [{ params: { slug: speaker.code.toLowerCase() }, props: { speaker, redirect: true } }]),
-	]);
+	return (await getSpeakers('en')).map((speaker) => ({ params: { slug: speaker.slug }, props: { speaker } }));
 }
 
-const { speaker, redirect } = Astro.props;
-if (redirect) return Astro.redirect(getLocalizedPath('en', `speakers/${speaker.slug}`));
+const { speaker } = Astro.props;
 ---
 
 <SpeakerDetail locale="en" speaker={speaker} />
