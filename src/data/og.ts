@@ -87,7 +87,7 @@ export async function renderCard({ locale, title, people, label, avatar }: Card)
 				h('div', { fontSize: 33, color: '#525252' }, `${t.event.date}, ${t.event.venue}`),
 			]),
 		]),
-		h('div', { position: 'absolute', top: labelTop, left: 60, fontSize: 36, fontWeight: 700, color: '#262626' }, label),
+		h('div', { position: 'absolute', top: labelTop, left: 60, fontSize: 36, fontWeight: 700, color: '#262626', paddingBottom: 6, borderBottom: '4px solid #262626' }, label),
 		h('div', { display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'absolute', top: titleTop, left: 60, width: textWidth, height: nameTop - 20 - titleTop }, [
 			h('div', { fontSize: size, fontWeight: 700, lineHeight: 1.18, letterSpacing: -1, lineClamp: 4, display: 'block' }, words(title)),
 		]),
