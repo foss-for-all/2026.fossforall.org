@@ -13,7 +13,7 @@ export async function getStaticPaths() {
 }
 
 const { session, redirect } = Astro.props;
-if (redirect) return Astro.redirect(encodeURI(getLocalizedPath('ko', `sessions/${session.slug}`)));
+if (redirect) return Astro.redirect(encodeURI(getLocalizedPath('ko', `sessions/${session.slug}`)), 301);
 ---
 
 <SessionDetail locale="ko" session={session} />

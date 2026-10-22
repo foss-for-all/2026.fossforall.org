@@ -18,7 +18,7 @@ const alternateLocale = getAlternateLocale(locale);
 const localeHandoff =
 	locale === defaultLocale
 		? `const match = location.pathname.match(/^(\\/en)?\\/(sessions|speakers)\\/(?:[^/]*-)?([a-z0-9]{6})\\/?$/i);
-			const code = match && \`\${match[1] ?? ''}/\${match[2]}/\${match[3].toLowerCase()}/\`;
+			const code = match && \`\${match[1] ? '/en' : ''}/\${match[2].toLowerCase()}/\${match[3].toLowerCase()}/\`;
 			if (code && location.pathname !== code) location.replace(code);
 			else if (location.pathname.startsWith('/en/')) location.replace('${getLocalizedPath('en', '404')}');`
 		: null;

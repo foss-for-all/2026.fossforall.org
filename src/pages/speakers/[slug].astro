@@ -12,7 +12,7 @@ export async function getStaticPaths() {
 }
 
 const { speaker, redirect } = Astro.props;
-if (redirect) return Astro.redirect(encodeURI(getLocalizedPath('ko', `speakers/${speaker.slug}`)));
+if (redirect) return Astro.redirect(encodeURI(getLocalizedPath('ko', `speakers/${speaker.slug}`)), 301);
 ---
 
 <SpeakerDetail locale="ko" speaker={speaker} />

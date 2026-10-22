@@ -23,7 +23,7 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 
 if (entry.data.locale !== 'en') {
-	return Astro.redirect(getLocalizedPath('ko', entry.data.path));
+	return Astro.redirect(getLocalizedPath('ko', entry.data.path), 301);
 }
 ---
 
