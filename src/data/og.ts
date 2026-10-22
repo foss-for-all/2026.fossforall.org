@@ -43,25 +43,48 @@ async function photo(url: string): Promise<string | undefined> {
 	} catch { return undefined; }
 }
 
-// Pretendard has no Han characters; fetch just the missing glyphs, and draw nothing if that fails.
-async function missingGlyphs(_code: string, text: string) {
+// Pretendard has no Han characters; fetch just the missing glyphs from Noto Sans KR.
+// Other scripts and emoji are not covered and are left out. In CI a failed fetch fails the build,
+// so a card without its Han characters is never deployed.
+async function missingGlyphs(code: string, text: string) {
+	if (code === 'emoji') return [];
+	const get = async (url: string) => {
+		const response = await fetch(url, { signal: AbortSignal.timeout(15000) });
+		if (!response.ok) throw new Error(`${url} returned ${response.status}`);
+		return response;
+	};
 	try {
-		const css = await (await fetch(`https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&text=${encodeURIComponent(text)}`, { signal: AbortSignal.timeout(15000) })).text();
+		const css = await (await get(`https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&text=${encodeURIComponent(text)}`)).text();
 		return await Promise.all([...css.matchAll(/font-weight: (400|700);\s*src: url\((.+?)\)/g)].map(async ([, weight, src]) => ({
-			name: 'Noto Sans KR',
-			data: await (await fetch(src, { signal: AbortSignal.timeout(15000) })).arrayBuffer(),
+			// Satori keeps the first font registered under a name, so each subset needs its own.
+			name: `Noto Sans KR ${text}`,
+			data: await (await get(src)).arrayBuffer(),
 			weight: Number(weight) as 400 | 700,
 		})));
-	} catch { return []; }
+	} catch (error) {
+		if (process.env.CI && /[\p{Script=Han}\p{Script=Hangul}\p{Script=Hiragana}\p{Script=Katakana}]/u.test(text)) throw error;
+		return [];
+	}
 }
 
+// Emoji and scripts without a font here would render as boxes, so they are left out.
+const drawable = (text: string) => text
+	.replace(/[\p{Extended_Pictographic}\u200d\ufe0f]/gu, '')
+	.replace(/[^\p{Script=Latin}\p{Script=Hangul}\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Common}\p{Script=Inherited}]/gu, '')
+	.replace(/\s+/g, ' ').trim();
+
+// Rough width in em: CJK is full width, everything else about half.
+const estimate = (text: string) => [...text].reduce((sum, char) => sum + (/[\u1100-\u11ff\u3000-\u9fff\uac00-\ud7af]/.test(char) ? 1 : 0.56), 0);
+
 // Satori's keep-all still breaks at script and punctuation boundaries ("Team\n의");
-// word joiners inside each word leave spaces as the only break points.
-const words = (text: string) => text.split(' ').map((word) => [...word].join('\u2060')).join(' ');
+// word joiners inside each word leave spaces as the only break points, except for words
+// too wide for one line (no-space CJK, long URLs), which stay breakable.
+const words = (text: string, size: number) => text.split(' ')
+	.map((word) => (estimate(word) * size <= textWidth * 0.9 ? [...word].join('\u2060') : word)).join(' ');
 
 // Shrink long text until it fits instead of truncating it.
 function fit(text: string, sizes: number[], maxLines: number, maxHeight: number): number {
-	const width = [...text].reduce((sum, char) => sum + (/[\u1100-\u11ff\u3000-\u9fff\uac00-\ud7af]/.test(char) ? 1 : 0.56), 0);
+	const width = estimate(text);
 	return sizes.find((size) => {
 		const lines = Math.ceil((width * size) / (textWidth * 0.85));
 		return lines <= maxLines && lines * size * 1.18 <= maxHeight;
@@ -77,7 +100,9 @@ const labelTop = 176;
 const titleTop = 224;
 const nameTop = 468;
 
-export async function renderCard({ locale, title, people, label, avatar }: Card): Promise<Buffer> {
+export async function renderCard({ locale, title: rawTitle, people: rawPeople, label, avatar }: Card): Promise<Buffer> {
+	const title = drawable(rawTitle);
+	const people = drawable(rawPeople);
 	const t = useTranslations(locale);
 	const image = avatar && await photo(avatar);
 	const size = fit(title, [104, 92, 80, 70, 62, 56, 50, 44, 40], 4, nameTop - 20 - titleTop);
@@ -93,9 +118,9 @@ export async function renderCard({ locale, title, people, label, avatar }: Card)
 		]),
 		h('div', { position: 'absolute', top: labelTop, left: 60, fontSize: 36, fontWeight: 700, color: '#262626', paddingBottom: 6, borderBottom: '4px solid #262626' }, label),
 		h('div', { display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'absolute', top: titleTop, left: 60, width: textWidth, height: nameTop - 20 - titleTop }, [
-			h('div', { fontSize: size, fontWeight: 700, lineHeight: 1.18, letterSpacing: -1, lineClamp: 4, display: 'block' }, words(title)),
+			h('div', { fontSize: size, fontWeight: 700, lineHeight: 1.18, letterSpacing: -1, lineClamp: 4, display: 'block' }, words(title, size)),
 		]),
-		h('div', { position: 'absolute', top: nameTop, left: 60, width: textWidth, fontSize: peopleSize, fontWeight: 700, lineHeight: 1.18, color: '#333333', lineClamp: 3, display: 'block' }, words(people)),
+		h('div', { position: 'absolute', top: nameTop, left: 60, width: textWidth, fontSize: peopleSize, fontWeight: 700, lineHeight: 1.18, color: '#333333', lineClamp: 3, display: 'block' }, words(people, peopleSize)),
 		h('div', { display: 'flex', flexDirection: 'column', alignItems: 'flex-end', position: 'absolute', right: 64, bottom: 32, fontSize: 24, color: '#737373' }, [
 			h('div', {}, ui.ko.hero.subtitle),
 			h('div', {}, ui.en.hero.subtitle),
