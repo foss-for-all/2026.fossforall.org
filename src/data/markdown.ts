@@ -3,11 +3,21 @@ import rehypeRaw from 'rehype-raw';
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
 
 // Pretalx text is speaker-supplied, so pasted HTML is parsed and then sanitized.
-// remark-rehype already prefixes footnote ids; a second prefix would break their links.
-const processor = createMarkdownProcessor({
-	syntaxHighlight: false,
-	rehypePlugins: [rehypeRaw, [rehypeSanitize, { ...defaultSchema, clobberPrefix: '', strip: [...(defaultSchema.strip ?? []), 'style'] }]],
-});
+// remark-rehype already prefixes footnote ids, so clobberPrefix is off; instead only those ids
+// survive, and `name` is dropped, so speaker text cannot shadow document properties or page ids.
+const schema = {
+	...defaultSchema,
+	clobberPrefix: '',
+	strip: [...(defaultSchema.strip ?? []), 'style'],
+	// Remote images would be hotlinked from the speaker's host.
+	tagNames: defaultSchema.tagNames?.filter((tag) => tag !== 'img'),
+	attributes: {
+		...defaultSchema.attributes,
+		'*': [...(defaultSchema.attributes?.['*'] ?? []).filter((attribute) => attribute !== 'id' && attribute !== 'name'), ['id', /^(user-content-|footnote-label$)/]],
+	},
+};
+
+const processor = createMarkdownProcessor({ syntaxHighlight: false, rehypePlugins: [rehypeRaw, [rehypeSanitize, schema]] });
 
 export async function renderMarkdown(source: string): Promise<string> {
 	return (await (await processor).render(source)).code;
