@@ -1,6 +1,7 @@
 import grafanaLogo from '../../assets/sponsor-logos/grafana.svg';
 import stadiaMapsLogo from '../../assets/sponsor-logos/stadia-maps.svg';
 import tangledLogo from '../../assets/sponsor-logos/tangled.svg';
+import rockyLinuxLogo from '../../assets/sponsor-logos/rockylinux.png';
 
 import type { SponsorContent } from './types';
 
@@ -21,6 +22,14 @@ export const en: SponsorContent = {
 		close: 'Close',
 	},
 	sponsors: [
+		{
+			name: 'Rocky Linux',
+			level: 'gold',
+			logo: rockyLinuxLogo,
+			description:
+				"Rocky Linux is an open-source enterprise operating system designed to be 100% bug-for-bug compatible with Red Hat Enterprise Linux®.",
+			website: 'https://rockylinux.org',
+		},
 		{
 			name: 'Grafana Labs',
 			level: 'silver',
