@@ -1,6 +1,6 @@
 import type { ImageMetadata } from 'astro';
 
-export const sponsorLevels = ['gold', 'silver', 'bronze'] as const;
+export const sponsorLevels = ['gold', 'silver', 'bronze', 'government'] as const;
 
 export type SponsorLevel = (typeof sponsorLevels)[number];
 

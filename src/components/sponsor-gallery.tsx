@@ -32,6 +32,10 @@ const tierStyles: Record<SponsorLevel, { container: string; image: string }> = {
 	bronze: {
 		container: 'min-h-28 sm:min-h-32',
 		image: 'max-h-14 max-w-40 sm:max-h-16 sm:max-w-44',
+  },
+  government: {
+		container: 'min-h-44 sm:min-h-52',
+		image: 'max-h-28 max-w-64 sm:max-h-32 sm:max-w-80',
 	},
 };
 

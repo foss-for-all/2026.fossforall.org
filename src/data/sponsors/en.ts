@@ -2,6 +2,7 @@ import grafanaLogo from '../../assets/sponsor-logos/grafana.svg';
 import stadiaMapsLogo from '../../assets/sponsor-logos/stadia-maps.svg';
 import tangledLogo from '../../assets/sponsor-logos/tangled.svg';
 import rockyLinuxLogo from '../../assets/sponsor-logos/rockylinux.png';
+import openUpLogo from '../../assets/sponsor-logos/nipa.svg';
 
 import type { SponsorContent } from './types';
 
@@ -15,7 +16,8 @@ export const en: SponsorContent = {
 	levels: {
 		gold: 'Gold',
 		silver: 'Silver',
-		bronze: 'Bronze',
+    bronze: 'Bronze',
+		government: 'Government Partner',
 	},
 	dialog: {
 		website: 'Visit sponsor website',
@@ -52,6 +54,13 @@ export const en: SponsorContent = {
 			logo: stadiaMapsLogo,
 			description: 'Stadia Maps offers location APIs for humans. Thousands of companies of all sizes use Stadia Maps to contextualize their data on a map, solve logistics problems, build fitness experiences, and more. We back our customers up with no-surprise billing, world-class reliability, strong privacy guarantees, and real human support.',
 			website: 'https://stadiamaps.com/',
+    },
+    {
+			name: 'OpenUP (NIPA)',
+			level: 'government',
+			logo: openUpLogo,
+			description: 'OpenUP—an initiative under the National IT Industry Promotion Agency (NIPA)—serves as a hub for promoting open-source software (OSS). It supports developers, companies, and government entities interested in developing, sharing, and utilizing open-source software, fostering a virtuous cycle between demand (from businesses and public institutions) and supply (from developers and companies).',
+			website: 'https://oss.kr/',
 		}
 	],
 };
