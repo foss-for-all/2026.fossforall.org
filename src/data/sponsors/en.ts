@@ -3,6 +3,7 @@ import stadiaMapsLogo from '../../assets/sponsor-logos/stadia-maps.svg';
 import tangledLogo from '../../assets/sponsor-logos/tangled.svg';
 import rockyLinuxLogo from '../../assets/sponsor-logos/rockylinux.png';
 import openUpLogo from '../../assets/sponsor-logos/nipa.svg';
+import awsLogo from '../../assets/sponsor-logos/aws.png';
 
 import type { SponsorContent } from './types';
 
@@ -16,8 +17,9 @@ export const en: SponsorContent = {
 	levels: {
 		gold: 'Gold',
 		silver: 'Silver',
-    bronze: 'Bronze',
+    	bronze: 'Bronze',
 		government: 'Government Partner',
+		venue: 'Venue Partner'
 	},
 	dialog: {
 		website: 'Visit sponsor website',
@@ -54,13 +56,20 @@ export const en: SponsorContent = {
 			logo: stadiaMapsLogo,
 			description: 'Stadia Maps offers location APIs for humans. Thousands of companies of all sizes use Stadia Maps to contextualize their data on a map, solve logistics problems, build fitness experiences, and more. We back our customers up with no-surprise billing, world-class reliability, strong privacy guarantees, and real human support.',
 			website: 'https://stadiamaps.com/',
-    },
-    {
+		},
+		{
 			name: 'OpenUP (NIPA)',
 			level: 'government',
 			logo: openUpLogo,
 			description: 'OpenUP—an initiative under the National IT Industry Promotion Agency (NIPA)—serves as a hub for promoting open-source software (OSS). It supports developers, companies, and government entities interested in developing, sharing, and utilizing open-source software, fostering a virtuous cycle between demand (from businesses and public institutions) and supply (from developers and companies).',
 			website: 'https://oss.kr/',
+		},
+		{
+			name: "AWS Korea",
+			level: "venue",
+			logo: awsLogo,
+			description: "Amazon Web Services (AWS) is the world’s most comprehensive and broadly adopted cloud, offering over 200 fully featured services from data centers globally. Millions of customers—including the fastest-growing startups, largest enterprises, and leading government agencies—use AWS to lower costs, become more agile, and accelerate innovation.",
+			website: "https://aws.amazon.com/ko/"
 		}
 	],
 };
