@@ -4,6 +4,7 @@ import tangledLogo from '../../assets/sponsor-logos/tangled.svg';
 import rockyLinuxLogo from '../../assets/sponsor-logos/rockylinux.png';
 import openUpLogo from '../../assets/sponsor-logos/nipa.svg';
 import awsLogo from '../../assets/sponsor-logos/aws.png';
+import ab180Logo from '../../assets/sponsor-logos/ab180.svg';
 
 import type { SponsorContent } from './types';
 
@@ -33,6 +34,13 @@ export const en: SponsorContent = {
 			description:
 				"Rocky Linux is an open-source enterprise operating system designed to be 100% bug-for-bug compatible with Red Hat Enterprise Linux®.",
 			website: 'https://rockylinux.org',
+		},
+		{
+			name: 'AB180',
+			level: 'gold',
+			logo: ab180Logo,
+			description: "AB180(에이비일팔공)은 모바일 앱과 웹의 사용자 데이터·마케팅 성과를 분석해 최적화할 수 있도록 돕는 디지털 마케팅 솔루션 전문 기업입니다."
+			website: 'https://www.ab180.co',
 		},
 		{
 			name: 'Grafana Labs',
