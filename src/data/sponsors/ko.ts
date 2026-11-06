@@ -39,7 +39,7 @@ export const ko: SponsorContent = {
 			name: 'AB180',
 			level: 'gold',
 			logo: ab180Logo,
-			description: "AB180(에이비일팔공)은 모바일 앱과 웹의 사용자 데이터·마케팅 성과를 분석해 최적화할 수 있도록 돕는 디지털 마케팅 솔루션 전문 기업입니다."
+			description: "AB180(에이비일팔공)은 모바일 앱과 웹의 사용자 데이터·마케팅 성과를 분석해 최적화할 수 있도록 돕는 디지털 마케팅 솔루션 전문 기업입니다.",
 			website: 'https://www.ab180.co',
 		},
     {
