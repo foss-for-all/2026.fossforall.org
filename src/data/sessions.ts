@@ -14,6 +14,7 @@ interface Submission {
 	content_locale?: string | null;
 	resources?: { resource: string; is_public?: boolean }[];
 	slots?: Slot[];
+	created?: string | null;
 }
 interface Speaker { code: string; name: string; biography?: string | null; avatar_url?: string | null }
 interface NamedItem { id: number; name: LocalizedName }
@@ -225,6 +226,14 @@ export async function getSessions(locale: Locale): Promise<{ groups: SessionGrou
 			const id = submission.submission_type;
 			if (!groups.has(id)) groups.set(id, { id, name: session.type, keynote: session.keynote, sessions: [] });
 			groups.get(id)!.sessions.push(session);
+		}
+		// Pinned talks first, then schedule order, then registration order.
+		const pinned = (code: string) => (pretalx.pinned as readonly string[]).indexOf(code) >>> 0;
+		const created = new Map(data.submissions.map((submission) => [submission.code, submission.created ?? '']));
+		for (const group of groups.values()) {
+			group.sessions.sort((a, b) => pinned(a.code) - pinned(b.code)
+				|| (a.start ?? '\uffff').localeCompare(b.start ?? '\uffff')
+				|| created.get(a.code)!.localeCompare(created.get(b.code)!));
 		}
 		const rank = (group: SessionGroup) => typeRank(data.types.find((type) => type.id === group.id)?.name);
 		return { groups: [...groups.values()].sort((a, b) => rank(a) - rank(b) || a.name.localeCompare(b.name, locale)), unavailable: false };

@@ -16,4 +16,6 @@ export const discourse = {
 export const pretalx = {
 	baseUrl: 'https://pretalx.fossforall.org',
 	eventSlug: '2026',
+	// Talks listed here come first in their group, in this order.
+	pinned: ['8VEJRP', 'W3TMNX'],
 } as const;
