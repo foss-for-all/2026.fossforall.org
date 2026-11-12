@@ -85,7 +85,7 @@ export const ko: SponsorContent = {
 				ML2는 현재까지 키워왔던 역량을 바탕으로 많은 개발자와 사용자가 있는 오픈소스 ML 플랫폼의 value chain의 중요한 연결고리를 개발하고 공유하고자 합니다.
 
 				그 첫번째 단계로 ML2는 commodity hardware와 open-source software를 바탕으로 개발자와 사용자 모두가 편리하게 사용할 수 있는 stand-alone ML system을 개발하는 것을 목표로 하고 있습니다.
-			`
+			`,
 			website: 'https://www.kc-ml2.com/',
 		},
     {
