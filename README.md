@@ -24,6 +24,9 @@ are fetched from Google Fonts at build time and are left out if that fails. CI r
 fails instead of deploying when Pretalx is unreachable. Without API access, local builds
 show a localized message and link to Pretalx.
 
+`npm run cards` also builds 2160x2160 card-news images for social feeds into
+`dist/cards/{ko,en}/{sessions,speakers}/`. They are not part of the deployed site.
+
 - `src/content/pages/{ko,en}/*.mdx` prose pages, rendered by `src/pages/[slug].astro`
 - `src/data/sponsorship/` the sponsorship prospectus page, one typed object per locale
 - `src/i18n/` navigation, footer, and UI strings
