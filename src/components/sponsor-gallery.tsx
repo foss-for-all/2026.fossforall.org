@@ -13,7 +13,7 @@ import {
 import { cn } from '@/lib/utils';
 import { sponsorLevels, type Sponsor, type SponsorContent, type SponsorLevel } from '../data/sponsors';
 
-type GallerySponsor = Omit<Sponsor, 'logo'> & { logo: string };
+type GallerySponsor = Omit<Sponsor, 'logo'> & { logo: string; descriptionHtml: string };
 type GalleryContent = Omit<SponsorContent, 'sponsors'> & { sponsors: GallerySponsor[] };
 
 interface Props {
@@ -74,7 +74,7 @@ export function SponsorGallery({ content }: Props) {
 													<img src={sponsor.logo} alt={sponsor.name} className={cn('h-auto w-auto object-contain', tierStyles[level].image)} />
 												</button>
 											</DialogTrigger>
-											<DialogContent>
+											<DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto">
 												<DialogCloseButton label={content.dialog.close} />
 												<div className="flex min-h-40 items-center justify-center rounded-xl border bg-white p-6">
 													<img src={sponsor.logo} alt={sponsor.name} className="max-h-28 max-w-full object-contain" />
@@ -82,7 +82,12 @@ export function SponsorGallery({ content }: Props) {
 												<DialogHeader>
 													<p className="font-mono text-xs font-semibold tracking-[0.16em] text-primary uppercase">{content.levels[sponsor.level]}</p>
 													<DialogTitle>{sponsor.name}</DialogTitle>
-													<DialogDescription>{sponsor.description}</DialogDescription>
+													<DialogDescription asChild>
+														<div
+															className="mdx-content min-w-0 text-left break-keep [overflow-wrap:anywhere]"
+															dangerouslySetInnerHTML={{ __html: sponsor.descriptionHtml }}
+														/>
+													</DialogDescription>
 												</DialogHeader>
 												<DialogFooter>
 													<Button asChild size="lg">
