@@ -72,19 +72,13 @@ export const ko: SponsorContent = {
 			level: 'bronze',
 			logo: ml2Logo,
 			description: `
-				- Our Team
-
-				ML2는 반도체 제조 솔루션 기업 (주)케이씨 산하에 설립된 독립적인 머신러닝 연구팀입니다. 2018년부터 ML2는 오픈소스를 기반으로 하는 머신러닝 기술로부터 지속 가능한 가치를 창출한다는 mission을 중심으로 다양한 연구개발 활동을 진행해 왔습니다.
-
-				그동안 ICML과 같은 탑티어 학회 논문 발표와 ACS Photonics와 같은 학술지 표지 논문 게재를 비롯해, LLVM-FLOW와 같은 오픈소스 소프트웨어를 개발하여 EuroLLVM 등 주요 developer conference에서 발표하는 등, 폭넓은 연구개발 활동을 통해 팀과 구성원 모두가 함께 성장해 왔습니다.
-
-				생성형 AI의 발전에 따라 다양한 머신러닝 연구개발 방향이 제시되고 있는 지금, ML2는 지속 가능한 가치를 창출할 수 있는 독보적인 기술 개발을 위한 다음 단계로의 진화를 모색하고 있습니다.
-
-				- Our Goal
-
-				ML2는 현재까지 키워왔던 역량을 바탕으로 많은 개발자와 사용자가 있는 오픈소스 ML 플랫폼의 value chain의 중요한 연결고리를 개발하고 공유하고자 합니다.
-
-				그 첫번째 단계로 ML2는 commodity hardware와 open-source software를 바탕으로 개발자와 사용자 모두가 편리하게 사용할 수 있는 stand-alone ML system을 개발하는 것을 목표로 하고 있습니다.
+## Our Team
+ML2는 반도체 제조 솔루션 기업 (주)케이씨 산하에 설립된 독립적인 머신러닝 연구팀입니다. 2018년부터 ML2는 오픈소스를 기반으로 하는 머신러닝 기술로부터 지속 가능한 가치를 창출한다는 mission을 중심으로 다양한 연구개발 활동을 진행해 왔습니다.
+그동안 ICML과 같은 탑티어 학회 논문 발표와 ACS Photonics와 같은 학술지 표지 논문 게재를 비롯해, LLVM-FLOW와 같은 오픈소스 소프트웨어를 개발하여 EuroLLVM 등 주요 developer conference에서 발표하는 등, 폭넓은 연구개발 활동을 통해 팀과 구성원 모두가 함께 성장해 왔습니다.
+생성형 AI의 발전에 따라 다양한 머신러닝 연구개발 방향이 제시되고 있는 지금, ML2는 지속 가능한 가치를 창출할 수 있는 독보적인 기술 개발을 위한 다음 단계로의 진화를 모색하고 있습니다.
+## Our Goal
+ML2는 현재까지 키워왔던 역량을 바탕으로 많은 개발자와 사용자가 있는 오픈소스 ML 플랫폼의 value chain의 중요한 연결고리를 개발하고 공유하고자 합니다.
+그 첫번째 단계로 ML2는 commodity hardware와 open-source software를 바탕으로 개발자와 사용자 모두가 편리하게 사용할 수 있는 stand-alone ML system을 개발하는 것을 목표로 하고 있습니다.
 			`,
 			website: 'https://www.kc-ml2.com/',
 		},
