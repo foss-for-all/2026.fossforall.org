@@ -1,7 +1,7 @@
 export const site = {
 	url: 'https://2026.fossforall.org',
 	ticketUrl: 'https://ticketa.co/event/ytbqha4p',
-	socialImage: '/f4ac26.png',
+	socialImage: '/f4ac26-centerfield.png',
 	socialImageWidth: 1200,
 	socialImageHeight: 630,
 	socialImageAlt: 'FOSS for All Conference 2026 - Your Gateway to Open Source',
