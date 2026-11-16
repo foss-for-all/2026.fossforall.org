@@ -133,6 +133,9 @@
     }
   body {
     @apply bg-background text-foreground;
+    /* Break Korean at spaces, not inside words; still wrap words longer than a line. */
+    word-break: keep-all;
+    overflow-wrap: break-word;
     }
   html {
     @apply font-sans;
