@@ -8,14 +8,14 @@ export const ui = {
       headerTitle: 'FOSS for All Conference 2026',
       title: 'FOSS for All Conference 2026',
       description:
-        '2026년 11월 28일 | 서울 센터필드 EAST 18층 AWS Korea',
+        '2026년 11월 28일 | 서울 센터필드 EAST 18층',
       defaultDescription:
         'FOSS for All Conference는 오픈소스 빌더, 메인테이너, 팀이 함께 실무 세션과 커뮤니티 교류를 나누는 하루입니다.',
     },
     event: {
       date: '2026년 11월 28일',
-      venue: 'AWS Korea 18F',
-      summary: '11월 28일 AWS Korea 18F',
+      venue: '센터필드 EAST 18층',
+      summary: '11월 28일 센터필드 EAST 18층',
     },
     hero: {
       title: 'FOSS for All Conference',
@@ -76,14 +76,14 @@ export const ui = {
       headerTitle: 'FOSS for All Conference 2026',
       title: 'FOSS for All Conference 2026',
       description:
-        'November 28th, 2026 | AWS Korea (CenterField EAST 18F), Seoul, South Korea',
+        'November 28th, 2026 | CenterField EAST 18F, Seoul, South Korea',
       defaultDescription:
         'FOSS for All Conference brings open-source builders, maintainers, and teams together for a day of practical sessions and community exchange.',
     },
     event: {
       date: 'November 28th, 2026',
-      venue: 'AWS Korea 18F',
-      summary: 'November 28th at AWS Korea 18F',
+      venue: 'CenterField EAST 18F',
+      summary: 'November 28th at CenterField EAST 18F',
     },
     hero: {
       title: 'FOSS for All Conference',
