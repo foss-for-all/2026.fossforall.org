@@ -6,6 +6,7 @@ import openUpLogo from '../../assets/sponsor-logos/nipa.svg';
 import awsLogo from '../../assets/sponsor-logos/aws.png';
 import ab180Logo from '../../assets/sponsor-logos/ab180.svg';
 import ml2Logo from '../../assets/sponsor-logos/kcml2.svg';
+import eclipseLogo from '../../assets/sponsor-logos/eclipse-foundation.png';
 
 import type { SponsorContent } from './types';
 
@@ -58,6 +59,14 @@ export const en: SponsorContent = {
 			description:
 				"Tangled is a federated git collaboration platform built on the AT Protocol. You can run your own infrastructure and still be discoverable: your identity and your projects aren't tied to any one server. Review happens in stacks rather than one large diff, and a vouch network handles the bots so maintainers don't have to. Open source in its entirety, on an open protocol.",
 			website: 'https://tangled.org/',
+		},
+		{
+			name: 'Eclipse Foundation',
+			level: 'silver',
+			logo: eclipseLogo,
+			description:
+				"The Eclipse Foundation empowers our global community with a mature, scalable, and business-friendly environment that drives open source collaboration and innovation.",
+			website: 'https://www.eclipse.org/',
 		},
 		{
 			name: 'Stadia Maps',

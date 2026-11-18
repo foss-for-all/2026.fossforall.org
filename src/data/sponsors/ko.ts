@@ -60,6 +60,14 @@ export const ko: SponsorContent = {
       website: "https://tangled.org/",
     },
     {
+			name: 'Eclipse Foundation',
+			level: 'silver',
+			logo: eclipseLogo,
+			description:
+				"The Eclipse Foundation empowers our global community with a mature, scalable, and business-friendly environment that drives open source collaboration and innovation.",
+			website: 'https://www.eclipse.org/',
+		},
+    {
       name: "Stadia Maps",
       level: "bronze",
       logo: stadiaMapsLogo,
