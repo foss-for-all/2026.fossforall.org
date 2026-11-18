@@ -6,6 +6,7 @@ import openUpLogo from "../../assets/sponsor-logos/nipa.svg";
 import awsLogo from '../../assets/sponsor-logos/aws.png';
 import ab180Logo from '../../assets/sponsor-logos/ab180.svg';
 import ml2Logo from '../../assets/sponsor-logos/kcml2.svg';
+import eclipseLogo from '../../assets/sponsor-logos/eclipse-foundation.png';
 
 import type { SponsorContent } from "./types";
 
