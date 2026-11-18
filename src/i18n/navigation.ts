@@ -51,7 +51,8 @@ const navigation = {
 			key: 'attend',
 			label: '참석하기',
 			items: [
-			  { type: 'link', key: 'coc', label: '행동강령', path: 'coc' },
+        { type: 'link', key: 'coc', label: '행동강령', path: 'coc' },
+        { type: 'link', key: 'venue', label: '행사장 안내', path: 'venue' },
 				{ type: 'link', key: 'entry-to-korea', label: '한국 입국 요건', path: 'entry-to-korea' },
 				{ type: 'link', key: 'visa-letter-request', label: '사증 초청장 요청', path: 'visa-letter-request' },
 			],
@@ -97,6 +98,7 @@ const navigation = {
 			label: 'Attend',
 			items: [
 			  { type: 'link', key: 'coc', label: 'Code of Conduct', path: 'coc' },
+					{ type: 'link', key: 'venue', label: 'Venue Guide', path: 'venue' },
 				{ type: 'link', key: 'entry-to-korea', label: 'Entry to Korea', path: 'entry-to-korea' },
 				{ type: 'link', key: 'visa-letter-request', label: 'Request Visa Invitation Letter', path: 'visa-letter-request' },
 			],
