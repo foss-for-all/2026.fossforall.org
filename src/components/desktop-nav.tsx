@@ -1,4 +1,5 @@
 import { ChevronDownIcon } from "lucide-react"
+import type { ComponentProps } from "react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -19,13 +20,13 @@ type DesktopNavProps = {
   items: NavigationItem[]
 }
 
-function LinkAnchor({ item, className }: { item: NavigationLink; className?: string }) {
+function LinkAnchor({ item, ...props }: { item: NavigationLink } & ComponentProps<"a">) {
   return (
     <a
       href={item.href}
       target={item.external ? "_blank" : undefined}
       rel={item.external ? "noreferrer" : undefined}
-      className={className}
+      {...props}
     >
       {item.label}
     </a>
