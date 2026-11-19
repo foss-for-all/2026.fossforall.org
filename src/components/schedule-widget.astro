@@ -35,7 +35,53 @@ const released = await fetch(`${eventUrl}schedule/widgets/schedule.json`, { meth
 {released ? (
 	<div class="overflow-hidden rounded-2xl border">
 		<script is:inline src={`${eventUrl}widgets/schedule.js`}></script>
-		<pretalx-schedule event-url={eventUrl} locale={locale} format="list" style="--pretalx-clr-primary: var(--primary)"></pretalx-schedule>
+		<!-- The widget only has a light theme with hard-coded colours, and its dialog relies on UA defaults,
+		     so keep it light and, in dark mode, add a copy of its rules with neutral colours flipped. -->
+		<pretalx-schedule event-url={eventUrl} locale={locale} format="list" style="--pretalx-clr-primary: var(--primary); color-scheme: light"></pretalx-schedule>
+		<script is:inline>
+			customElements.whenDefined('pretalx-schedule').then(() => {
+				const widget = document.querySelector('pretalx-schedule');
+				const root = widget.shadowRoot;
+				// Greys map onto the site's dark range (white becomes #171717); colours and images stay as they are.
+				// Light text only ever sits on a coloured background here, so text is flipped only when dark.
+				const flip = (value, text) => {
+					const grey = (r, g, b, alpha = '') => Math.max(r, g, b) - Math.min(r, g, b) > 16 || (text && r > 127) ? null
+						: `rgb${alpha ? 'a' : ''}(${Array(3).fill(Math.round(23 + (255 - r) * 0.82)).join(', ')}${alpha})`;
+					return value
+						.replace(/rgba?\((\d+), (\d+), (\d+)(, [\d.]+)?\)/g, (match, r, g, b, alpha) => grey(+r, +g, +b, alpha) ?? match)
+						.replace(/#([0-9a-f]{6}|[0-9a-f]{3})\b/gi, (match, hex) => {
+							const [r, g, b] = (hex.length === 3 ? [...hex].map((c) => c + c) : hex.match(/../g)).map((c) => parseInt(c, 16));
+							return grey(r, g, b) ?? match;
+						});
+				};
+				const ours = document.createElement('style');
+				const walk = (list, rules) => {
+					for (const rule of list) {
+						if (rule.cssRules && !rule.selectorText) walk(rule.cssRules, rules);
+						if (!rule.selectorText) continue;
+						const decls = [...rule.style].filter((name) => name.startsWith('--') || /color|background|border|shadow|fill|stroke/.test(name))
+							.map((name) => [name, rule.style.getPropertyValue(name), /^(color|fill|--pretalx-clr-text)$/.test(name)])
+							.filter(([, value, text]) => flip(value, text) !== value)
+							.map(([name, value, text]) => `${name}: ${flip(value, text)}`);
+						if (decls.length) rules.push(`${rule.selectorText.split(',').map((part) => `:host([data-dark]) ${part}`).join(',')} { ${decls.join('; ')} }`);
+					}
+				};
+				// The widget adds its stylesheets while it renders, so rebuild whenever one arrives.
+				const build = () => {
+					const rules = [':host([data-dark]) .pretalx-modal { background-color: #171717; color: #ededed; }'];
+					for (const sheet of root.styleSheets) if (sheet.ownerNode !== ours) walk(sheet.cssRules, rules);
+					ours.textContent = rules.join('\n');
+					root.append(ours);
+				};
+				build();
+				new MutationObserver((mutations) => {
+					if (mutations.some((mutation) => [...mutation.addedNodes].some((node) => node.nodeName === 'STYLE' && node !== ours))) build();
+				}).observe(root, { childList: true });
+				const sync = () => widget.toggleAttribute('data-dark', document.documentElement.classList.contains('dark'));
+				sync();
+				new MutationObserver(sync).observe(document.documentElement, { attributeFilter: ['class'] });
+			});
+		</script>
 		<noscript>
 			<p class="p-6">{labels.noscript} <a href={`${eventUrl}schedule/`} target="_blank" rel="noopener noreferrer">{labels.here}</a>.</p>
 		</noscript>
