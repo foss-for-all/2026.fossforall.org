@@ -7,6 +7,7 @@ import awsLogo from '../../assets/sponsor-logos/aws.png';
 import ab180Logo from '../../assets/sponsor-logos/ab180.svg';
 import ml2Logo from '../../assets/sponsor-logos/kcml2.svg';
 import eclipseLogo from '../../assets/sponsor-logos/eclipse-foundation.png';
+import tenstorrentLogo from '../../assets/sponsor-logos/tenstorrent.svg';
 
 import type { SponsorContent } from "./types";
 
@@ -67,6 +68,14 @@ export const ko: SponsorContent = {
 			description:
 				"The Eclipse Foundation empowers our global community with a mature, scalable, and business-friendly environment that drives open source collaboration and innovation.",
 			website: 'https://www.eclipse.org/',
+		},
+    {
+			name: 'Tenstorrent',
+			level: 'silver',
+			logo: tenstorrentLogo,
+			description:
+				"Tenstorrent is a computing company that builds AI accelerators and high-performance RISC-V CPUs. Founded in 2016 and led by CEO Jim Keller, Tenstorrent believes in open hardware and software. Its entire software stack is open source, and it licenses its AI and RISC-V IP to companies building their own chips. Its products range from PCIe cards and desktop workstations to Galaxy servers for the data center.",
+			website: 'https://tenstorrent.com',
 		},
     {
       name: "Stadia Maps",
