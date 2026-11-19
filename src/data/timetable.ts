@@ -3,19 +3,22 @@ import type { Locale } from '../i18n/config';
 import { getSessions, localizedName } from './sessions';
 
 type LocalizedName = string | Record<string, string>;
-interface WidgetSlot {
+export interface WidgetSlot {
+	id?: number;
 	code?: string;
 	title: LocalizedName;
 	start: string;
 	end: string;
 	room: number;
+	track?: number | null;
 	speakers?: string[];
 	content_locale?: string | null;
 	slot_type?: string;
 }
-interface WidgetSchedule {
+export interface WidgetSchedule {
 	talks: WidgetSlot[];
 	rooms: { id: number; name: LocalizedName }[];
+	tracks: { id: number; name: LocalizedName }[];
 	speakers: { code: string; name: string }[];
 	timezone: string;
 }
@@ -73,11 +76,21 @@ export const timetableLabels = {
 const scheduleUrl = `${pretalx.baseUrl}/${pretalx.eventSlug}/schedule/widgets/schedule.json`;
 
 // 404 means no schedule is released yet; any other failure throws so CI keeps the deployed site.
-async function fetchSchedule(): Promise<WidgetSchedule | null> {
+export async function fetchSchedule(): Promise<WidgetSchedule | null> {
 	const response = await fetch(scheduleUrl, { signal: AbortSignal.timeout(15000) });
 	if (response.status === 404) return null;
 	if (!response.ok) throw new Error(`Pretalx schedule returned ${response.status}`);
 	return response.json();
+}
+
+const at = (value: string) => new Date(value).getTime();
+
+// Breaks that sit under talks only reserve the room in Pretalx, like "Opening + Keynote" over the keynotes.
+export function scheduleBreaks(data: WidgetSchedule): WidgetSlot[] {
+	const rooms = (room: number) => room === pretalx.everyRoom ? data.rooms.map(({ id }) => id) : [room];
+	const talks = data.talks.filter((slot) => slot.code);
+	return data.talks.filter((slot) => !slot.code && !talks.some((talk) =>
+		at(slot.start) < at(talk.end) && at(talk.start) < at(slot.end) && rooms(slot.room).some((room) => rooms(talk.room).includes(room))));
 }
 
 export async function getTimetable(locale: Locale): Promise<{ timetable: Timetable | null; unavailable: boolean }> {
@@ -98,13 +111,8 @@ export async function getTimetable(locale: Locale): Promise<{ timetable: Timetab
 	// Pretalx lists rooms in no stable order; ids follow creation order.
 	const rooms = data.rooms.filter(({ id }) => id !== pretalx.everyRoom).sort((a, b) => a.id - b.id);
 	const columnsOf = (room: number) => room === pretalx.everyRoom ? rooms.map((_, i) => i) : [rooms.findIndex(({ id }) => id === room)].filter((i) => i >= 0);
-	const at = (value: string) => new Date(value).getTime();
-
 	const talks = data.talks.filter((slot) => slot.code);
-	const overlaps = (a: WidgetSlot, b: WidgetSlot) => at(a.start) < at(b.end) && at(b.start) < at(a.end);
-	// Breaks that sit under talks only reserve the room in Pretalx, like "Opening + Keynote" over the keynotes.
-	const breaks = data.talks.filter((slot) => !slot.code && !talks.some((talk) =>
-		overlaps(slot, talk) && columnsOf(slot.room).some((column) => columnsOf(talk.room).includes(column))));
+	const breaks = scheduleBreaks(data);
 
 	// One cell per run of adjacent columns, so a break held in every room becomes one row.
 	const items = new Map<string, { slot: WidgetSlot; columns: Set<number> }>();
