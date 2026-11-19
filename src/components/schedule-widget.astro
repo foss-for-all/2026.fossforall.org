@@ -1,6 +1,4 @@
 ---
-import { buttonVariants } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import { pretalx } from '../config';
 import type { Locale } from '../i18n/config';
 import { getLocalizedPath } from '../i18n/utils';
@@ -11,32 +9,20 @@ const { locale } = Astro.props;
 const labels = {
 	ko: {
 		pending: '일정표는 일정이 확정되면 공개됩니다. 그동안 세션 목록을 확인해 주세요.',
-		get: '일정 받아보기',
-		glance: '한눈에 보기 (A4 인쇄용)',
+		links: '바로 가기',
+		glance: '한눈에 보기 (A4)',
 		subscribe: '캘린더 구독',
-		subscribeHelp: '구독하면 일정이 바뀔 때 캘린더에도 자동으로 반영됩니다.',
 		google: 'Google 캘린더',
-		download: '.ics 내려받기',
-		apps: '일정 앱',
-		appsHelp: '아래 XML 주소를 앱에 추가하세요.',
-		data: '원본 데이터',
-		feed: '일정 변경 RSS',
 		sessions: '세션 목록 보기',
 		noscript: '일정표를 보려면 JavaScript가 필요합니다. JavaScript 없이 보려면',
 		here: '여기를 누르세요',
 	},
 	en: {
 		pending: 'The schedule will be published once it is finalized. In the meantime, check out the session list.',
-		get: 'Get the schedule',
-		glance: 'At a glance (printable A4)',
-		subscribe: 'Subscribe in your calendar',
-		subscribeHelp: 'A subscription picks up schedule changes automatically.',
+		links: 'Quick links',
+		glance: 'At a glance (A4)',
+		subscribe: 'Subscribe in calendar',
 		google: 'Google Calendar',
-		download: 'Download .ics',
-		apps: 'Schedule apps',
-		appsHelp: 'Add the XML address below to the app.',
-		data: 'Raw schedule data',
-		feed: 'Schedule updates (RSS)',
 		sessions: 'View sessions',
 		noscript: 'JavaScript is disabled in your browser. To access our schedule without JavaScript,',
 		here: 'click here',
@@ -46,13 +32,16 @@ const labels = {
 const eventUrl = `${pretalx.baseUrl}/${pretalx.eventSlug}/`;
 const ics = `${pretalx.exports}/schedule.ics`;
 const webcal = ics.replace(/^https:/, 'webcal:');
-// Apps that take any Frab/Pentabarf XML URL, as listed on FOSDEM's mobile apps page.
-const apps = [
-	['Giggity (Android)', 'https://f-droid.org/packages/net.gaast.giggity/'],
-	['ConfClerk (Linux)', 'https://www.toastfreeware.priv.at/confclerk'],
-	['Confy (GTK)', 'https://confy.kirgroup.net'],
+const links = [
+	[labels.glance, getLocalizedPath(locale, 'timetable')],
+	[labels.subscribe, webcal],
+	[labels.google, `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(webcal)}`],
+	['iCal', ics],
+	['XML', `${pretalx.exports}/schedule.xml`],
+	['xCal', `${pretalx.exports}/schedule.xcal`],
+	['JSON', `${pretalx.exports}/schedule.json`],
+	['RSS', pretalx.feed],
 ];
-const data = [['XML', `${pretalx.exports}/schedule.xml`], ['iCal', ics], ['xCal', `${pretalx.exports}/schedule.xcal`], ['JSON', `${pretalx.exports}/schedule.json`]];
 // The widget fails to load until a schedule version is released.
 // Anything but 200 or 404 fails CI builds so a transient outage does not hide a released schedule.
 const released = await fetch(`${eventUrl}schedule/widgets/schedule.json`, { method: 'HEAD', signal: AbortSignal.timeout(15000) })
@@ -64,24 +53,9 @@ const released = await fetch(`${eventUrl}schedule/widgets/schedule.json`, { meth
 ---
 
 {released && (
-	<section class="mb-8 rounded-2xl border bg-card p-6 text-card-foreground" aria-labelledby="get-schedule">
-		<h2 id="get-schedule" class="!mt-0 !border-0 !pb-0 font-heading text-xl font-bold">{labels.get}</h2>
-		<div class="mt-4 flex flex-wrap gap-2">
-			<a class={cn(buttonVariants(), 'no-underline')} href={webcal}>{labels.subscribe}</a>
-			<a class={cn(buttonVariants({ variant: 'outline' }), 'text-foreground no-underline')} href={`https://calendar.google.com/calendar/r?cid=${encodeURIComponent(webcal)}`} target="_blank" rel="noopener noreferrer">{labels.google}</a>
-			<a class={cn(buttonVariants({ variant: 'outline' }), 'text-foreground no-underline')} href={ics}>{labels.download}</a>
-			<a class={cn(buttonVariants({ variant: 'outline' }), 'text-foreground no-underline')} href={getLocalizedPath(locale, 'timetable')}>{labels.glance}</a>
-		</div>
-		<p class="mt-2 text-sm text-muted-foreground">{labels.subscribeHelp}</p>
-		<dl class="mt-5 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-[auto_1fr]">
-			<dt class="font-semibold">{labels.apps}</dt>
-			<dd>{apps.map(([name, href], i) => <>{i > 0 && ' · '}<a href={href} target="_blank" rel="noopener noreferrer">{name}</a></>)} <span class="text-muted-foreground">{labels.appsHelp}</span></dd>
-			<dt class="font-semibold">{labels.data}</dt>
-			<dd>{data.map(([name, href], i) => <>{i > 0 && ' · '}<a href={href}>{name}</a></>)}</dd>
-			<dt class="font-semibold">RSS</dt>
-			<dd><a href={pretalx.feed} type="application/atom+xml">{labels.feed}</a></dd>
-		</dl>
-	</section>
+	<p class="mb-6 text-sm">
+		<strong>{labels.links}:</strong> {links.map(([label, href], i) => <>{i > 0 && ' · '}<a href={href}>{label}</a></>)}
+	</p>
 )}
 
 {released ? (
