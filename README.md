@@ -27,6 +27,10 @@ show a localized message and link to Pretalx.
 `npm run cards` also builds 2160x2160 card-news images for social feeds into
 `dist/cards/{ko,en}/{sessions,speakers}/`. They are not part of the deployed site.
 
+`/timetable/` renders the released schedule (Pretalx widget JSON, breaks included) as one
+black-and-white A4 page for printing. Set `pretalx.everyRoom` in `src/config.ts` to the room
+that stands for all rooms at once.
+
 Calendar, app and feed links point at Pretalx exports (`schedule.ics`, `schedule.xml`,
 `talk/<code>.ics`, `schedule/feed.xml`) and the forum's `conf-2026` tag RSS; nothing is
 generated locally.

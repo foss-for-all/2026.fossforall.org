@@ -12,6 +12,7 @@ const labels = {
 	ko: {
 		pending: '일정표는 일정이 확정되면 공개됩니다. 그동안 세션 목록을 확인해 주세요.',
 		get: '일정 받아보기',
+		glance: '한눈에 보기 (A4 인쇄용)',
 		subscribe: '캘린더 구독',
 		subscribeHelp: '구독하면 일정이 바뀔 때 캘린더에도 자동으로 반영됩니다.',
 		google: 'Google 캘린더',
@@ -27,6 +28,7 @@ const labels = {
 	en: {
 		pending: 'The schedule will be published once it is finalized. In the meantime, check out the session list.',
 		get: 'Get the schedule',
+		glance: 'At a glance (printable A4)',
 		subscribe: 'Subscribe in your calendar',
 		subscribeHelp: 'A subscription picks up schedule changes automatically.',
 		google: 'Google Calendar',
@@ -68,6 +70,7 @@ const released = await fetch(`${eventUrl}schedule/widgets/schedule.json`, { meth
 			<a class={cn(buttonVariants(), 'no-underline')} href={webcal}>{labels.subscribe}</a>
 			<a class={cn(buttonVariants({ variant: 'outline' }), 'text-foreground no-underline')} href={`https://calendar.google.com/calendar/r?cid=${encodeURIComponent(webcal)}`} target="_blank" rel="noopener noreferrer">{labels.google}</a>
 			<a class={cn(buttonVariants({ variant: 'outline' }), 'text-foreground no-underline')} href={ics}>{labels.download}</a>
+			<a class={cn(buttonVariants({ variant: 'outline' }), 'text-foreground no-underline')} href={getLocalizedPath(locale, 'timetable')}>{labels.glance}</a>
 		</div>
 		<p class="mt-2 text-sm text-muted-foreground">{labels.subscribeHelp}</p>
 		<dl class="mt-5 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-[auto_1fr]">

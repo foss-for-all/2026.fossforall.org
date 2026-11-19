@@ -19,6 +19,8 @@ export const pretalx = {
 	eventSlug: '2026',
 	// Talks listed here come first in their group, in this order.
 	pinned: ['8VEJRP', 'W3TMNX'],
+	// The Pretalx room that stands for every room at once (opening, keynotes, closing).
+	everyRoom: 14,
 	exports: 'https://pretalx.fossforall.org/2026/schedule/export',
 	feed: 'https://pretalx.fossforall.org/2026/schedule/feed.xml',
 } as const;

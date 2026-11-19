@@ -1,0 +1,165 @@
+---
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { site } from '../config';
+import { getTimetable, timetableLabels } from '../data/timetable';
+import type { Locale } from '../i18n/config';
+import { getLocalizedPath, useTranslations } from '../i18n/utils';
+import SiteLayout from '../layouts/site-layout.astro';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const labels = timetableLabels[locale];
+const { timetable, unavailable } = await getTimetable(locale);
+const schedulePath = getLocalizedPath(locale, 'schedules');
+const scheduleUrl = new URL(schedulePath, site.url);
+
+const rowCount = timetable ? timetable.times.length - 1 : 0;
+// Rows holding talks take up the spare height of the page; break rows stay as thin as their text.
+// Without a page height (phones) 1fr rows would all grow to the tallest one, so they fall back to auto there.
+const rows = timetable ? Array.from({ length: rowCount }, (_, row) =>
+	timetable.cells.some((cell) => cell.talk && cell.row <= row && row < cell.rowEnd) ? '1fr' : 'auto').join(' ') : '';
+// Empty slots still need their own box so the ruled lines stay unbroken.
+const empty = timetable ? Array.from({ length: rowCount }, (_, row) => timetable.rooms.map((_, column) => ({ row, column }))).flat()
+	.filter(({ row, column }) => !timetable.cells.some((cell) => cell.row <= row && row < cell.rowEnd && cell.column <= column && column < cell.columnEnd)) : [];
+---
+
+<SiteLayout locale={locale} path="timetable" title={labels.title} description={labels.description}>
+	<main class="tt-desk">
+		{timetable ? (
+			<>
+				<div class="tt-actions">
+					<button type="button" class={cn(buttonVariants())} onclick="print()">{labels.print}</button>
+					<a class={cn(buttonVariants({ variant: 'outline' }))} href={schedulePath}>{labels.list}</a>
+				</div>
+				<article class="tt-sheet" style={`--rooms: ${timetable.rooms.length}`}>
+					<header class="tt-head">
+						<h1>FOSS for All Conference 2026</h1>
+						<p>{t.event.date} · {t.event.venue}</p>
+					</header>
+
+					<div class="tt-grid" style={`--rows: auto ${rows}`}>
+						<div class="tt-room" style="grid-row: 1; grid-column: 1"></div>
+						{timetable.rooms.map((room, i) => <div class="tt-room" style={`grid-row: 1; grid-column: ${i + 2}`}>{room}</div>)}
+						{timetable.times.slice(0, -1).map((time, row) => <div class="tt-time" style={`grid-row: ${row + 2}`}>{time}</div>)}
+						{empty.map(({ row, column }) => <div style={`grid-row: ${row + 2}; grid-column: ${column + 2}`}></div>)}
+						{timetable.cells.map((cell) => {
+							const Cell = cell.href ? 'a' : 'div';
+							const place = `grid-row: ${cell.row + 2} / ${cell.rowEnd + 2}; grid-column: ${cell.column + 2} / ${cell.columnEnd + 2}`;
+							if (!cell.talk) return <div class="tt-break" style={place}><span class="sr-only">{cell.start} </span>{cell.title}</div>;
+							return (
+								<Cell class="tt-talk" style={place} href={cell.href && getLocalizedPath(locale, `sessions/${cell.href}`)}>
+									<span class="sr-only">{cell.start}, {timetable.rooms.slice(cell.column, cell.columnEnd).join(', ')}: </span>
+									{cell.keynote && <span class="tt-tag">{labels.keynote}</span>}
+									<strong>{cell.title}</strong>
+									<span>{cell.speakers}{cell.language && cell.language !== locale && ` [${labels.other}]`}</span>
+								</Cell>
+							);
+						})}
+					</div>
+
+					<footer class="tt-foot">
+						<p>[{labels.other}] {labels.otherLegend}</p>
+						<p>{labels.note}: <a href={schedulePath}>{scheduleUrl.host}{scheduleUrl.pathname}</a></p>
+					</footer>
+				</article>
+			</>
+		) : (
+			<div class="mx-auto max-w-4xl px-6 py-16 lg:px-8">
+				<h1 class="font-heading text-4xl font-black tracking-[-0.04em] text-balance sm:text-5xl">{labels.title}</h1>
+				<div class="mt-8 rounded-2xl border border-dashed p-8 text-center text-muted-foreground">
+					<p>{unavailable ? labels.unavailable : labels.pending}</p>
+					<a class={cn(buttonVariants({ variant: 'outline' }), 'mt-4')} href={getLocalizedPath(locale, 'sessions')}>{labels.sessions}</a>
+				</div>
+			</div>
+		)}
+	</main>
+</SiteLayout>
+
+<style>
+	/* A plain black-on-white sheet in every theme: it is meant for printing and photocopying.
+	   Sizes are in em of the sheet font, so the screen sheet and the printed A4 page share one layout. */
+	.tt-desk { padding: 2.5rem 1.5rem 4rem; }
+	.tt-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		justify-content: flex-end;
+		max-width: 860px;
+		margin: 0 auto 1rem;
+	}
+	.tt-sheet {
+		display: flex;
+		flex-direction: column;
+		max-width: 860px;
+		aspect-ratio: 210 / 297;
+		margin: 0 auto;
+		padding: 2.9em;
+		font-size: 14px;
+		line-height: 1.3;
+		color: #000;
+		background: #fff;
+		color-scheme: light;
+		box-shadow: 0 0 0 1px rgb(0 0 0 / 0.15), 0 8px 24px -8px rgb(0 0 0 / 0.3);
+	}
+	.tt-sheet a { color: inherit; text-decoration: none; }
+	.tt-sheet a:hover { text-decoration: underline; }
+	.tt-head {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 0 1em;
+		margin-bottom: 0.6em;
+		font-weight: 700;
+	}
+	.tt-head h1 { font-size: 1.15em; }
+
+	.tt-grid {
+		display: grid;
+		flex: 1;
+		grid-template-columns: max-content repeat(var(--rooms), minmax(0, 1fr));
+		grid-template-rows: var(--rows);
+		border-top: 1px solid #000;
+		border-left: 1px solid #000;
+	}
+	.tt-grid > * {
+		padding: 0.3em 0.45em;
+		border-right: 1px solid #000;
+		border-bottom: 1px solid #000;
+		break-inside: avoid;
+	}
+	.tt-room {
+		position: sticky;
+		top: 77px; /* height of the sticky site header */
+		z-index: 1;
+		font-weight: 700;
+		text-align: center;
+		background: #fff;
+	}
+	.tt-time { grid-column: 1; font-variant-numeric: tabular-nums; }
+	.tt-break { text-align: center; }
+	.tt-talk { display: flex; flex-direction: column; gap: 0.15em; }
+	.tt-tag { font-size: 0.8em; font-weight: 700; }
+
+	.tt-foot { margin-top: 0.6em; font-size: 0.8em; }
+
+	@media (max-width: 639px) {
+		.tt-desk { padding: 1rem 0 2rem; }
+		.tt-actions { padding: 0 1rem; justify-content: flex-start; }
+		.tt-sheet { aspect-ratio: auto; padding: 1rem 0.5rem; font-size: 12px; box-shadow: none; }
+		.tt-grid { grid-template-rows: none; }
+		.tt-grid > * { padding: 0.3em; }
+	}
+
+	@page { size: A4; margin: 10mm; }
+	@media print {
+		:global(body > header), :global(body > footer), .tt-actions { display: none !important; }
+		/* A dark color-scheme would also paint the page margins dark. */
+		:global(html), :global(body) { background: #fff !important; color-scheme: light !important; }
+		.tt-desk { padding: 0; }
+		.tt-sheet { max-width: none; aspect-ratio: auto; min-height: 277mm; padding: 0; font-size: 8.6pt; box-shadow: none; }
+		.tt-room { position: static; }
+	}
+</style>
