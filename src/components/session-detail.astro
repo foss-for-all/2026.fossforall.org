@@ -24,6 +24,8 @@ const meta = [
 	[labels.room, session.room],
 ].filter(([, value]) => value);
 const links = [
+	// Pretalx serves an .ics per talk once it has a slot in the released schedule.
+	[labels.calendar, session.start && session.url && `${session.url.replace(/\/$/, '')}.ics`],
 	[labels.video, session.video],
 	[labels.feedback, session.feedback],
 	[labels.pretalx, session.url],

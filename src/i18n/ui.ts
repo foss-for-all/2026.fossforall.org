@@ -39,6 +39,9 @@ export const ui = {
       label: '포럼',
       title: '최근 소식',
       viewAll: '소식 더 보기',
+      rss: 'RSS 구독',
+      feed: 'FOSS for All Conference 2026 소식',
+      scheduleFeed: 'FOSS for All Conference 2026 일정 변경',
     },
     sections: [
       {
@@ -107,6 +110,9 @@ export const ui = {
       label: 'Forum',
       title: 'Latest news',
       viewAll: 'View more news',
+      rss: 'Subscribe via RSS',
+      feed: 'FOSS for All Conference 2026 news',
+      scheduleFeed: 'FOSS for All Conference 2026 schedule updates',
     },
     sections: [
       {

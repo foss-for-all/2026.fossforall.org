@@ -27,6 +27,10 @@ show a localized message and link to Pretalx.
 `npm run cards` also builds 2160x2160 card-news images for social feeds into
 `dist/cards/{ko,en}/{sessions,speakers}/`. They are not part of the deployed site.
 
+Calendar, app and feed links point at Pretalx exports (`schedule.ics`, `schedule.xml`,
+`talk/<code>.ics`, `schedule/feed.xml`) and the forum's `conf-2026` tag RSS; nothing is
+generated locally.
+
 - `src/content/pages/{ko,en}/*.mdx` prose pages, rendered by `src/pages/[slug].astro`
 - `src/data/sponsorship/` the sponsorship prospectus page, one typed object per locale
 - `src/i18n/` navigation, footer, and UI strings

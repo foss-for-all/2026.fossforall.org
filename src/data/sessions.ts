@@ -44,7 +44,7 @@ export interface SpeakerProfile extends SessionSpeaker { sessions: Session[] }
 export const sessionLabels = {
 	ko: {
 		title: '세션 목록', description: '컨퍼런스 세션과 발표자를 만나 보세요.',
-		feedback: '피드백 보내기', video: '영상 보기', pretalx: 'Pretalx에서 보기',
+		feedback: '피드백 보내기', video: '영상 보기', pretalx: 'Pretalx에서 보기', calendar: '캘린더에 추가',
 		empty: '아직 공개된 세션이 없습니다. 곧 다시 확인해 주세요.',
 		unavailable: '세션 목록을 불러올 수 없습니다. Pretalx에서 프로그램을 확인해 주세요.',
 		program: 'Pretalx에서 프로그램 보기', unknownType: '세션', unknownSpeaker: '발표자 추후 공개',
@@ -53,7 +53,7 @@ export const sessionLabels = {
 	},
 	en: {
 		title: 'Sessions', description: 'Explore the conference sessions and meet our speakers.',
-		feedback: 'Give feedback', video: 'Watch video', pretalx: 'View on Pretalx',
+		feedback: 'Give feedback', video: 'Watch video', pretalx: 'View on Pretalx', calendar: 'Add to calendar',
 		empty: 'No sessions have been published yet. Check back soon.',
 		unavailable: 'The session list is currently unavailable. Please check the program on Pretalx.',
 		program: 'View program on Pretalx', unknownType: 'Session', unknownSpeaker: 'Speaker to be announced',
