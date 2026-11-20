@@ -1,0 +1,902 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 528 448"
+   width="527.7"
+   height="447.9"
+   version="1.1"
+   id="svg98"
+   sodipodi:docname="gemini-svg.svg"
+   inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview98"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="1.8798839"
+     inkscape:cx="229.80142"
+     inkscape:cy="275.01698"
+     inkscape:window-width="1853"
+     inkscape:window-height="1043"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg98" />
+  <defs
+     id="defs11">
+    <style
+       id="style1">
+      .wall { fill: none; stroke: #183a7a; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+      .door { fill: #ffffff; stroke: #183a7a; stroke-width: 0.9; }
+      .pillar { fill: #c4c7cc; stroke: #183a7a; stroke-width: 1.2; }
+      .room-blue { fill: #2573f5; stroke: #183a7a; stroke-width: 1.4; }
+      .room-lightblue { fill: #c9d9f5; stroke: #183a7a; stroke-width: 1.4; }
+      .room-gray { fill: #c4c7cc; stroke: #183a7a; stroke-width: 1.4; }
+      .room-white { fill: #f9fafc; stroke: #183a7a; stroke-width: 1.4; }
+      .title-text { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; font-weight: 700; font-size: 13px; fill: #ffffff; text-anchor: middle; }
+      .sub-text { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; font-weight: 600; font-size: 8.5px; fill: #ffffff; text-anchor: middle; }
+      .icon-bg { fill: #00d27a; stroke: #183a7a; stroke-width: 1.1; }
+      .icon-fg { fill: none; stroke: #183a7a; stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
+      .icon-fill { fill: #183a7a; }
+    </style>
+    <!-- 공통 아이콘 정의 -->
+    <!-- 1. 식당/탕비실 (포크+나이프) -->
+    <g
+       id="icon-dining">
+      <circle
+         cx="0"
+         cy="0"
+         r="8.5"
+         class="icon-bg"
+         id="circle1" />
+      <path
+         d="M -2.5,-4.5 L -2.5,-1 M -1.2,-4.5 L -1.2,-1 M -3.8,-4.5 L -3.8,-1 M -3.8,-1 L -1.2,-1 M -2.5,-1 L -2.5,4.5"
+         class="icon-fg"
+         id="path1" />
+      <path
+         d="M 2.2,-4.5 L 2.2,4.5 M 2.2,-4.5 C 3.8,-4.5 3.8,-1 2.2,-1"
+         class="icon-fg"
+         id="path2" />
+    </g>
+    <!-- 2. 화장실 (남녀) -->
+    <g
+       id="icon-restroom">
+      <circle
+         cx="0"
+         cy="0"
+         r="8.5"
+         class="icon-bg"
+         id="circle2" />
+      <circle
+         cx="-2.4"
+         cy="-3.2"
+         r="1.2"
+         class="icon-fill"
+         id="circle3" />
+      <rect
+         x="-3.7"
+         y="-1.5"
+         width="2.6"
+         height="4.8"
+         rx="0.8"
+         class="icon-fill"
+         id="rect3" />
+      <circle
+         cx="2.4"
+         cy="-3.2"
+         r="1.2"
+         class="icon-fill"
+         id="circle4" />
+      <path
+         d="M 1.1,-1.5 L 3.7,-1.5 L 4.3,2.5 L 3.2,2.5 L 3.2,3.3 L 1.6,3.3 L 1.6,2.5 L 0.5,2.5 Z"
+         class="icon-fill"
+         id="path4" />
+    </g>
+    <!-- 3. 계단 -->
+    <g
+       id="icon-stairs">
+      <circle
+         cx="0"
+         cy="0"
+         r="8.5"
+         class="icon-bg"
+         id="circle5" />
+      <polyline
+         points="-4.5,3.5 -2,3.5 -2,1.2 0.5,1.2 0.5,-1.1 3,-1.1 3,-3.5 4.8,-3.5"
+         class="icon-fg"
+         id="polyline5" />
+    </g>
+    <!-- 4. 엘리베이터 -->
+    <g
+       id="icon-elevator">
+      <circle
+         cx="0"
+         cy="0"
+         r="8.5"
+         class="icon-bg"
+         id="circle6" />
+      <rect
+         x="-4"
+         y="-4"
+         width="8"
+         height="8"
+         rx="1"
+         class="icon-fg"
+         id="rect6" />
+      <polygon
+         points="-1.8,-0.8 -0.6,-2.5 0.6,-0.8"
+         class="icon-fill"
+         id="polygon6" />
+      <polygon
+         points="-1.8,0.8 -0.6,2.5 0.6,0.8"
+         class="icon-fill"
+         id="polygon7" />
+      <line
+         x1="1.8"
+         y1="-2.2"
+         x2="1.8"
+         y2="2.2"
+         class="icon-fg"
+         id="line7" />
+    </g>
+    <!-- 5. 안내/리셉션 -->
+    <g
+       id="icon-info">
+      <circle
+         cx="0"
+         cy="0"
+         r="8.5"
+         class="icon-bg"
+         id="circle7" />
+      <circle
+         cx="0"
+         cy="-2.8"
+         r="1.5"
+         class="icon-fill"
+         id="circle8" />
+      <rect
+         x="-3.5"
+         y="0"
+         width="7"
+         height="3.2"
+         rx="0.8"
+         class="icon-fill"
+         id="rect8" />
+    </g>
+    <!-- 6. 카페 (커피잔) -->
+    <g
+       id="icon-cafe">
+      <circle
+         cx="0"
+         cy="0"
+         r="8.5"
+         class="icon-bg"
+         id="circle9" />
+      <path
+         d="M -3.5,-1.5 L 2.5,-1.5 L 2.5,2 C 2.5,3.5 1.2,4.2 -0.5,4.2 C -2.2,4.2 -3.5,3.5 -3.5,2 Z"
+         class="icon-fg"
+         id="path9" />
+      <path
+         d="M 2.5,-0.8 L 4,-0.8 C 4.8,-0.8 4.8,1.5 4,1.5 L 2.5,1.5"
+         class="icon-fg"
+         id="path10" />
+      <line
+         x1="-1.5"
+         y1="-3.8"
+         x2="-1.5"
+         y2="-2.6"
+         class="icon-fg"
+         id="line10" />
+      <line
+         x1="0.5"
+         y1="-3.8"
+         x2="0.5"
+         y2="-2.6"
+         class="icon-fg"
+         id="line11" />
+    </g>
+  </defs>
+  <!-- 어두운 외곽 배경 -->
+  <rect
+     x="0"
+     y="0"
+     width="528"
+     height="448"
+     fill="#3a3a3d"
+     id="rect11" />
+  <!-- 건물 전체 외곽 베이스 (흰색 복도/공용부) -->
+  <polygon
+     points="18,1.5 215,1.5 215,11 402,11 402,21 510,21 510,145 526.5,145 526.5,424 495,424 495,446.5 27,446.5 27,315 18,315 18,176 1.5,176 1.5,145 1.5,51 18,51"
+     fill="#f9fafc"
+     stroke="#183a7a"
+     stroke-width="1.6"
+     id="polygon11" />
+  <rect
+     style="font-variation-settings:'wght' 800;fill:#00d27a;fill-opacity:1;stroke:#000000;stroke-width:0.599587;stroke-dasharray:none"
+     id="rect98-9-9"
+     width="15.673853"
+     height="16.900738"
+     x="28.517778"
+     y="28.477097" />
+  <text
+     xml:space="preserve"
+     style="font-size:13.3409px;line-height:1;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu, @wght=800';font-variation-settings:'wght' 800;writing-mode:lr-tb;direction:ltr;fill:#00d27a;fill-opacity:1;stroke:#000000;stroke-width:1.00057;stroke-dasharray:none"
+     x="31.392029"
+     y="41.863594"
+     id="text98-4-6"><tspan
+       sodipodi:role="line"
+       id="tspan98-8-38"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:13.3409px;font-family:'Noto Sans CJK KR';-inkscape-font-specification:'Noto Sans CJK KR';fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.00057"
+       x="31.392029"
+       y="41.863594">R</tspan></text>
+  <!-- ==================== 상단 영역 ==================== -->
+  <!-- 좌측 상단 다각형 공용공간 라인 -->
+  <polygon
+     points="84,33 113,33 113,136 84,136 84,108 70,99 81,64 78,46 84,46"
+     class="room-white"
+     id="polygon12" />
+  <!-- 상단 연파랑실 (좌) -->
+  <rect
+     x="113"
+     y="45"
+     width="69"
+     height="91"
+     class="room-lightblue"
+     id="rect12" />
+  <!-- 집현전 301호 -->
+  <rect
+     x="182"
+     y="45"
+     width="115"
+     height="91"
+     class="room-blue"
+     id="rect13" />
+  <!-- 서원 400호 -->
+  <rect
+     x="297"
+     y="45"
+     width="115"
+     height="91"
+     class="room-blue"
+     id="rect14" />
+  <rect
+     style="font-variation-settings:'wght' 800;fill:#00d27a;fill-opacity:1;stroke:#000000;stroke-width:0.910433;stroke-dasharray:none"
+     id="rect98-15"
+     width="36.815395"
+     height="16.589891"
+     x="334.32404"
+     y="82.098068" />
+  <text
+     xml:space="preserve"
+     style="font-size:13.3409px;line-height:1;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu, @wght=800';font-variation-settings:'wght' 800;writing-mode:lr-tb;direction:ltr;fill:#00d27a;fill-opacity:1;stroke:#000000;stroke-width:1.00057;stroke-dasharray:none"
+     x="341.0451"
+     y="95.329147"
+     id="text98-9"><tspan
+       sodipodi:role="line"
+       id="tspan98-77"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:13.3409px;font-family:'Noto Sans CJK KR';-inkscape-font-specification:'Noto Sans CJK KR';fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.00057"
+       x="341.0451"
+       y="95.329147">400</tspan></text>
+  <!-- 상단 연파랑실 (우) -->
+  <rect
+     x="412"
+     y="45"
+     width="63"
+     height="91"
+     class="room-lightblue"
+     id="rect16" />
+  <!-- 상단 작은 부속실 (집현전 위) -->
+  <rect
+     x="196"
+     y="33"
+     width="33"
+     height="12"
+     class="room-white"
+     id="rect17" />
+  <!-- 상단 기둥 4개 -->
+  <rect
+     x="168"
+     y="33"
+     width="13"
+     height="12"
+     class="pillar"
+     id="rect19" />
+  <rect
+     x="261"
+     y="33"
+     width="13"
+     height="12"
+     class="pillar"
+     id="rect20" />
+  <rect
+     x="354"
+     y="33"
+     width="13"
+     height="12"
+     class="pillar"
+     id="rect21" />
+  <rect
+     x="492"
+     y="33"
+     width="12"
+     height="12"
+     class="pillar"
+     id="rect22" />
+  <!-- ==================== 중단 코어 및 좌/우 구역 ==================== -->
+  <!-- 좌측 회색 구역 -->
+  <rect
+     x="18"
+     y="156"
+     width="35"
+     height="159"
+     class="room-gray"
+     id="rect23" />
+  <!-- 엘리베이터 홀 (세로 복도) -->
+  <rect
+     x="53"
+     y="151"
+     width="32"
+     height="164"
+     class="room-white"
+     id="rect24" />
+  <!-- 중앙 회색 블록 3연속 -->
+  <rect
+     x="85"
+     y="151"
+     width="32"
+     height="164"
+     class="room-gray"
+     id="rect25" />
+  <rect
+     x="117"
+     y="151"
+     width="32"
+     height="164"
+     class="room-gray"
+     id="rect26" />
+  <rect
+     x="149"
+     y="151"
+     width="32"
+     height="164"
+     class="room-gray"
+     id="rect27" />
+  <!-- 화장실 복도 (중앙 좌) -->
+  <rect
+     style="font-variation-settings:'wght' 800;fill:#00d27a;fill-opacity:1;stroke:#000000;stroke-width:0.910433;stroke-dasharray:none"
+     id="rect98-7"
+     width="36.815395"
+     height="16.589891"
+     x="425.93582"
+     y="82.098068" />
+  <text
+     xml:space="preserve"
+     style="font-size:13.3409px;line-height:1;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu, @wght=800';font-variation-settings:'wght' 800;writing-mode:lr-tb;direction:ltr;fill:#00d27a;fill-opacity:1;stroke:#000000;stroke-width:1.00057;stroke-dasharray:none"
+     x="432.65692"
+     y="95.329147"
+     id="text98-3"><tspan
+       sodipodi:role="line"
+       id="tspan98-6"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:13.3409px;font-family:'Noto Sans CJK KR';-inkscape-font-specification:'Noto Sans CJK KR';fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.00057"
+       x="432.65692"
+       y="95.329147">401</tspan></text>
+  <rect
+     x="181"
+     y="151"
+     width="30"
+     height="164"
+     class="room-white"
+     id="rect28" />
+  <!-- 회색 세로 블록 -->
+  <rect
+     x="211"
+     y="151"
+     width="31"
+     height="164"
+     class="room-gray"
+     id="rect29" />
+  <!-- 계단실 블록 (위 회색 / 아래 흰색) -->
+  <rect
+     x="242"
+     y="151"
+     width="33"
+     height="63"
+     class="room-gray"
+     id="rect30" />
+  <rect
+     x="242"
+     y="214"
+     width="33"
+     height="101"
+     class="room-white"
+     id="rect31" />
+  <!-- 큰 회색 블록 -->
+  <rect
+     x="275"
+     y="151"
+     width="57"
+     height="164"
+     class="room-gray"
+     id="rect32" />
+  <!-- 계단 및 샤프트 구역 -->
+  <rect
+     x="332"
+     y="151"
+     width="22"
+     height="18"
+     class="room-white"
+     id="rect33" />
+  <rect
+     x="354"
+     y="151"
+     width="13"
+     height="18"
+     class="room-gray"
+     id="rect34" />
+  <rect
+     x="332"
+     y="169"
+     width="35"
+     height="71"
+     class="room-white"
+     id="rect35" />
+  <rect
+     x="332"
+     y="240"
+     width="35"
+     height="75"
+     class="room-gray"
+     id="rect36" />
+  <!-- 화장실 복도 (중앙 우) -->
+  <rect
+     x="367"
+     y="151"
+     width="34"
+     height="164"
+     class="room-white"
+     id="rect37" />
+  <!-- 화랑도 100호 & 태백 101호 -->
+  <rect
+     x="418"
+     y="185"
+     width="97"
+     height="53"
+     class="room-blue"
+     id="rect38" />
+  <rect
+     x="418"
+     y="238"
+     width="97"
+     height="53"
+     class="room-blue"
+     id="rect39" />
+  <!-- 화랑도 위 소형실 및 기둥 -->
+  <rect
+     x="412"
+     y="173"
+     width="24"
+     height="12"
+     class="room-white"
+     id="rect41" />
+  <rect
+     x="488"
+     y="145"
+     width="14"
+     height="14"
+     class="pillar"
+     id="rect42" />
+  <!-- ==================== 하단 영역 ==================== -->
+  <!-- 좌측 하단 연파랑실 (위/아래) -->
+  <polygon
+     points="27,315 57,315 57,325 71,325 77,397 27,397"
+     class="room-lightblue"
+     id="polygon42" />
+  <polygon
+     points="27,397 167,397 173,446.5 27,446.5"
+     class="room-lightblue"
+     id="polygon43" />
+  <!-- 하단 중앙 소형 연파랑실 4개 -->
+  <rect
+     x="131"
+     y="325"
+     width="56"
+     height="31"
+     class="room-lightblue"
+     id="rect43" />
+  <rect
+     x="187"
+     y="325"
+     width="21"
+     height="31"
+     class="room-lightblue"
+     id="rect44" />
+  <rect
+     x="208"
+     y="325"
+     width="28"
+     height="31"
+     class="room-lightblue"
+     id="rect45" />
+  <rect
+     x="236"
+     y="325"
+     width="28"
+     height="31"
+     class="room-lightblue"
+     id="rect46" />
+  <!-- 하단 중앙 탕비실/휴게실 (경사벽 포함) -->
+  <polygon
+     points="73,335 131,335 131,356 264,356 264,446.5 173,446.5 167,397 158,386 77,397"
+     class="room-white"
+     id="polygon46" />
+  <!-- 하단 우측 대형 실 3개 -->
+  <rect
+     x="264"
+     y="325"
+     width="113"
+     height="121.5"
+     class="room-white"
+     id="rect47" />
+  <rect
+     x="377"
+     y="325"
+     width="58"
+     height="121.5"
+     class="room-white"
+     id="rect48" />
+  <rect
+     x="435"
+     y="325"
+     width="80"
+     height="90"
+     class="room-white"
+     id="rect49" />
+  <rect
+     x="435"
+     y="415"
+     width="80"
+     height="31.5"
+     class="room-white"
+     id="rect50" />
+  <!-- ==================== 문(Door Arc) 디테일 ==================== -->
+  <!-- 상단 방들의 위/아래 문 -->
+  <path
+     d="M 103,33 A 9,9 0 0 0 112,24 L 112,33"
+     class="door"
+     id="path50" />
+  <path
+     d="M 157,45 A 9,9 0 0 0 166,36 L 166,45"
+     class="door"
+     id="path51" />
+  <path
+     d="M 196,33 A 9,9 0 0 1 205,24 L 196,24"
+     class="door"
+     id="path52" />
+  <path
+     d="M 250,45 A 9,9 0 0 0 259,36 L 259,45"
+     class="door"
+     id="path53" />
+  <rect
+     style="font-variation-settings:'wght' 800;fill:#00d27a;fill-opacity:1;stroke:#000000;stroke-width:0.910433;stroke-dasharray:none"
+     id="rect98-9"
+     width="36.815395"
+     height="16.589891"
+     x="449.81149"
+     y="203.07117" />
+  <text
+     xml:space="preserve"
+     style="font-size:13.3409px;line-height:1;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu, @wght=800';font-variation-settings:'wght' 800;writing-mode:lr-tb;direction:ltr;fill:#00d27a;fill-opacity:1;stroke:#000000;stroke-width:1.00057;stroke-dasharray:none"
+     x="456.53259"
+     y="216.30225"
+     id="text98-4"><tspan
+       sodipodi:role="line"
+       id="tspan98-8"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:13.3409px;font-family:'Noto Sans CJK KR';-inkscape-font-specification:'Noto Sans CJK KR';fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.00057"
+       x="456.53259"
+       y="216.30225">100</tspan></text>
+  <rect
+     style="font-variation-settings:'wght' 800;fill:#00d27a;fill-opacity:1;stroke:#000000;stroke-width:0.910433;stroke-dasharray:none"
+     id="rect98-9-2"
+     width="36.815395"
+     height="16.589891"
+     x="449.81149"
+     y="251.65793" />
+  <text
+     xml:space="preserve"
+     style="font-size:13.3409px;line-height:1;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu, @wght=800';font-variation-settings:'wght' 800;writing-mode:lr-tb;direction:ltr;fill:#00d27a;fill-opacity:1;stroke:#000000;stroke-width:1.00057;stroke-dasharray:none"
+     x="456.53256"
+     y="264.88901"
+     id="text98-4-9"><tspan
+       sodipodi:role="line"
+       id="tspan98-8-3"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:13.3409px;font-family:'Noto Sans CJK KR';-inkscape-font-specification:'Noto Sans CJK KR';fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.00057"
+       x="456.53256"
+       y="264.88901">101</tspan></text>
+  <rect
+     style="font-variation-settings:'wght' 800;fill:#00d27a;fill-opacity:1;stroke:#000000;stroke-width:0.910433;stroke-dasharray:none"
+     id="rect98-9-8"
+     width="36.815395"
+     height="16.589891"
+     x="456.91681"
+     y="363.29001" />
+  <text
+     xml:space="preserve"
+     style="font-size:13.3409px;line-height:1;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu, @wght=800';font-variation-settings:'wght' 800;writing-mode:lr-tb;direction:ltr;fill:#00d27a;fill-opacity:1;stroke:#000000;stroke-width:1.00057;stroke-dasharray:none"
+     x="463.63794"
+     y="376.52109"
+     id="text98-4-8"><tspan
+       sodipodi:role="line"
+       id="tspan98-8-5"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:13.3409px;font-family:'Noto Sans CJK KR';-inkscape-font-specification:'Noto Sans CJK KR';fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.00057"
+       x="463.63794"
+       y="376.52109">102</tspan></text>
+  <path
+     d="M 343,45 A 9,9 0 0 0 352,36 L 352,45"
+     class="door"
+     id="path54" />
+  <path
+     d="M 414,45 A 9,9 0 0 1 423,36 L 414,36"
+     class="door"
+     id="path55" />
+  <!-- 메인 복도 상단 방 출입문 -->
+  <path
+     d="M 118,136 A 9,9 0 0 0 127,145 L 118,145"
+     class="door"
+     id="path56" />
+  <path
+     d="M 184,136 A 9,9 0 0 0 193,145 L 184,145"
+     class="door"
+     id="path57" />
+  <path
+     d="M 299,136 A 9,9 0 0 0 308,145 L 299,145"
+     class="door"
+     id="path58" />
+  <path
+     d="M 465,136 A 9,9 0 0 0 474,145 L 474,136"
+     class="door"
+     id="path59" />
+  <!-- 좌측 복도 & 코어 문 -->
+  <path
+     d="M 53,138 A 9,9 0 0 1 62,129 L 53,129"
+     class="door"
+     id="path60" />
+  <path
+     d="M 53,140 A 9,9 0 0 0 62,149 L 53,149"
+     class="door"
+     id="path61" />
+  <!-- 중앙 회색실 상단 양문 -->
+  <path
+     d="M 121,151 A 7,7 0 0 0 128,158 L 128,151"
+     class="door"
+     id="path62" />
+  <path
+     d="M 131,151 A 7,7 0 0 1 138,158 L 131,158"
+     class="door"
+     id="path63" />
+  <!-- 화장실/계단실 출입문 -->
+  <path
+     d="M 200,151 A 9,9 0 0 0 209,160 L 209,151"
+     class="door"
+     id="path64" />
+  <path
+     d="M 200,315 A 9,9 0 0 1 209,306 L 209,315"
+     class="door"
+     id="path65" />
+  <path
+     d="M 264,315 A 9,9 0 0 1 273,306 L 273,315"
+     class="door"
+     id="path66" />
+  <!-- 중앙 하단 양문 -->
+  <path
+     d="M 284,151 A 7,7 0 0 0 291,144 L 291,151"
+     class="door"
+     id="path67" />
+  <path
+     d="M 293,151 A 7,7 0 0 1 300,144 L 293,144"
+     class="door"
+     id="path68" />
+  <path
+     d="M 284,315 A 7,7 0 0 0 291,322 L 291,315"
+     class="door"
+     id="path69" />
+  <path
+     d="M 293,315 A 7,7 0 0 1 300,322 L 293,322"
+     class="door"
+     id="path70" />
+  <!-- 우측 코어 & 화랑도/태백 문 -->
+  <path
+     d="M 336,151 A 8,8 0 0 0 344,159 L 344,151"
+     class="door"
+     id="path71" />
+  <path
+     d="M 353,169 A 8,8 0 0 1 361,177 L 361,169"
+     class="door"
+     id="path72" />
+  <path
+     d="M 371,315 A 9,9 0 0 1 380,306 L 371,306"
+     class="door"
+     id="path73" />
+  <path
+     d="M 401,136 A 10,10 0 0 1 411,146 L 411,136"
+     class="door"
+     id="path74" />
+  <path
+     d="M 412,173 A 8,8 0 0 1 420,165 L 412,165"
+     class="door"
+     id="path75" />
+  <path
+     d="M 484,185 A 9,9 0 0 1 493,176 L 484,176"
+     class="door"
+     id="path76" />
+  <path
+     d="M 401,311 A 9,9 0 0 0 410,302 L 410,311"
+     class="door"
+     id="path77" />
+  <path
+     d="M 418,289 A 9,9 0 0 0 409,280 L 409,289"
+     class="door"
+     id="path78" />
+  <!-- 하단 방들의 문 -->
+  <path
+     d="M 65,397 A 9,9 0 0 1 74,388 L 65,388"
+     class="door"
+     id="path79" />
+  <path
+     d="M 96,395 A 8,8 0 0 0 105,402 L 103,394"
+     class="door"
+     id="path80" />
+  <path
+     d="M 149,388 A 8,8 0 0 0 156,395 L 156,387"
+     class="door"
+     id="path81" />
+  <path
+     d="M 178,356 A 8,8 0 0 1 186,348 L 186,356"
+     class="door"
+     id="path82" />
+  <path
+     d="M 188,356 A 8,8 0 0 0 196,348 L 188,348"
+     class="door"
+     id="path83" />
+  <path
+     d="M 227,356 A 8,8 0 0 1 235,348 L 235,356"
+     class="door"
+     id="path84" />
+  <path
+     d="M 237,356 A 8,8 0 0 0 245,348 L 237,348"
+     class="door"
+     id="path85" />
+  <path
+     d="M 264,368 A 9,9 0 0 0 255,377 L 264,377"
+     class="door"
+     id="path86" />
+  <path
+     d="M 353,325 A 9,9 0 0 1 362,316 L 362,325"
+     class="door"
+     id="path87" />
+  <path
+     d="M 364,325 A 9,9 0 0 0 373,316 L 364,316"
+     class="door"
+     id="path88" />
+  <path
+     d="M 435,415 A 9,9 0 0 1 444,406 L 435,406"
+     class="door"
+     id="path89" />
+  <!-- ==================== 아이콘 배치 ==================== -->
+  <!-- 좌측 상단 식당 -->
+  <use
+     href="#icon-dining"
+     x="57"
+     y="77"
+     id="use89" />
+  <!-- 우측 상단 식당 -->
+  <use
+     href="#icon-dining"
+     x="454"
+     y="160"
+     id="use90" />
+  <!-- 하단 중앙 식당 -->
+  <use
+     href="#icon-dining"
+     x="227"
+     y="405"
+     id="use91" />
+  <!-- 좌측 엘리베이터 -->
+  <use
+     href="#icon-elevator"
+     x="69"
+     y="233"
+     id="use92" />
+  <!-- 중앙 좌 화장실 -->
+  <use
+     href="#icon-restroom"
+     x="196"
+     y="233"
+     id="use93" />
+  <!-- 우측 화장실 -->
+  <use
+     href="#icon-restroom"
+     x="384"
+     y="233"
+     id="use94" />
+  <!-- 중앙 계단 -->
+  <use
+     href="#icon-stairs"
+     x="259"
+     y="246"
+     id="use95" />
+  <!-- 우측 계단 -->
+  <use
+     href="#icon-stairs"
+     x="350"
+     y="205"
+     id="use96" />
+  <!-- 하단 안내데스크 -->
+  <!-- 우측 하단 카페 -->
+  <use
+     href="#icon-cafe"
+     x="504"
+     y="302"
+     id="use98" />
+  <!-- 현위치 핀 (네이비 마커) -->
+  <rect
+     style="font-variation-settings:'wght' 800;fill:#00d27a;fill-opacity:1;stroke:#000000;stroke-width:0.910433;stroke-dasharray:none"
+     id="rect98"
+     width="36.815395"
+     height="16.589891"
+     x="128.54506"
+     y="82.098068" />
+  <text
+     xml:space="preserve"
+     style="font-size:13.3409px;line-height:1;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu, @wght=800';font-variation-settings:'wght' 800;writing-mode:lr-tb;direction:ltr;fill:#00d27a;fill-opacity:1;stroke:#000000;stroke-width:1.00057;stroke-dasharray:none"
+     x="135.26614"
+     y="95.329147"
+     id="text98"><tspan
+       sodipodi:role="line"
+       id="tspan98"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:13.3409px;font-family:'Noto Sans CJK KR';-inkscape-font-specification:'Noto Sans CJK KR';fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.00057"
+       x="135.26614"
+       y="95.329147">300</tspan></text>
+  <rect
+     style="font-variation-settings:'wght' 800;fill:#00d27a;fill-opacity:1;stroke:#000000;stroke-width:0.910433;stroke-dasharray:none"
+     id="rect98-1"
+     width="36.815395"
+     height="16.589891"
+     x="221.60831"
+     y="82.098068" />
+  <text
+     xml:space="preserve"
+     style="font-size:13.3409px;line-height:1;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu, @wght=800';font-variation-settings:'wght' 800;writing-mode:lr-tb;direction:ltr;fill:#00d27a;fill-opacity:1;stroke:#000000;stroke-width:1.00057;stroke-dasharray:none"
+     x="228.32939"
+     y="95.329147"
+     id="text98-7"><tspan
+       sodipodi:role="line"
+       id="tspan98-7"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:13.3409px;font-family:'Noto Sans CJK KR';-inkscape-font-specification:'Noto Sans CJK KR';fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.00057"
+       x="228.32939"
+       y="95.329147">301</tspan></text>
+  <rect
+     style="font-variation-settings:'wght' 800;fill:#00d27a;fill-opacity:1;stroke:#000000;stroke-width:0.689738;stroke-dasharray:none"
+     id="rect98-9-6"
+     width="20.852711"
+     height="16.810587"
+     x="104.404"
+     y="360.4722" />
+  <text
+     xml:space="preserve"
+     style="font-size:13.3409px;line-height:1;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu, @wght=800';font-variation-settings:'wght' 800;writing-mode:lr-tb;direction:ltr;fill:#00d27a;fill-opacity:1;stroke:#000000;stroke-width:1.00057;stroke-dasharray:none"
+     x="109.23431"
+     y="373.81363"
+     id="text98-4-1"><tspan
+       sodipodi:role="line"
+       id="tspan98-8-1"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:13.3409px;font-family:'Noto Sans CJK KR';-inkscape-font-specification:'Noto Sans CJK KR';fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.00057"
+       x="109.23431"
+       y="373.81363">O</tspan></text>
+</svg>
