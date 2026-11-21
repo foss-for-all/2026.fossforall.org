@@ -5,6 +5,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
+import { Rss } from 'lucide-react';
 import { discourse } from '../config';
 import type { Locale } from '../i18n/config';
 import { useTranslations } from '../i18n/utils';
@@ -51,9 +52,15 @@ const dateFormatter = new Intl.DateTimeFormat(locale === 'ko' ? 'ko-KR' : 'en-US
 					{t.forum.title}
 				</h2>
 			</div>
-			<a class="text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline" href={discourse.newsUrl} target="_blank" rel="noreferrer">
-				{t.forum.viewAll}
-			</a>
+			<div class="flex items-center gap-4">
+				<a class="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline" href={discourse.newsRssUrl} type="application/rss+xml">
+					<Rss aria-hidden="true" className="size-4" />
+					{t.forum.rss}
+				</a>
+				<a class="text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline" href={discourse.newsUrl} target="_blank" rel="noreferrer">
+					{t.forum.viewAll}
+				</a>
+			</div>
 		</div>
 
 		<div class="grid grid-cols-1 gap-4 md:grid-cols-3">

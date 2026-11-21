@@ -5,7 +5,7 @@ import SiteHeader from '../components/site-header.astro';
 import type { Locale } from '../i18n/config';
 import { getNavigation } from '../i18n/navigation';
 import { getLanguageOptions, useTranslations } from '../i18n/utils';
-import { site } from '../config';
+import { discourse, pretalx, site } from '../config';
 import { ogSize } from '../data/og';
 
 interface Props {
@@ -77,6 +77,8 @@ const localeRedirect =
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={metaDescription} />
 		<link rel="canonical" href={canonicalUrl.href} />
+		<link rel="alternate" type="application/rss+xml" title={t.forum.feed} href={discourse.newsRssUrl} />
+		<link rel="alternate" type="application/atom+xml" title={t.forum.scheduleFeed} href={pretalx.feed} />
 		{languageOptions.map((option) => <link rel="alternate" hreflang={option.locale} href={new URL(option.href, site.url).href} />)}
 		{korean && <link rel="alternate" hreflang="x-default" href={new URL(korean.href, site.url).href} />}
 		<meta property="og:type" content="website" />

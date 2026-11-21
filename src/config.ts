@@ -11,6 +11,7 @@ export const discourse = {
 	baseUrl: 'https://forum.fossforall.org',
 	newsUrl: 'https://forum.fossforall.org/tags/c/news/notices/13/conf-2026/6',
 	newsFeedUrl: 'https://forum.fossforall.org/tags/c/news/notices/13/conf-2026/6.json',
+	newsRssUrl: 'https://forum.fossforall.org/tag/conf-2026.rss',
 } as const;
 
 export const pretalx = {
@@ -18,4 +19,8 @@ export const pretalx = {
 	eventSlug: '2026',
 	// Talks listed here come first in their group, in this order.
 	pinned: ['8VEJRP', 'W3TMNX'],
+	// The Pretalx room that stands for every room at once (opening, keynotes, closing).
+	everyRoom: 14,
+	exports: 'https://pretalx.fossforall.org/2026/schedule/export',
+	feed: 'https://pretalx.fossforall.org/2026/schedule/feed.xml',
 } as const;

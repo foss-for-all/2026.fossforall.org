@@ -9,12 +9,20 @@ const { locale } = Astro.props;
 const labels = {
 	ko: {
 		pending: '일정표는 일정이 확정되면 공개됩니다. 그동안 세션 목록을 확인해 주세요.',
+		links: '바로 가기',
+		glance: '한눈에 보기 (A4)',
+		subscribe: '캘린더 구독',
+		google: 'Google 캘린더',
 		sessions: '세션 목록 보기',
 		noscript: '일정표를 보려면 JavaScript가 필요합니다. JavaScript 없이 보려면',
 		here: '여기를 누르세요',
 	},
 	en: {
 		pending: 'The schedule will be published once it is finalized. In the meantime, check out the session list.',
+		links: 'Quick links',
+		glance: 'At a glance (A4)',
+		subscribe: 'Subscribe in calendar',
+		google: 'Google Calendar',
 		sessions: 'View sessions',
 		noscript: 'JavaScript is disabled in your browser. To access our schedule without JavaScript,',
 		here: 'click here',
@@ -22,6 +30,18 @@ const labels = {
 }[locale];
 
 const eventUrl = `${pretalx.baseUrl}/${pretalx.eventSlug}/`;
+const ics = `${pretalx.exports}/schedule.ics`;
+const webcal = ics.replace(/^https:/, 'webcal:');
+const links = [
+	[labels.glance, getLocalizedPath(locale, 'timetable')],
+	[labels.subscribe, webcal],
+	[labels.google, `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(webcal)}`],
+	['iCal', ics],
+	['XML', `${pretalx.exports}/schedule.xml`],
+	['xCal', `${pretalx.exports}/schedule.xcal`],
+	['JSON', `${pretalx.exports}/schedule.json`],
+	['RSS', pretalx.feed],
+];
 // The widget fails to load until a schedule version is released.
 // Anything but 200 or 404 fails CI builds so a transient outage does not hide a released schedule.
 const released = await fetch(`${eventUrl}schedule/widgets/schedule.json`, { method: 'HEAD', signal: AbortSignal.timeout(15000) })
@@ -31,6 +51,12 @@ const released = await fetch(`${eventUrl}schedule/widgets/schedule.json`, { meth
 	})
 	.catch((error) => { if (process.env.CI) throw error; return false; });
 ---
+
+{released && (
+	<p class="mb-6 text-sm">
+		<strong>{labels.links}:</strong> {links.map(([label, href], i) => <>{i > 0 && ' · '}<a href={href}>{label}</a></>)}
+	</p>
+)}
 
 {released ? (
 	<div class="overflow-hidden rounded-2xl border">
