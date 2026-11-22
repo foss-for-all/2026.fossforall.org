@@ -10,6 +10,7 @@ export type FooterLink = {
 
 type FooterConfig = {
 	title: string;
+	navLabel: string;
 	copyright: string;
 	links: FooterLink[];
 };
@@ -17,6 +18,7 @@ type FooterConfig = {
 const footer = {
 	ko: {
 		title: 'FOSS for All Conference 2026',
+		navLabel: '푸터',
 		copyright:
 			'© 2026-Present FOSS for All. 별도 고지가 없는 경우, 콘텐츠는 CC BY 4.0 소스코드는 MIT 라이센스 아래 이용 가능.',
 		links: [
@@ -44,6 +46,7 @@ const footer = {
 	},
 	en: {
 		title: 'FOSS for All Conference 2026',
+		navLabel: 'Footer',
 		copyright:
 			'© 2026-Present FOSS for All. Unless otherwise noted, content is available under CC BY 4.0 and source code under the MIT License.',
 		links: [
@@ -64,7 +67,7 @@ const footer = {
 			{
 				key: 'org',
 				label: 'Learn about FOSS for All',
-				href: 'https://fossforall.org',
+				href: 'https://fossforall.org/en/',
 				external: true,
 			},
 		],

@@ -23,23 +23,23 @@ interface Props {
 const tierStyles: Record<SponsorLevel, { container: string; image: string }> = {
 	gold: {
 		container: 'min-h-44 sm:min-h-52',
-		image: 'max-h-28 max-w-64 sm:max-h-32 sm:max-w-80',
+		image: 'max-h-28 max-w-[min(100%,16rem)] sm:max-h-32 sm:max-w-[min(100%,20rem)]',
 	},
 	silver: {
 		container: 'min-h-36 sm:min-h-40',
-		image: 'max-h-20 max-w-52 sm:max-h-24 sm:max-w-60',
+		image: 'max-h-20 max-w-[min(100%,13rem)] sm:max-h-24 sm:max-w-[min(100%,15rem)]',
 	},
 	bronze: {
 		container: 'min-h-28 sm:min-h-32',
-		image: 'max-h-14 max-w-40 sm:max-h-16 sm:max-w-44',
+		image: 'max-h-14 max-w-[min(100%,10rem)] sm:max-h-16 sm:max-w-[min(100%,11rem)]',
 	},
 	government: {
 		container: 'min-h-44 sm:min-h-52',
-		image: 'max-h-28 max-w-64 sm:max-h-32 sm:max-w-80',
+		image: 'max-h-28 max-w-[min(100%,16rem)] sm:max-h-32 sm:max-w-[min(100%,20rem)]',
 	},
 	venue: {
 		container: 'min-h-44 sm:min-h-52',
-		image: 'max-h-28 max-w-64 sm:max-h-32 sm:max-w-80',
+		image: 'max-h-28 max-w-[min(100%,16rem)] sm:max-h-32 sm:max-w-[min(100%,20rem)]',
 	},
 };
 
@@ -84,7 +84,7 @@ export function SponsorGallery({ content }: Props) {
 													<DialogTitle>{sponsor.name}</DialogTitle>
 													<DialogDescription asChild>
 														<div
-															className="mdx-content min-w-0 text-left break-keep [overflow-wrap:anywhere]"
+															className="mdx-content min-w-0 text-left break-keep [overflow-wrap:anywhere] [&_h2]:mt-4 [&_h2]:mb-2 [&_h2]:border-0 [&_h2]:pb-0 [&_h2]:text-base [&_h2]:font-semibold [&_h2]:text-foreground [&_h2:first-child]:mt-0 [&_h2+p]:mt-0"
 															dangerouslySetInnerHTML={{ __html: sponsor.descriptionHtml }}
 														/>
 													</DialogDescription>

@@ -20,6 +20,7 @@ type MobileNavProps = {
   description: string
   registerLabel: string
   openLabel: string
+  closeLabel?: string
 }
 
 function MobileLink({ item }: { item: NavigationLink }) {
@@ -43,6 +44,7 @@ export function MobileNav({
   description,
   registerLabel,
   openLabel,
+  closeLabel,
 }: MobileNavProps) {
   return (
     <Sheet>
@@ -51,18 +53,18 @@ export function MobileNav({
           <MenuIcon />
         </Button>
       </SheetTrigger>
-      <SheetContent className="flex flex-col" side="right">
+      <SheetContent side="right" closeLabel={closeLabel}>
         <SheetHeader>
           <SheetTitle>{title}</SheetTitle>
           <SheetDescription>{description}</SheetDescription>
         </SheetHeader>
 
-        <nav className="mt-8 flex flex-col gap-2">
+        <nav className="mt-4 flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto">
           {items.map((item) => (
             item.type === "link" ? (
               <MobileLink item={item} key={item.key} />
             ) : (
-              <div className="mt-4 flex flex-col gap-2" key={item.key}>
+              <div className="mt-4 flex flex-col gap-2 first:mt-0" key={item.key}>
                 <p className="px-3 text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase">
                   {item.label}
                 </p>
@@ -74,11 +76,10 @@ export function MobileNav({
           ))}
         </nav>
 
-
         <SheetFooter>
           <SheetClose asChild>
             <Button asChild size="lg">
-              <a href={site.ticketUrl}>{registerLabel}</a>
+              <a href={site.ticketUrl} target="_blank" rel="noreferrer">{registerLabel}</a>
             </Button>
           </SheetClose>
         </SheetFooter>

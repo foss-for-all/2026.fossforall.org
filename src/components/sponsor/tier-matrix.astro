@@ -1,12 +1,17 @@
 ---
 import type { MatrixRow, Tier } from '../../data/sponsorship/types';
+import type { Locale } from '../../i18n/config';
+import { getLocaleFromPathname } from '../../i18n/utils';
 
 interface Props {
+	locale?: Locale;
 	tiers: [Tier, Tier, Tier];
 	matrix: MatrixRow[];
 }
 
-const { tiers, matrix } = Astro.props;
+const { locale = getLocaleFromPathname(Astro.url.pathname), tiers, matrix } = Astro.props;
+const includedLabel = locale === 'ko' ? '포함' : 'included';
+const notIncludedLabel = locale === 'ko' ? '미포함' : 'not included';
 ---
 
 <div class="grid gap-4 sm:grid-cols-3">
@@ -56,11 +61,11 @@ const { tiers, matrix } = Astro.props;
 							{row.values.map((value) => (
 								<td class="px-2 py-3 text-center align-middle text-muted-foreground break-keep">
 									{value === true ? (
-										<span class="text-primary" aria-label="included">
+										<span class="text-primary" aria-label={includedLabel}>
 											&#9679;
 										</span>
 									) : value === false ? (
-										<span class="text-border" aria-label="not included">
+										<span class="text-border" aria-label={notIncludedLabel}>
 											&#8211;
 										</span>
 									) : (

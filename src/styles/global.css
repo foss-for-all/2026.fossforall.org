@@ -209,7 +209,16 @@
   }
 
   .mdx-content table {
-    @apply my-6 w-full overflow-hidden text-sm;
+    @apply my-6 w-full text-sm;
+  }
+
+  @media (max-width: 639px) {
+    .mdx-content table {
+      display: block;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
   }
 
   .mdx-content thead {

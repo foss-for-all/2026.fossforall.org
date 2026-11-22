@@ -129,7 +129,7 @@ const navigation = {
 			type: 'link',
 			key: 'fossforall',
 			label: 'fossforall.org',
-			href: 'https://fossforall.org',
+			href: 'https://fossforall.org/en/',
 			external: true,
 		},
 	],

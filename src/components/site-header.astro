@@ -11,12 +11,14 @@ import { getLanguageOptions, getLocalizedPath } from '../i18n/utils';
 interface Props {
 	locale: Locale;
 	path?: string;
+	alternates?: boolean;
 	labels: {
 		headerTitle: string;
 		siteName: string;
 		eventSummary: string;
 		register: string;
 		openNavigation: string;
+		closeNavigation: string;
 		language: string;
 		theme: string;
 		lightTheme: string;
@@ -26,8 +28,12 @@ interface Props {
 	navItems: NavigationItem[];
 }
 
-const { locale, path = '', labels, navItems } = Astro.props;
-const languageOptions = getLanguageOptions(locale, path);
+const { locale, path = '', alternates = true, labels, navItems } = Astro.props;
+const languageOptions = alternates
+	? getLanguageOptions(locale, path)
+	: path
+		? []
+		: getLanguageOptions(locale).map((option) => ({ ...option, current: false }));
 const themeLabels = {
 	theme: labels.theme,
 	lightTheme: labels.lightTheme,
@@ -43,30 +49,32 @@ const themeLabels = {
 			<span class="hidden sm:inline">{labels.headerTitle}</span>
 		</a>
 
-		<div class="hidden md:block">
+		<div class="hidden xl:block">
 			<DesktopNav client:load items={navItems} />
 		</div>
 
 		<div class="flex items-center gap-2 sm:gap-3">
 			<ThemeToggle client:load labels={themeLabels} />
-			<nav aria-label={labels.language} class="flex shrink-0 items-center text-sm font-medium whitespace-nowrap">
-				{languageOptions.map((option, index) => (
-					<>
-						{index > 0 && <span aria-hidden="true" class="px-1.5 text-border">|</span>}
-						<a
-							href={option.href}
-							hreflang={option.locale}
-							lang={option.locale}
-							data-locale={option.locale}
-							aria-current={option.current ? 'page' : undefined}
-							class={option.current ? 'text-foreground' : 'text-muted-foreground underline-offset-4 hover:text-foreground hover:underline'}
-						>
-							{option.label}
-						</a>
-					</>
-				))}
-			</nav>
-			<div class="md:hidden">
+			{languageOptions.length > 0 && (
+				<nav aria-label={labels.language} class="flex shrink-0 items-center text-sm font-medium whitespace-nowrap">
+					{languageOptions.map((option, index) => (
+						<>
+							{index > 0 && <span aria-hidden="true" class="px-1.5 text-border">|</span>}
+							<a
+								href={option.href}
+								hreflang={option.locale}
+								lang={option.locale}
+								data-locale={option.locale}
+								aria-current={option.current ? 'page' : undefined}
+								class={option.current ? 'text-foreground' : 'text-muted-foreground underline-offset-4 hover:text-foreground hover:underline'}
+							>
+								{option.label}
+							</a>
+						</>
+					))}
+				</nav>
+			)}
+			<div class="xl:hidden">
 				<MobileNav
 					client:load
 					items={navItems}
@@ -74,6 +82,7 @@ const themeLabels = {
 					description={labels.eventSummary}
 					registerLabel={labels.register}
 					openLabel={labels.openNavigation}
+					closeLabel={labels.closeNavigation}
 				/>
 			</div>
 			<RegisterNavButton client:load label={labels.register} />

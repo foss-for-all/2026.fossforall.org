@@ -21,7 +21,7 @@ const footer = getFooter(locale);
 			</p>
 		</div>
 
-		<nav aria-label="Footer" class="flex flex-col gap-2 text-sm lg:items-end">
+		<nav aria-label={footer.navLabel} class="flex flex-col gap-2 text-sm lg:items-end">
 			{footer.links.map((link) => (
 				<a
 					href={link.href}

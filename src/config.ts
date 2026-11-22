@@ -4,7 +4,6 @@ export const site = {
 	socialImage: '/f4ac26-centerfield.png',
 	socialImageWidth: 1200,
 	socialImageHeight: 630,
-	socialImageAlt: 'FOSS for All Conference 2026 - Your Gateway to Open Source',
 } as const;
 
 export const discourse = {
