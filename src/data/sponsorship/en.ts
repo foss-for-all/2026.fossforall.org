@@ -176,7 +176,7 @@ export const en: SponsorshipContent = {
 				'Proposal first, payment second. Submit a talk proposal, the program team reviews it, and you buy the add-on once it is accepted.',
 				'Talks must be about open source and follow the <a href="/en/coc/">code of conduct</a>. Heavy product pitching is not allowed.',
 				'Slots are assigned in order of acceptance, and room size follows that order. Keynotes are not available.',
-				'Sponsor sessions are labelled as such on the website and in the program book.',
+				'Sponsor sessions are labeled as such on the website and in the program book.',
 				'The proposal deadline will be announced once it is agreed with the program team.',
 			],
 		},
@@ -285,7 +285,7 @@ export const en: SponsorshipContent = {
 		communitiesTitle: 'Communities',
 		communitiesLead: 'Eight open source communities ran booths at the 2025 edition, alongside the sponsor booths, and attendees moved freely between them.',
 		communities: [
-			{ file: 'coscup.svg', ar: 2.96, name: 'COSCUP', body: "Taiwan's annual conference, jointly organised by its open source communities. They introduced Taiwan's community culture and ecosystem." },
+			{ file: 'coscup.svg', ar: 2.96, name: 'COSCUP', body: "Taiwan's annual conference, jointly organized by its open source communities. They introduced Taiwan's community culture and ecosystem." },
 			{ file: 'debian.png', ar: 0.76, name: 'Debian', body: 'A free software operating system built by volunteers worldwide.' },
 			{
 				file: 'osm-korea.svg',
@@ -304,7 +304,7 @@ export const en: SponsorshipContent = {
 				file: 'ubuntu-korea.svg',
 				ar: 4.7,
 				name: 'Ubuntu Korea Community',
-				body: 'An official Ubuntu local community recognised by the Ubuntu Community Council.',
+				body: 'An official Ubuntu local community recognized by the Ubuntu Community Council.',
 			},
 			{ file: 'code-for-korea.png', ar: 4.0, name: 'Code for Korea', body: 'A civic hacking community solving social problems with technology.' },
 			{
@@ -387,7 +387,7 @@ export const en: SponsorshipContent = {
 				body: 'Building connections between maintainers, contributors, users, companies, and institutions, and acting as a catalyst between them.',
 			},
 		],
-		homepage: 'https://fossforall.org/en',
+		homepage: 'https://fossforall.org/en/',
 	},
 
 	closing: {
@@ -398,7 +398,7 @@ export const en: SponsorshipContent = {
 			'We will respond within two business days.',
 		],
 		mail: 'sponsors@fossforall.org',
-		site: 'https://2026.fossforall.org/en',
+		site: 'https://2026.fossforall.org/en/',
 		siteLabel: '2026.fossforall.org/en',
 	},
 };

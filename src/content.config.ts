@@ -9,6 +9,7 @@ const pages = defineCollection({
 		description: z.string(),
 		locale: z.enum(['ko', 'en']),
 		path: z.string(),
+		noindex: z.boolean().optional(),
 	}),
 });
 
