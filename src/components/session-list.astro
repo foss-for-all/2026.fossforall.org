@@ -9,12 +9,11 @@ interface Props { groups: SessionGroup[]; locale: Locale }
 const { groups, locale } = Astro.props;
 const labels = sessionLabels[locale];
 const hasTranslations = groups.some((group) => group.sessions.some((session) => Boolean(session.translation?.title?.text)));
-const defaultTranslated = locale === 'en';
 ---
 
 <div
 	data-translation-scope={hasTranslations ? '' : undefined}
-	data-show-translated={hasTranslations ? (defaultTranslated ? 'true' : 'false') : undefined}
+	data-show-translated={hasTranslations ? 'true' : undefined}
 >
 	{hasTranslations && (
 		<div class="tr-bar -mt-4 mb-8 flex flex-wrap items-center justify-between gap-3 text-sm">
@@ -23,7 +22,7 @@ const defaultTranslated = locale === 'en';
 				type="button"
 				class={cn(buttonVariants({ variant: 'outline', size: 'xs' }))}
 				data-translation-toggle
-				aria-pressed={defaultTranslated ? 'true' : 'false'}
+				aria-pressed="true"
 			>
 				<span class="tr-translated">{labels.showOriginal}</span>
 				<span class="tr-original">{labels.translate}</span>

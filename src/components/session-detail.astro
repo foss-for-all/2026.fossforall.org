@@ -15,7 +15,8 @@ const languages = new Intl.DisplayNames([locale], { type: 'language' });
 const time = new Intl.DateTimeFormat(locale, { timeZone: 'Asia/Seoul', dateStyle: 'medium', timeStyle: 'short' });
 const endTime = new Intl.DateTimeFormat(locale, { timeZone: 'Asia/Seoul', timeStyle: 'short' });
 // One document, so footnote ids from the abstract and the description cannot collide.
-const body = await renderMarkdown([session.abstract, session.description].filter(Boolean).join('\n\n'));
+const rawBody = [session.abstract, session.description].filter(Boolean).join('\n\n');
+const body = await renderMarkdown(rawBody);
 const otherLocale: Locale = locale === 'en' ? 'ko' : 'en';
 const translatedTitle = session.translation?.title?.text;
 const titleSourceLocale = session.translation?.title?.sourceLocale ?? otherLocale;
@@ -24,8 +25,10 @@ const translatedBody = translatedDescriptionText ? await renderMarkdown(translat
 const descSourceLocale = session.translation?.description?.sourceLocale ?? otherLocale;
 const hasTranslation = Boolean(translatedTitle || translatedBody);
 const bilingualOnly = !hasTranslation && Boolean(session.translation?.title?.bilingual || session.translation?.description?.bilingual);
-const defaultTranslated = locale === 'en';
 const translatedNotice = translatedBody ? labels.translatedNotice : labels.translatedTitleNotice;
+const previewTitle = translatedTitle ?? session.title;
+const previewBody = translatedDescriptionText ?? rawBody;
+const previewDescription = (await summarize(previewBody)) || session.speakers.map((speaker) => speaker.name).join(', ') || undefined;
 const meta = [
 	[labels.type, session.type],
 	[labels.track, session.track],
@@ -42,11 +45,11 @@ const links = [
 ].filter(([, href]) => href);
 ---
 
-<SiteLayout locale={locale} path={`sessions/${session.slug}`} image={`/og/${locale}/sessions/${session.slug}.png`} title={session.title} description={await summarize(session.abstract || session.description)}>
+<SiteLayout locale={locale} path={`sessions/${session.slug}`} image={`/og/${locale}/sessions/${session.slug}.png`} title={previewTitle} description={previewDescription}>
 	<main
 		class="mx-auto max-w-4xl px-6 py-16 lg:px-8"
 		data-translation-scope={hasTranslation ? '' : undefined}
-		data-show-translated={hasTranslation ? (defaultTranslated ? 'true' : 'false') : undefined}
+		data-show-translated={hasTranslation ? 'true' : undefined}
 	>
 		<nav class="text-sm text-muted-foreground">
 			<a href={getLocalizedPath(locale, 'sessions')} class="hover:text-foreground hover:underline">{labels.title}</a>
@@ -61,6 +64,11 @@ const links = [
 				</>
 			) : session.title}
 		</h1>
+		{translatedTitle && (
+			<p class="tr-orig-sub mt-2 text-base leading-snug text-muted-foreground break-keep [overflow-wrap:anywhere] sm:text-lg" lang={titleSourceLocale}>
+				{session.title}
+			</p>
+		)}
 
 		{hasTranslation && (
 			<div class="tr-bar mt-6 flex flex-wrap items-center justify-between gap-3 text-sm">
@@ -69,7 +77,7 @@ const links = [
 					type="button"
 					class={cn(buttonVariants({ variant: 'outline', size: 'xs' }))}
 					data-translation-toggle
-					aria-pressed={defaultTranslated ? 'true' : 'false'}
+					aria-pressed="true"
 				>
 					<span class="tr-translated">{labels.showOriginal}</span>
 					<span class="tr-original">{labels.translate}</span>
@@ -173,6 +181,7 @@ const links = [
 		background: color-mix(in oklch, var(--muted) 45%, transparent);
 	}
 	[data-show-translated="true"] .tr-original { display: none; }
-	[data-show-translated="false"] .tr-translated { display: none; }
+	[data-show-translated="false"] .tr-translated,
+	[data-show-translated="false"] .tr-orig-sub { display: none; }
 	[data-show-note="false"] .tr-bilingual-note { display: none; }
 </style>

@@ -15,14 +15,21 @@ const sourceLocale = session.translation?.title?.sourceLocale ?? (locale === 'en
 ---
 
 <a href={getLocalizedPath(locale, `sessions/${session.slug}`)} class="flex flex-col gap-4 rounded-xl border bg-card p-6 text-card-foreground shadow-sm transition-colors hover:border-primary/60">
-	<h3 class="text-xl leading-snug font-semibold tracking-tight break-keep [overflow-wrap:anywhere]">
-		{translatedTitle ? (
-			<>
-				<span class="tr-translated" lang={locale}>{translatedTitle}</span>
-				<span class="tr-original" lang={sourceLocale}>{session.title}</span>
-			</>
-		) : session.title}
-	</h3>
+	<div>
+		<h3 class="text-xl leading-snug font-semibold tracking-tight break-keep [overflow-wrap:anywhere]">
+			{translatedTitle ? (
+				<>
+					<span class="tr-translated" lang={locale}>{translatedTitle}</span>
+					<span class="tr-original" lang={sourceLocale}>{session.title}</span>
+				</>
+			) : session.title}
+		</h3>
+		{translatedTitle && (
+			<span class="tr-orig-sub mt-1 block text-xs leading-snug font-normal text-muted-foreground break-keep [overflow-wrap:anywhere]" lang={sourceLocale}>
+				{session.title}
+			</span>
+		)}
+	</div>
 	<ul class="flex flex-col gap-2 text-sm text-muted-foreground">
 		{session.speakers.length > 0 ? session.speakers.map((speaker) => (
 			<li class="flex items-center gap-2"><SpeakerAvatar speaker={speaker} size={24} />{speaker.name}</li>
@@ -32,7 +39,7 @@ const sourceLocale = session.translation?.title?.sourceLocale ?? (locale === 'en
 		{session.track && <Badge variant="secondary" className="h-auto max-w-full text-left whitespace-normal">{session.track}</Badge>}
 		{session.language && <Badge variant="outline">{languages.of(session.language) ?? session.language}</Badge>}
 		{translatedTitle && (
-			<span class={cn(badgeVariants({ variant: 'outline' }), 'tr-translated border-dashed font-normal text-muted-foreground')}>
+			<span class={cn(badgeVariants({ variant: 'outline' }), 'tr-translated tr-badge border-dashed font-normal text-muted-foreground')}>
 				{labels.aiTag}
 			</span>
 		)}
@@ -41,5 +48,6 @@ const sourceLocale = session.translation?.title?.sourceLocale ?? (locale === 'en
 
 <style>
 	:global([data-show-translated="true"]) .tr-original { display: none; }
-	:global([data-show-translated="false"]) .tr-translated { display: none; }
+	:global([data-show-translated="false"]) .tr-translated,
+	:global([data-show-translated="false"]) .tr-orig-sub { display: none; }
 </style>
