@@ -1,5 +1,11 @@
 import { pretalx } from '../config';
 import type { Locale } from '../i18n/config';
+import {
+	getSessionTranslation,
+	getSpeakerTranslation,
+	type SessionTranslation,
+	type SpeakerTranslation,
+} from './translations';
 
 type LocalizedName = string | Record<string, string>;
 interface Slot { start?: string | null; end?: string | null; room?: { name: LocalizedName } | null }
@@ -19,7 +25,7 @@ interface Submission {
 interface Speaker { code: string; name: string; biography?: string | null; avatar_url?: string | null }
 interface NamedItem { id: number; name: LocalizedName }
 interface Program { submissions: Submission[]; speakers: Speaker[]; tracks: NamedItem[]; types: NamedItem[]; started: boolean; visible: Set<string> }
-export interface SessionSpeaker { code: string; slug: string; name: string; biography: string; avatar?: string }
+export interface SessionSpeaker { code: string; slug: string; name: string; biography: string; avatar?: string; translation?: SpeakerTranslation }
 export interface Session {
 	code: string;
 	slug: string;
@@ -37,6 +43,7 @@ export interface Session {
 	url?: string;
 	feedback?: string;
 	video?: string;
+	translation?: SessionTranslation;
 }
 export interface SessionGroup { id: number; name: string; keynote: boolean; sessions: Session[] }
 export interface SpeakerProfile extends SessionSpeaker { sessions: Session[] }
@@ -50,6 +57,12 @@ export const sessionLabels = {
 		program: 'Pretalx에서 프로그램 보기', unknownType: '세션', unknownSpeaker: '발표자 추후 공개',
 		type: '유형', track: '트랙', language: '언어', time: '시간', room: '장소',
 		speakers: '발표자', speaker: '발표자', links: '링크', speakerSessions: '발표', keynotes: '기조연사', allSessions: '전체 세션 보기',
+		aiTag: '기계 번역', translate: '기계 번역', bilingualButton: '기계 번역', showOriginal: '원문 보기',
+		translatedNotice: '기계 번역된 내용입니다. 정확하지 않을 수 있습니다.',
+		translatedTitleNotice: '제목이 기계 번역되었습니다. 정확하지 않을 수 있습니다.',
+		translatedListNotice: '영어 발표 제목이 기계 번역되었습니다. 정확하지 않을 수 있습니다.',
+		translatedSessionTitlesNotice: '발표 제목이 기계 번역되었습니다. 정확하지 않을 수 있습니다.',
+		bilingualNotice: '원문에 이미 한국어와 영어가 함께 있습니다.',
 	},
 	en: {
 		title: 'Sessions', description: 'Explore the conference sessions and meet our speakers.',
@@ -59,6 +72,12 @@ export const sessionLabels = {
 		program: 'View program on Pretalx', unknownType: 'Session', unknownSpeaker: 'Speaker to be announced',
 		type: 'Type', track: 'Track', language: 'Language', time: 'Time', room: 'Room',
 		speakers: 'Speakers', speaker: 'Speaker', links: 'Links', speakerSessions: 'Sessions', keynotes: 'Keynote Speakers', allSessions: 'View all sessions',
+		aiTag: 'AI-translated', translate: 'Show AI translation', bilingualButton: 'AI translation', showOriginal: 'Show original',
+		translatedNotice: 'Machine-translated from Korean. May be inaccurate.',
+		translatedTitleNotice: 'Title is AI-translated from Korean. May be inaccurate.',
+		translatedListNotice: 'Korean session titles are AI-translated.',
+		translatedSessionTitlesNotice: 'Korean session titles are AI-translated.',
+		bilingualNotice: 'The original text already includes both Korean and English.',
 	},
 } as const;
 
@@ -193,17 +212,29 @@ function toSession(submission: Submission, data: Program, locale: Locale): Sessi
 	const typeName = data.types.find((type) => type.id === submission.submission_type)?.name;
 	const slot = submission.slots?.find((candidate) => candidate.start);
 	const url = data.visible.has(submission.code) ? talkUrl(submission.code) : undefined;
+	const abstract = submission.abstract ?? '';
+	const description = submission.description ?? '';
+	const body = [abstract, description].filter(Boolean).join('\n\n');
 	return {
 		code: submission.code,
 		slug: slugify(submission.code, submission.title),
 		title: submission.title,
 		type: localizedName(typeName, locale) || sessionLabels[locale].unknownType,
 		keynote: typeRank(typeName) === 0,
-		abstract: submission.abstract ?? '',
-		description: submission.description ?? '',
+		abstract,
+		description,
 		speakers: submission.speakers.flatMap((code) => {
 			const speaker = data.speakers.find((candidate) => candidate.code === code);
-			return speaker ? [{ code, slug: slugify(code, speaker.name), name: speaker.name, biography: speaker.biography ?? '', avatar: speaker.avatar_url ?? undefined }] : [];
+			if (!speaker) return [];
+			const biography = speaker.biography ?? '';
+			return [{
+				code,
+				slug: slugify(code, speaker.name),
+				name: speaker.name,
+				biography,
+				avatar: speaker.avatar_url ?? undefined,
+				translation: getSpeakerTranslation(code, biography, locale),
+			}];
 		}),
 		track: localizedName(data.tracks.find((track) => track.id === submission.track)?.name, locale),
 		language: submission.content_locale || '',
@@ -213,6 +244,7 @@ function toSession(submission: Submission, data: Program, locale: Locale): Sessi
 		url,
 		feedback: url && data.started ? `${url}feedback/` : undefined,
 		video: videoUrl(submission.resources),
+		translation: getSessionTranslation(submission.code, submission.title, body, locale),
 	};
 }
 

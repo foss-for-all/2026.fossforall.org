@@ -1,4 +1,6 @@
 ---
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { renderMarkdown, summarize } from '../data/markdown';
 import { sessionLabels, type SpeakerProfile } from '../data/sessions';
 import type { Locale } from '../i18n/config';
@@ -11,10 +13,23 @@ interface Props { speaker: SpeakerProfile; locale: Locale }
 const { speaker, locale } = Astro.props;
 const labels = sessionLabels[locale];
 const biography = await renderMarkdown(speaker.biography);
+const otherLocale: Locale = locale === 'en' ? 'ko' : 'en';
+const translatedBioText = speaker.translation?.biography?.text;
+const translatedBio = translatedBioText ? await renderMarkdown(translatedBioText) : undefined;
+const bioSourceLocale = speaker.translation?.biography?.sourceLocale ?? otherLocale;
+const hasTranslatedSessions = speaker.sessions.some((session) => Boolean(session.translation?.title?.text));
+const hasTranslation = Boolean(translatedBio || hasTranslatedSessions);
+const bilingualOnly = !hasTranslation && Boolean(speaker.translation?.biography?.bilingual);
+const defaultTranslated = locale === 'en';
+const translatedNotice = translatedBio ? labels.translatedNotice : labels.translatedSessionTitlesNotice;
 ---
 
 <SiteLayout locale={locale} path={`speakers/${speaker.slug}`} image={`/og/${locale}/speakers/${speaker.slug}.png`} title={speaker.name} description={await summarize(speaker.biography)}>
-	<main class="mx-auto max-w-4xl px-6 py-16 lg:px-8">
+	<main
+		class="mx-auto max-w-4xl px-6 py-16 lg:px-8"
+		data-translation-scope={hasTranslation ? '' : undefined}
+		data-show-translated={hasTranslation ? (defaultTranslated ? 'true' : 'false') : undefined}
+	>
 		<nav class="text-sm text-muted-foreground">
 			<a href={getLocalizedPath(locale, 'sessions')} class="hover:text-foreground hover:underline">{labels.title}</a>
 			<span aria-hidden="true" class="px-2">/</span>
@@ -25,7 +40,43 @@ const biography = await renderMarkdown(speaker.biography);
 			<h1 class="font-heading text-4xl font-black tracking-[-0.04em] text-balance break-keep [overflow-wrap:anywhere] sm:text-5xl">{speaker.name}</h1>
 		</header>
 
-		<article class="mdx-content mt-10 max-w-none break-keep [overflow-wrap:anywhere]" set:html={biography} />
+		{hasTranslation && (
+			<div class="tr-bar mt-6 flex flex-wrap items-center justify-between gap-3 text-sm">
+				<p class="tr-translated text-muted-foreground">{translatedNotice}</p>
+				<button
+					type="button"
+					class={cn(buttonVariants({ variant: 'outline', size: 'xs' }))}
+					data-translation-toggle
+					aria-pressed={defaultTranslated ? 'true' : 'false'}
+				>
+					<span class="tr-translated">{labels.showOriginal}</span>
+					<span class="tr-original">{labels.translate}</span>
+				</button>
+			</div>
+		)}
+
+		{bilingualOnly && (
+			<div class="mt-6 flex flex-wrap items-center gap-3 text-sm" data-bilingual-scope data-show-note="false">
+				<button
+					type="button"
+					class={cn(buttonVariants({ variant: 'outline', size: 'xs' }))}
+					data-bilingual-toggle
+					aria-expanded="false"
+				>
+					{labels.bilingualButton}
+				</button>
+				<p class="tr-bilingual-note text-muted-foreground" role="status">{labels.bilingualNotice}</p>
+			</div>
+		)}
+
+		{translatedBio ? (
+			<>
+				<article class="mdx-content tr-translated mt-10 max-w-none break-keep [overflow-wrap:anywhere]" lang={locale} set:html={translatedBio} />
+				<article class="mdx-content tr-original mt-10 max-w-none break-keep [overflow-wrap:anywhere]" lang={bioSourceLocale} set:html={biography} />
+			</>
+		) : (
+			<article class="mdx-content mt-10 max-w-none break-keep [overflow-wrap:anywhere]" set:html={biography} />
+		)}
 
 		<section class="mt-12" aria-labelledby="sessions-heading">
 			<h2 id="sessions-heading" class="font-heading text-2xl font-bold tracking-tight">{labels.speakerSessions}</h2>
@@ -35,3 +86,44 @@ const biography = await renderMarkdown(speaker.biography);
 		</section>
 	</main>
 </SiteLayout>
+
+{(hasTranslation || bilingualOnly) && (
+	<script is:inline>
+		if (!window.__f4aTrToggle) {
+			window.__f4aTrToggle = true;
+			document.addEventListener('click', (event) => {
+				const target = event.target instanceof Element ? event.target : null;
+				if (!target) return;
+				const toggle = target.closest('[data-translation-toggle]');
+				if (toggle) {
+					const scope = toggle.closest('[data-translation-scope]');
+					if (!scope) return;
+					const next = scope.getAttribute('data-show-translated') !== 'true';
+					scope.setAttribute('data-show-translated', String(next));
+					toggle.setAttribute('aria-pressed', String(next));
+					return;
+				}
+				const bilingual = target.closest('[data-bilingual-toggle]');
+				if (bilingual) {
+					const scope = bilingual.closest('[data-bilingual-scope]');
+					if (!scope) return;
+					const next = scope.getAttribute('data-show-note') !== 'true';
+					scope.setAttribute('data-show-note', String(next));
+					bilingual.setAttribute('aria-expanded', String(next));
+				}
+			});
+		}
+	</script>
+)}
+
+<style>
+	[data-show-translated="true"] .tr-bar {
+		padding: 0.625rem 1rem;
+		border: 1px solid var(--border);
+		border-radius: var(--radius-xl);
+		background: color-mix(in oklch, var(--muted) 45%, transparent);
+	}
+	[data-show-translated="true"] .tr-original { display: none; }
+	[data-show-translated="false"] .tr-translated { display: none; }
+	[data-show-note="false"] .tr-bilingual-note { display: none; }
+</style>

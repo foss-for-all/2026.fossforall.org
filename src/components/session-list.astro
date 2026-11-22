@@ -1,22 +1,74 @@
 ---
-import type { SessionGroup } from '../data/sessions';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { sessionLabels, type SessionGroup } from '../data/sessions';
 import type { Locale } from '../i18n/config';
 import SessionCard from './session-card.astro';
 
 interface Props { groups: SessionGroup[]; locale: Locale }
 const { groups, locale } = Astro.props;
+const labels = sessionLabels[locale];
+const hasTranslations = groups.some((group) => group.sessions.some((session) => Boolean(session.translation?.title?.text)));
+const defaultTranslated = locale === 'en';
 ---
 
-<div class="space-y-12">
-	{groups.map((group, index) => (
-		<>
-			{index > 0 && groups[index - 1].keynote && !group.keynote && <hr class="border-border" />}
-			<section aria-labelledby={`session-type-${group.id}`}>
-				<h2 id={`session-type-${group.id}`} class="mb-5 font-heading text-2xl font-bold tracking-tight sm:text-3xl">{group.name}</h2>
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-					{group.sessions.map((session) => <SessionCard session={session} locale={locale} />)}
-				</div>
-			</section>
-		</>
-	))}
+<div
+	data-translation-scope={hasTranslations ? '' : undefined}
+	data-show-translated={hasTranslations ? (defaultTranslated ? 'true' : 'false') : undefined}
+>
+	{hasTranslations && (
+		<div class="tr-bar -mt-4 mb-8 flex flex-wrap items-center justify-between gap-3 text-sm">
+			<p class="tr-translated text-muted-foreground">{labels.translatedListNotice}</p>
+			<button
+				type="button"
+				class={cn(buttonVariants({ variant: 'outline', size: 'xs' }))}
+				data-translation-toggle
+				aria-pressed={defaultTranslated ? 'true' : 'false'}
+			>
+				<span class="tr-translated">{labels.showOriginal}</span>
+				<span class="tr-original">{labels.translate}</span>
+			</button>
+		</div>
+	)}
+	<div class="space-y-12">
+		{groups.map((group, index) => (
+			<>
+				{index > 0 && groups[index - 1].keynote && !group.keynote && <hr class="border-border" />}
+				<section aria-labelledby={`session-type-${group.id}`}>
+					<h2 id={`session-type-${group.id}`} class="mb-5 font-heading text-2xl font-bold tracking-tight sm:text-3xl">{group.name}</h2>
+					<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+						{group.sessions.map((session) => <SessionCard session={session} locale={locale} />)}
+					</div>
+				</section>
+			</>
+		))}
+	</div>
 </div>
+
+{hasTranslations && (
+	<script is:inline>
+		if (!window.__f4aTrToggle) {
+			window.__f4aTrToggle = true;
+			document.addEventListener('click', (event) => {
+				const button = event.target instanceof Element && event.target.closest('[data-translation-toggle]');
+				if (!button) return;
+				const scope = button.closest('[data-translation-scope]');
+				if (!scope) return;
+				const next = scope.getAttribute('data-show-translated') !== 'true';
+				scope.setAttribute('data-show-translated', String(next));
+				button.setAttribute('aria-pressed', String(next));
+			});
+		}
+	</script>
+)}
+
+<style>
+	[data-show-translated="true"] .tr-bar {
+		padding: 0.625rem 1rem;
+		border: 1px solid var(--border);
+		border-radius: var(--radius-xl);
+		background: color-mix(in oklch, var(--muted) 45%, transparent);
+	}
+	[data-show-translated="true"] .tr-original { display: none; }
+	[data-show-translated="false"] .tr-translated { display: none; }
+</style>

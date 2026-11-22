@@ -16,6 +16,16 @@ const time = new Intl.DateTimeFormat(locale, { timeZone: 'Asia/Seoul', dateStyle
 const endTime = new Intl.DateTimeFormat(locale, { timeZone: 'Asia/Seoul', timeStyle: 'short' });
 // One document, so footnote ids from the abstract and the description cannot collide.
 const body = await renderMarkdown([session.abstract, session.description].filter(Boolean).join('\n\n'));
+const otherLocale: Locale = locale === 'en' ? 'ko' : 'en';
+const translatedTitle = session.translation?.title?.text;
+const titleSourceLocale = session.translation?.title?.sourceLocale ?? otherLocale;
+const translatedDescriptionText = session.translation?.description?.text;
+const translatedBody = translatedDescriptionText ? await renderMarkdown(translatedDescriptionText) : undefined;
+const descSourceLocale = session.translation?.description?.sourceLocale ?? otherLocale;
+const hasTranslation = Boolean(translatedTitle || translatedBody);
+const bilingualOnly = !hasTranslation && Boolean(session.translation?.title?.bilingual || session.translation?.description?.bilingual);
+const defaultTranslated = locale === 'en';
+const translatedNotice = translatedBody ? labels.translatedNotice : labels.translatedTitleNotice;
 const meta = [
 	[labels.type, session.type],
 	[labels.track, session.track],
@@ -33,13 +43,53 @@ const links = [
 ---
 
 <SiteLayout locale={locale} path={`sessions/${session.slug}`} image={`/og/${locale}/sessions/${session.slug}.png`} title={session.title} description={await summarize(session.abstract || session.description)}>
-	<main class="mx-auto max-w-4xl px-6 py-16 lg:px-8">
+	<main
+		class="mx-auto max-w-4xl px-6 py-16 lg:px-8"
+		data-translation-scope={hasTranslation ? '' : undefined}
+		data-show-translated={hasTranslation ? (defaultTranslated ? 'true' : 'false') : undefined}
+	>
 		<nav class="text-sm text-muted-foreground">
 			<a href={getLocalizedPath(locale, 'sessions')} class="hover:text-foreground hover:underline">{labels.title}</a>
 			<span aria-hidden="true" class="px-2">/</span>
 			<span>{session.type}</span>
 		</nav>
-		<h1 class="mt-3 font-heading text-4xl font-black tracking-[-0.04em] text-balance break-keep [overflow-wrap:anywhere] sm:text-5xl">{session.title}</h1>
+		<h1 class="mt-3 font-heading text-4xl font-black tracking-[-0.04em] text-balance break-keep [overflow-wrap:anywhere] sm:text-5xl">
+			{translatedTitle ? (
+				<>
+					<span class="tr-translated" lang={locale}>{translatedTitle}</span>
+					<span class="tr-original" lang={titleSourceLocale}>{session.title}</span>
+				</>
+			) : session.title}
+		</h1>
+
+		{hasTranslation && (
+			<div class="tr-bar mt-6 flex flex-wrap items-center justify-between gap-3 text-sm">
+				<p class="tr-translated text-muted-foreground">{translatedNotice}</p>
+				<button
+					type="button"
+					class={cn(buttonVariants({ variant: 'outline', size: 'xs' }))}
+					data-translation-toggle
+					aria-pressed={defaultTranslated ? 'true' : 'false'}
+				>
+					<span class="tr-translated">{labels.showOriginal}</span>
+					<span class="tr-original">{labels.translate}</span>
+				</button>
+			</div>
+		)}
+
+		{bilingualOnly && (
+			<div class="mt-6 flex flex-wrap items-center gap-3 text-sm" data-bilingual-scope data-show-note="false">
+				<button
+					type="button"
+					class={cn(buttonVariants({ variant: 'outline', size: 'xs' }))}
+					data-bilingual-toggle
+					aria-expanded="false"
+				>
+					{labels.bilingualButton}
+				</button>
+				<p class="tr-bilingual-note text-muted-foreground" role="status">{labels.bilingualNotice}</p>
+			</div>
+		)}
 
 		<dl class="mt-8 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 border-y py-6 text-sm">
 			{meta.map(([term, value]) => (
@@ -50,7 +100,14 @@ const links = [
 			))}
 		</dl>
 
-		<article class="mdx-content mt-10 max-w-none break-keep [overflow-wrap:anywhere]" set:html={body} />
+		{translatedBody ? (
+			<>
+				<article class="mdx-content tr-translated mt-10 max-w-none break-keep [overflow-wrap:anywhere]" lang={locale} set:html={translatedBody} />
+				<article class="mdx-content tr-original mt-10 max-w-none break-keep [overflow-wrap:anywhere]" lang={descSourceLocale} set:html={body} />
+			</>
+		) : (
+			<article class="mdx-content mt-10 max-w-none break-keep [overflow-wrap:anywhere]" set:html={body} />
+		)}
 
 		{session.speakers.length > 0 && (
 			<section class="mt-12" aria-labelledby="speakers-heading">
@@ -78,3 +135,44 @@ const links = [
 		)}
 	</main>
 </SiteLayout>
+
+{(hasTranslation || bilingualOnly) && (
+	<script is:inline>
+		if (!window.__f4aTrToggle) {
+			window.__f4aTrToggle = true;
+			document.addEventListener('click', (event) => {
+				const target = event.target instanceof Element ? event.target : null;
+				if (!target) return;
+				const toggle = target.closest('[data-translation-toggle]');
+				if (toggle) {
+					const scope = toggle.closest('[data-translation-scope]');
+					if (!scope) return;
+					const next = scope.getAttribute('data-show-translated') !== 'true';
+					scope.setAttribute('data-show-translated', String(next));
+					toggle.setAttribute('aria-pressed', String(next));
+					return;
+				}
+				const bilingual = target.closest('[data-bilingual-toggle]');
+				if (bilingual) {
+					const scope = bilingual.closest('[data-bilingual-scope]');
+					if (!scope) return;
+					const next = scope.getAttribute('data-show-note') !== 'true';
+					scope.setAttribute('data-show-note', String(next));
+					bilingual.setAttribute('aria-expanded', String(next));
+				}
+			});
+		}
+	</script>
+)}
+
+<style>
+	[data-show-translated="true"] .tr-bar {
+		padding: 0.625rem 1rem;
+		border: 1px solid var(--border);
+		border-radius: var(--radius-xl);
+		background: color-mix(in oklch, var(--muted) 45%, transparent);
+	}
+	[data-show-translated="true"] .tr-original { display: none; }
+	[data-show-translated="false"] .tr-translated { display: none; }
+	[data-show-note="false"] .tr-bilingual-note { display: none; }
+</style>
