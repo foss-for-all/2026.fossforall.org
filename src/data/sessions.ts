@@ -73,7 +73,7 @@ export const sessionLabels = {
 		type: 'Type', track: 'Track', language: 'Language', time: 'Time', room: 'Room',
 		speakers: 'Speakers', speaker: 'Speaker', links: 'Links', speakerSessions: 'Sessions', keynotes: 'Keynote Speakers', allSessions: 'View all sessions',
 		aiTag: 'AI-translated', translate: 'Show AI translation', bilingualButton: 'AI translation', showOriginal: 'Show original',
-		translatedNotice: 'Machine-translated from Korean. May be inaccurate.',
+		translatedNotice: 'AI-translated from Korean. May be inaccurate.',
 		translatedTitleNotice: 'Title is AI-translated from Korean. May be inaccurate.',
 		translatedListNotice: 'Korean session titles are AI-translated.',
 		translatedSessionTitlesNotice: 'Korean session titles are AI-translated.',
@@ -83,6 +83,38 @@ export const sessionLabels = {
 
 export function localizedName(name: LocalizedName | undefined, locale: Locale): string {
 	return typeof name === 'string' ? name : name?.[locale] || name?.en || Object.values(name ?? {})[0] || '';
+}
+
+function localizedTrack(name: LocalizedName | undefined, locale: Locale): string {
+	const value = localizedName(name, locale);
+	if (locale === 'en' && /[\uAC00-\uD7A3]/.test(value)) {
+		const match = value.match(/\(([^()]*[A-Za-z][^()]*)\)\s*$/);
+		if (match) return match[1].trim();
+	}
+	return value;
+}
+
+// Keep reference link definitions so Markdown reference links resolve when summarizing one language of a bilingual text.
+export function extractLocaleSummary(text: string, locale: Locale): string {
+	const refs: string[] = [];
+	const blocks: string[] = [];
+	for (const raw of text.replace(/\r\n?/g, '\n').split(/\n\s*\n/)) {
+		const kept: string[] = [];
+		for (const line of raw.split('\n')) {
+			if (/^\s*\[[^\]]+\]:\s+\S+/.test(line)) refs.push(line);
+			else kept.push(line);
+		}
+		const block = kept.join('\n').trim();
+		if (block && !/^(?:#{1,6}\s|[-*_]{3,}$)/.test(block)) blocks.push(block);
+	}
+	const matches = blocks.filter((block) => {
+		const plain = block.replace(/\]\([^)]*\)|https?:\/\/\S+/g, '');
+		const hangul = plain.match(/[\uAC00-\uD7A3]/g)?.length ?? 0;
+		const latin = plain.match(/[A-Za-z]/g)?.length ?? 0;
+		return locale === 'en' ? latin > 0 && latin > hangul * 4 : hangul > 0 && hangul * 3 >= latin;
+	});
+	if (!matches.length) return text;
+	return [...matches, ...refs].join('\n\n');
 }
 
 // Only an explicit "not there" hides content; any other failure throws, so CI keeps the deployed site.
@@ -236,7 +268,7 @@ function toSession(submission: Submission, data: Program, locale: Locale): Sessi
 				translation: getSpeakerTranslation(code, biography, locale),
 			}];
 		}),
-		track: localizedName(data.tracks.find((track) => track.id === submission.track)?.name, locale),
+		track: localizedTrack(data.tracks.find((track) => track.id === submission.track)?.name, locale),
 		language: submission.content_locale || '',
 		start: slot?.start ?? undefined,
 		end: slot?.end ?? undefined,

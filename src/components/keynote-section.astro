@@ -40,7 +40,7 @@ const otherLocale: Locale = locale === 'en' ? 'ko' : 'en';
 				<a href={getLocalizedPath(locale, 'sessions')} class="w-fit font-medium text-primary underline underline-offset-4">{labels.allSessions}</a>
 			</div>
 		</div>
-		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+		<div class="grid gap-6 sm:grid-cols-2">
 			{keynotes.flatMap((session) => {
 				const translatedTitle = session.translation?.title?.text;
 				const sourceLocale = session.translation?.title?.sourceLocale ?? otherLocale;
@@ -71,18 +71,37 @@ const otherLocale: Locale = locale === 'en' ? 'ko' : 'en';
 
 {hasTranslations && (
 	<script is:inline>
-		if (!window.__f4aTrToggle) {
-			window.__f4aTrToggle = true;
-			document.addEventListener('click', (event) => {
-				const button = event.target instanceof Element && event.target.closest('[data-translation-toggle]');
-				if (!button) return;
-				const scope = button.closest('[data-translation-scope]');
-				if (!scope) return;
-				const next = scope.getAttribute('data-show-translated') !== 'true';
-				scope.setAttribute('data-show-translated', String(next));
-				button.setAttribute('aria-pressed', String(next));
-			});
-		}
+		(() => {
+			const key = 'f4a-show-translated';
+			const apply = (value) => {
+				for (const scope of document.querySelectorAll('[data-translation-scope]')) {
+					scope.setAttribute('data-show-translated', value);
+					for (const toggle of scope.querySelectorAll('[data-translation-toggle]')) {
+						toggle.setAttribute('aria-pressed', value);
+					}
+				}
+			};
+			const sync = () => {
+				try {
+					const saved = sessionStorage.getItem(key);
+					if (saved === 'true' || saved === 'false') apply(saved);
+				} catch {}
+			};
+			sync();
+			if (!window.__f4aTrToggle) {
+				window.__f4aTrToggle = true;
+				window.addEventListener('pageshow', sync);
+				document.addEventListener('click', (event) => {
+					const button = event.target instanceof Element && event.target.closest('[data-translation-toggle]');
+					if (!button) return;
+					const scope = button.closest('[data-translation-scope]');
+					if (!scope) return;
+					const next = String(scope.getAttribute('data-show-translated') !== 'true');
+					apply(next);
+					try { sessionStorage.setItem(key, next); } catch {}
+				});
+			}
+		})();
 	</script>
 )}
 

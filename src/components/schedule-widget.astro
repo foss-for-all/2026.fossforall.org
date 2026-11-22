@@ -14,6 +14,7 @@ const labels = {
 		subscribe: '캘린더 구독',
 		google: 'Google 캘린더',
 		sessions: '세션 목록 보기',
+		translationHint: ['번역된 제목은 ', '인쇄용 시간표', ' 또는 ', '세션 목록', '에서 볼 수 있습니다.'],
 		noscript: '일정표를 보려면 JavaScript가 필요합니다. JavaScript 없이 보려면',
 		here: '여기를 누르세요',
 	},
@@ -24,16 +25,19 @@ const labels = {
 		subscribe: 'Subscribe in calendar',
 		google: 'Google Calendar',
 		sessions: 'View sessions',
+		translationHint: ['For AI-translated titles, see the ', 'printable timetable', ' or ', 'sessions list', '.'],
 		noscript: 'JavaScript is disabled in your browser. To access our schedule without JavaScript,',
 		here: 'click here',
 	},
 }[locale];
 
+const timetablePath = getLocalizedPath(locale, 'timetable');
+const sessionsPath = getLocalizedPath(locale, 'sessions');
 const eventUrl = `${pretalx.baseUrl}/${pretalx.eventSlug}/`;
 const ics = `${pretalx.exports}/schedule.ics`;
 const webcal = ics.replace(/^https:/, 'webcal:');
 const links = [
-	[labels.glance, getLocalizedPath(locale, 'timetable')],
+	[labels.glance, timetablePath],
 	[labels.subscribe, webcal],
 	[labels.google, `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(webcal)}`],
 	['iCal', ics],
@@ -53,9 +57,14 @@ const released = await fetch(`${eventUrl}schedule/widgets/schedule.json`, { meth
 ---
 
 {released && (
-	<p class="mb-6 text-sm">
-		<strong>{labels.links}:</strong> {links.map(([label, href], i) => <>{i > 0 && ' · '}<a href={href}>{label}</a></>)}
-	</p>
+	<div class="mb-6 space-y-1.5 text-sm">
+		<p class="!my-0">
+			<strong>{labels.links}:</strong> {links.map(([label, href], i) => <>{i > 0 && ' · '}<a href={href}>{label}</a></>)}
+		</p>
+		<p class="!my-0 text-muted-foreground">
+			{labels.translationHint[0]}<a href={timetablePath}>{labels.translationHint[1]}</a>{labels.translationHint[2]}<a href={sessionsPath}>{labels.translationHint[3]}</a>{labels.translationHint[4]}
+		</p>
+	</div>
 )}
 
 {released ? (
@@ -92,17 +101,51 @@ const released = await fetch(`${eventUrl}schedule/widgets/schedule.json`, { meth
 						if (decls.length) rules.push(`${rule.selectorText.split(',').map((part) => `:host([data-dark]) ${part}`).join(',')} { ${decls.join('; ')} }`);
 					}
 				};
+				const parseColor = (value) => {
+					const rgb = value.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+					if (rgb) return [+rgb[1], +rgb[2], +rgb[3]];
+					const hex = value.trim().match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i)?.[1];
+					if (!hex) return null;
+					return (hex.length === 3 ? [...hex].map((c) => c + c) : hex.match(/../g)).map((c) => parseInt(c, 16));
+				};
+				const luminance = ([r, g, b]) => [r, g, b].reduce((sum, c, i) => {
+					const s = c / 255;
+					return sum + (s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4) * [0.2126, 0.7152, 0.0722][i];
+				}, 0);
+				// Mark bright track colours so text on them uses dark ink and labels on white stay legible.
+				const tagTracks = () => {
+					for (const el of root.querySelectorAll('[style*="--track-color"], [style*="--pill-color"]')) {
+						const raw = el.style.getPropertyValue('--track-color') || el.style.getPropertyValue('--pill-color');
+						const rgb = parseColor(raw);
+						if (rgb) el.toggleAttribute('data-light-track', luminance(rgb) > 0.2);
+					}
+				};
+				const trackContrastRules = [
+					'.c-linear-schedule-session .time-box .duration, .break .time-box .duration { color: rgba(255, 255, 255, 0.88); }',
+					'.c-linear-schedule-session[data-light-track] .time-box .start, .break[data-light-track] .time-box .start { color: #171717; }',
+					'.c-linear-schedule-session[data-light-track] .time-box .duration, .break[data-light-track] .time-box .duration { color: #171717; }',
+					':host(:not([data-dark])) .c-linear-schedule-session[data-light-track] .info .bottom-info .track, :host(:not([data-dark])) .break[data-light-track] .info .bottom-info .track { color: color-mix(in srgb, var(--track-color) 42%, #000000); }',
+					':host(:not([data-dark])) .pretalx-schedule .filter-pill[data-light-track].has-color:not(.active) { color: color-mix(in srgb, var(--pill-color) 42%, #000000); border-color: color-mix(in srgb, var(--pill-color) 65%, #000000); }',
+					':host([data-dark]) .c-linear-schedule-session .info .bottom-info .track, :host([data-dark]) .break .info .bottom-info .track { color: color-mix(in srgb, var(--track-color) 50%, #ffffff); }',
+					':host([data-dark]) .c-linear-schedule-session:hover .info, :host([data-dark]) .break:hover .info { border-color: color-mix(in srgb, var(--track-color) 55%, #ffffff); }',
+					':host([data-dark]) .pretalx-schedule .filter-pill.has-color:not(.active) { color: color-mix(in srgb, var(--pill-color) 50%, #ffffff); border-color: color-mix(in srgb, var(--pill-color) 55%, #ffffff); }',
+					':host([data-dark]) .pretalx-schedule .filter-pill.active, :host([data-dark]) .pretalx-schedule .filter-pill.active:hover, :host([data-dark]) .pretalx-schedule .filter-pill.has-color:not(.active):hover { background-color: var(--pill-color, var(--pretalx-clr-primary)); border-color: var(--pill-color, var(--pretalx-clr-primary)); color: #ffffff; }',
+					'.pretalx-schedule .filter-pill[data-light-track].active, .pretalx-schedule .filter-pill[data-light-track].active:hover, .pretalx-schedule .filter-pill[data-light-track].has-color:not(.active):hover, :host([data-dark]) .pretalx-schedule .filter-pill[data-light-track].active, :host([data-dark]) .pretalx-schedule .filter-pill[data-light-track].active:hover, :host([data-dark]) .pretalx-schedule .filter-pill[data-light-track].has-color:not(.active):hover { color: #171717; }',
+				];
 				// The widget adds its stylesheets while it renders, so rebuild whenever one arrives.
 				const build = () => {
 					const rules = [':host([data-dark]) .pretalx-modal { background-color: #171717; color: #ededed; }'];
 					for (const sheet of root.styleSheets) if (sheet.ownerNode !== ours) walk(sheet.cssRules, rules);
+					rules.push(...trackContrastRules);
 					ours.textContent = rules.join('\n');
 					root.append(ours);
 				};
 				build();
+				tagTracks();
 				new MutationObserver((mutations) => {
 					if (mutations.some((mutation) => [...mutation.addedNodes].some((node) => node.nodeName === 'STYLE' && node !== ours))) build();
-				}).observe(root, { childList: true });
+					tagTracks();
+				}).observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] });
 				const sync = () => widget.toggleAttribute('data-dark', document.documentElement.classList.contains('dark'));
 				sync();
 				new MutationObserver(sync).observe(document.documentElement, { attributeFilter: ['class'] });

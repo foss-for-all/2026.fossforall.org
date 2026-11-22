@@ -13,6 +13,12 @@ const bilingual = (name: Name) => {
 	const [ko, en] = [localizedName(name, 'ko'), localizedName(name, 'en')];
 	return ko === en ? ko : `${ko} (${en})`;
 };
+const bilingualRoom = (name: Name) => {
+	const [ko, en] = [localizedName(name, 'ko'), localizedName(name, 'en')];
+	if (!en || ko === en) return ko;
+	if (!ko) return en;
+	return `${ko} / ${en.replace(/^Session\s+(?=Room\b)/i, '')}`;
+};
 const languages = new Intl.DisplayNames(['en'], { type: 'language' });
 // Pretalx mixes UTC and local offsets; give the apps one form in Korea time (no DST).
 const kst = (value: string) => `${new Date(new Date(value).getTime() + 9 * 3600e3).toISOString().slice(0, 19)}+09:00`;
@@ -70,7 +76,7 @@ export const GET: APIRoute = async () => {
 
 	const rooms = (data?.rooms ?? []).toSorted((a, b) => a.id - b.id).map((room) => ({
 		id: String(room.id),
-		...both({ name: localizedName(room.name, 'ko') }),
+		...both({ name: bilingualRoom(room.name) }),
 	}));
 	if (events.some((event) => event.room === 'all')) {
 		rooms.push({ id: 'all', ...both({ name: '전체 (All rooms)' }) });

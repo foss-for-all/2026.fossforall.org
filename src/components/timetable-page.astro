@@ -87,14 +87,27 @@ const empty = timetable ? Array.from({ length: rowCount }, (_, row) => timetable
 				{hasTranslations && (
 					<script is:inline>
 						(() => {
+							const key = 'f4a-show-translated';
 							const btn = document.querySelector('[data-tt-toggle]');
 							const root = btn?.closest('[data-show-translated]');
 							if (!btn || !root) return;
+							const apply = (show) => {
+								root.setAttribute('data-show-translated', String(show));
+								btn.setAttribute('aria-pressed', String(show));
+								btn.textContent = show ? btn.dataset.labelTranslated : btn.dataset.labelOriginal;
+							};
+							const sync = () => {
+								try {
+									const saved = sessionStorage.getItem(key);
+									if (saved === 'true' || saved === 'false') apply(saved === 'true');
+								} catch {}
+							};
+							sync();
+							window.addEventListener('pageshow', sync);
 							btn.addEventListener('click', () => {
 								const next = root.getAttribute('data-show-translated') !== 'true';
-								root.setAttribute('data-show-translated', String(next));
-								btn.setAttribute('aria-pressed', String(next));
-								btn.textContent = next ? btn.dataset.labelTranslated : btn.dataset.labelOriginal;
+								apply(next);
+								try { sessionStorage.setItem(key, String(next)); } catch {}
 							});
 						})();
 					</script>

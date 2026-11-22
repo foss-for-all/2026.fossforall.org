@@ -2,7 +2,7 @@
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { renderMarkdown, summarize } from '../data/markdown';
-import { sessionLabels, type SpeakerProfile } from '../data/sessions';
+import { extractLocaleSummary, sessionLabels, type SpeakerProfile } from '../data/sessions';
 import type { Locale } from '../i18n/config';
 import { getLocalizedPath } from '../i18n/utils';
 import SiteLayout from '../layouts/site-layout.astro';
@@ -21,7 +21,7 @@ const hasTranslatedSessions = speaker.sessions.some((session) => Boolean(session
 const hasTranslation = Boolean(translatedBio || hasTranslatedSessions);
 const bilingualOnly = !hasTranslation && Boolean(speaker.translation?.biography?.bilingual);
 const translatedNotice = translatedBio ? labels.translatedNotice : labels.translatedSessionTitlesNotice;
-const previewBio = translatedBioText ?? speaker.biography;
+const previewBio = translatedBioText ?? (speaker.translation?.biography?.bilingual ? extractLocaleSummary(speaker.biography, locale) : speaker.biography);
 const previewDescription = (await summarize(previewBio))
 	|| speaker.sessions.map((session) => session.translation?.title?.text ?? session.title).join(', ')
 	|| undefined;
@@ -92,30 +92,49 @@ const previewDescription = (await summarize(previewBio))
 
 {(hasTranslation || bilingualOnly) && (
 	<script is:inline>
-		if (!window.__f4aTrToggle) {
-			window.__f4aTrToggle = true;
-			document.addEventListener('click', (event) => {
-				const target = event.target instanceof Element ? event.target : null;
-				if (!target) return;
-				const toggle = target.closest('[data-translation-toggle]');
-				if (toggle) {
-					const scope = toggle.closest('[data-translation-scope]');
-					if (!scope) return;
-					const next = scope.getAttribute('data-show-translated') !== 'true';
-					scope.setAttribute('data-show-translated', String(next));
-					toggle.setAttribute('aria-pressed', String(next));
-					return;
+		(() => {
+			const key = 'f4a-show-translated';
+			const apply = (value) => {
+				for (const scope of document.querySelectorAll('[data-translation-scope]')) {
+					scope.setAttribute('data-show-translated', value);
+					for (const toggle of scope.querySelectorAll('[data-translation-toggle]')) {
+						toggle.setAttribute('aria-pressed', value);
+					}
 				}
-				const bilingual = target.closest('[data-bilingual-toggle]');
-				if (bilingual) {
-					const scope = bilingual.closest('[data-bilingual-scope]');
-					if (!scope) return;
-					const next = scope.getAttribute('data-show-note') !== 'true';
-					scope.setAttribute('data-show-note', String(next));
-					bilingual.setAttribute('aria-expanded', String(next));
-				}
-			});
-		}
+			};
+			const sync = () => {
+				try {
+					const saved = sessionStorage.getItem(key);
+					if (saved === 'true' || saved === 'false') apply(saved);
+				} catch {}
+			};
+			sync();
+			if (!window.__f4aTrToggle) {
+				window.__f4aTrToggle = true;
+				window.addEventListener('pageshow', sync);
+				document.addEventListener('click', (event) => {
+					const target = event.target instanceof Element ? event.target : null;
+					if (!target) return;
+					const toggle = target.closest('[data-translation-toggle]');
+					if (toggle) {
+						const scope = toggle.closest('[data-translation-scope]');
+						if (!scope) return;
+						const next = String(scope.getAttribute('data-show-translated') !== 'true');
+						apply(next);
+						try { sessionStorage.setItem(key, next); } catch {}
+						return;
+					}
+					const bilingual = target.closest('[data-bilingual-toggle]');
+					if (bilingual) {
+						const scope = bilingual.closest('[data-bilingual-scope]');
+						if (!scope) return;
+						const next = scope.getAttribute('data-show-note') !== 'true';
+						scope.setAttribute('data-show-note', String(next));
+						bilingual.setAttribute('aria-expanded', String(next));
+					}
+				});
+			}
+		})();
 	</script>
 )}
 
