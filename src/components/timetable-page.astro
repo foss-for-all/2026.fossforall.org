@@ -17,7 +17,6 @@ const { timetable, unavailable } = await getTimetable(locale);
 const schedulePath = getLocalizedPath(locale, 'schedules');
 const scheduleUrl = new URL(schedulePath, site.url);
 const hasTranslations = Boolean(timetable?.cells.some((cell) => cell.translatedTitle));
-const defaultTranslated = locale === 'en';
 const otherLocale: Locale = locale === 'en' ? 'ko' : 'en';
 
 const rowCount = timetable ? timetable.times.length - 1 : 0;
@@ -31,7 +30,7 @@ const empty = timetable ? Array.from({ length: rowCount }, (_, row) => timetable
 ---
 
 <SiteLayout locale={locale} path="timetable" title={labels.title} description={labels.description}>
-	<main class="tt-desk" data-show-translated={defaultTranslated ? 'true' : 'false'}>
+	<main class="tt-desk" data-show-translated={hasTranslations ? 'true' : 'false'}>
 		{timetable ? (
 			<>
 				<div class="tt-actions">
@@ -42,9 +41,9 @@ const empty = timetable ? Array.from({ length: rowCount }, (_, row) => timetable
 							data-tt-toggle
 							data-label-translated={labels.showOriginal}
 							data-label-original={labels.showTranslated}
-							aria-pressed={defaultTranslated ? 'true' : 'false'}
+							aria-pressed="true"
 						>
-							{defaultTranslated ? labels.showOriginal : labels.showTranslated}
+							{labels.showOriginal}
 						</button>
 					)}
 					<button type="button" class={cn(buttonVariants())} onclick="print()">{labels.print}</button>

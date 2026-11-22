@@ -16,6 +16,7 @@ export interface Card {
 	people: string;
 	label: string;
 	avatar?: string;
+	translated?: boolean;
 }
 
 type Node = { type: string; props: Record<string, unknown> };
@@ -102,13 +103,25 @@ const labelTop = 176;
 const titleTop = 224;
 const nameTop = 468;
 
-export async function renderCard({ locale, title: rawTitle, people: rawPeople, label, avatar }: Card): Promise<Buffer> {
+function labelRow(locale: Locale, label: string, translated: boolean | undefined, { top, left, fontSize, borderWidth, tagSize, tagPadding, gap }: {
+	top: number; left: number; fontSize: number; borderWidth: number; tagSize: number; tagPadding: string; gap: number;
+}): Node {
+	return h('div', { display: 'flex', alignItems: 'center', gap, position: 'absolute', top, left }, [
+		h('div', { fontSize, fontWeight: 700, color: '#262626', paddingBottom: 6, borderBottom: `${borderWidth}px solid #262626` }, label),
+		...(translated ? [h('div', {
+			fontSize: tagSize, fontWeight: 400, color: '#525252',
+			padding: tagPadding, border: '1.5px solid #d4d4d4', borderRadius: 999, marginBottom: borderWidth,
+		}, sessionLabels[locale].aiTag)] : []),
+	]);
+}
+
+export async function renderCard({ locale, title: rawTitle, people: rawPeople, label, avatar, translated }: Card): Promise<Buffer> {
 	const title = drawable(rawTitle);
 	const people = drawable(rawPeople);
 	const t = useTranslations(locale);
 	const image = avatar && await photo(avatar);
-	const size = fit(title, [104, 92, 80, 70, 62, 56, 50, 44, 40], 4, nameTop - 20 - titleTop);
-	const peopleSize = fit(people, [54, 48, 42, 38, 34, 30, 28, 26], 3, 104);
+	const size = fit(title, [104, 92, 80, 70, 62, 56, 50, 44, 40, 36], 4, nameTop - 20 - titleTop);
+	const peopleSize = fit(people, [54, 48, 42, 38, 34, 30, 28, 26, 24], 3, 104);
 	const border = 12;
 	const tree = h('div', { display: 'flex', width: ogSize.width, height: ogSize.height, background: '#ffffff', color: '#000000', fontFamily: 'Pretendard' }, [
 		h('div', { display: 'flex', alignItems: 'center', gap: 20, position: 'absolute', top: 52, left: 60 }, [
@@ -118,7 +131,7 @@ export async function renderCard({ locale, title: rawTitle, people: rawPeople, l
 				h('div', { fontSize: 33, color: '#525252' }, `${t.event.date}, ${t.event.venue}`),
 			]),
 		]),
-		h('div', { position: 'absolute', top: labelTop, left: 60, fontSize: 36, fontWeight: 700, color: '#262626', paddingBottom: 6, borderBottom: '4px solid #262626' }, label),
+		labelRow(locale, label, translated, { top: labelTop, left: 60, fontSize: 36, borderWidth: 4, tagSize: 22, tagPadding: '4px 12px', gap: 16 }),
 		h('div', { display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'absolute', top: titleTop, left: 60, width: textWidth, height: nameTop - 20 - titleTop }, [
 			h('div', { fontSize: size, fontWeight: 700, lineHeight: 1.18, letterSpacing: -1, lineClamp: 4, display: 'block' }, words(title, size)),
 		]),
@@ -139,15 +152,15 @@ export async function renderCard({ locale, title: rawTitle, people: rawPeople, l
 // Square card for social feeds (1080 at 2x): header, title band, then name and photo at the bottom.
 const square = { size: 1080, titleWidth: 960, titleTop: 290, titleBottom: 620, nameTop: 720, nameWidth: 500, circle: 360 };
 
-export async function renderSquareCard({ locale, title: rawTitle, people: rawPeople, label, avatar }: Card): Promise<Buffer> {
+export async function renderSquareCard({ locale, title: rawTitle, people: rawPeople, label, avatar, translated }: Card): Promise<Buffer> {
 	const { size: S, titleWidth, titleTop, titleBottom, nameTop, nameWidth, circle: ring } = square;
 	const title = drawable(rawTitle);
 	const people = drawable(rawPeople);
 	const t = useTranslations(locale);
 	// Rendered at 2x, so the photo needs twice the circle's pixels.
 	const image = avatar && await photo(avatar, ring * 2);
-	const size = fit(title, [96, 84, 74, 66, 58, 52, 46], 4, titleBottom - titleTop, titleWidth);
-	const peopleSize = fit(people, [56, 50, 44, 38, 34, 30], 3, 150, nameWidth);
+	const size = fit(title, [96, 84, 74, 66, 58, 52, 46, 42], 4, titleBottom - titleTop, titleWidth);
+	const peopleSize = fit(people, [56, 50, 44, 38, 34, 30, 28, 26, 24], 3, 150, nameWidth);
 	const circleStyle = { position: 'absolute', right: 64, top: 650, width: ring, height: ring, borderRadius: ring / 2 };
 	const tree = h('div', { display: 'flex', width: S, height: S, background: '#ffffff', color: '#000000', fontFamily: 'Pretendard' }, [
 		h('div', { display: 'flex', alignItems: 'center', gap: 22, position: 'absolute', top: 64, left: 64 }, [
@@ -157,7 +170,7 @@ export async function renderSquareCard({ locale, title: rawTitle, people: rawPeo
 				h('div', { fontSize: 34, color: '#525252' }, `${t.event.date}, ${t.event.venue}`),
 			]),
 		]),
-		h('div', { position: 'absolute', top: 226, left: 64, fontSize: 40, fontWeight: 700, color: '#262626', paddingBottom: 6, borderBottom: '5px solid #262626' }, label),
+		labelRow(locale, label, translated, { top: 226, left: 64, fontSize: 40, borderWidth: 5, tagSize: 24, tagPadding: '5px 14px', gap: 18 }),
 		h('div', { display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'absolute', top: titleTop, left: 64, width: titleWidth, height: titleBottom - titleTop }, [
 			h('div', { fontSize: size, fontWeight: 700, lineHeight: 1.16, letterSpacing: -1, lineClamp: 4, display: 'block' }, words(title, size, titleWidth)),
 		]),
@@ -183,20 +196,25 @@ export async function cardPaths() {
 		const sessions = (await getSessions(locale)).groups.flatMap((group) => group.sessions);
 		const speakers = await getSpeakers(locale);
 		return [
-			...sessions.map((session) => ({
-				params: { locale, kind: 'sessions', slug: session.slug },
-				props: {
-					locale, title: session.title, label: session.type,
-					people: session.speakers.map((speaker) => speaker.name).join(', '),
-					avatar: session.speakers.find((speaker) => speaker.avatar)?.avatar,
-				} satisfies Card,
-			})),
+			...sessions.map((session) => {
+				const translatedTitle = session.translation?.title?.text;
+				return {
+					params: { locale, kind: 'sessions', slug: session.slug },
+					props: {
+						locale, title: translatedTitle ?? session.title, label: session.type,
+						people: session.speakers.map((speaker) => speaker.name).join(', '),
+						avatar: session.speakers.find((speaker) => speaker.avatar)?.avatar,
+						translated: Boolean(translatedTitle),
+					} satisfies Card,
+				};
+			}),
 			...speakers.map((speaker) => ({
 				params: { locale, kind: 'speakers', slug: speaker.slug },
 				props: {
 					locale, title: speaker.name, label: sessionLabels[locale].speaker,
-					people: speaker.sessions.map((session) => session.title).join(', '),
+					people: speaker.sessions.map((session) => session.translation?.title?.text ?? session.title).join(', '),
 					avatar: speaker.avatar,
+					translated: speaker.sessions.some((session) => Boolean(session.translation?.title?.text)),
 				} satisfies Card,
 			})),
 		];
