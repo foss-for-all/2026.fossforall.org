@@ -16,6 +16,9 @@ const labels = timetableLabels[locale];
 const { timetable, unavailable } = await getTimetable(locale);
 const schedulePath = getLocalizedPath(locale, 'schedules');
 const scheduleUrl = new URL(schedulePath, site.url);
+const hasTranslations = Boolean(timetable?.cells.some((cell) => cell.translatedTitle));
+const defaultTranslated = locale === 'en';
+const otherLocale: Locale = locale === 'en' ? 'ko' : 'en';
 
 const rowCount = timetable ? timetable.times.length - 1 : 0;
 // Rows holding talks take up the spare height of the page; break rows stay as thin as their text.
@@ -28,10 +31,22 @@ const empty = timetable ? Array.from({ length: rowCount }, (_, row) => timetable
 ---
 
 <SiteLayout locale={locale} path="timetable" title={labels.title} description={labels.description}>
-	<main class="tt-desk">
+	<main class="tt-desk" data-show-translated={defaultTranslated ? 'true' : 'false'}>
 		{timetable ? (
 			<>
 				<div class="tt-actions">
+					{hasTranslations && (
+						<button
+							type="button"
+							class={cn(buttonVariants({ variant: 'outline' }))}
+							data-tt-toggle
+							data-label-translated={labels.showOriginal}
+							data-label-original={labels.showTranslated}
+							aria-pressed={defaultTranslated ? 'true' : 'false'}
+						>
+							{defaultTranslated ? labels.showOriginal : labels.showTranslated}
+						</button>
+					)}
 					<button type="button" class={cn(buttonVariants())} onclick="print()">{labels.print}</button>
 					<a class={cn(buttonVariants({ variant: 'outline' }))} href={schedulePath}>{labels.list}</a>
 				</div>
@@ -51,7 +66,14 @@ const empty = timetable ? Array.from({ length: rowCount }, (_, row) => timetable
 								<Cell class="tt-talk" style={place} href={cell.href && getLocalizedPath(locale, `sessions/${cell.href}`)}>
 									<span class="sr-only">{cell.start}, {timetable.rooms.slice(cell.column, cell.columnEnd).join(', ')}: </span>
 									{cell.keynote && <span class="tt-tag">{labels.keynote}</span>}
-									<span>{cell.title}</span>
+									{cell.translatedTitle ? (
+										<>
+											<span class="tt-title-tr" lang={locale}>{cell.translatedTitle}</span>
+											<span class="tt-title-orig" lang={otherLocale}>{cell.title}</span>
+										</>
+									) : (
+										<span>{cell.title}</span>
+									)}
 									<span class="tt-people">{cell.speakers}{cell.language && cell.language !== locale && ` [${labels.other}]`}</span>
 								</Cell>
 							);
@@ -59,10 +81,25 @@ const empty = timetable ? Array.from({ length: rowCount }, (_, row) => timetable
 					</div>
 
 					<footer class="tt-foot">
-						<p>[{labels.other}] {labels.otherLegend}</p>
+						<p>[{labels.other}] {labels.otherLegend}{hasTranslations && <span class="tt-tr-note"> · {labels.translatedNote}</span>}</p>
 						<p>{labels.note}: <a href={schedulePath}>{scheduleUrl.host}{scheduleUrl.pathname}</a></p>
 					</footer>
 				</article>
+				{hasTranslations && (
+					<script is:inline>
+						(() => {
+							const btn = document.querySelector('[data-tt-toggle]');
+							const root = btn?.closest('[data-show-translated]');
+							if (!btn || !root) return;
+							btn.addEventListener('click', () => {
+								const next = root.getAttribute('data-show-translated') !== 'true';
+								root.setAttribute('data-show-translated', String(next));
+								btn.setAttribute('aria-pressed', String(next));
+								btn.textContent = next ? btn.dataset.labelTranslated : btn.dataset.labelOriginal;
+							});
+						})();
+					</script>
+				)}
 			</>
 		) : (
 			<div class="mx-auto max-w-4xl px-6 py-16 lg:px-8">
@@ -139,6 +176,9 @@ const empty = timetable ? Array.from({ length: rowCount }, (_, row) => timetable
 	.tt-talk { display: flex; flex-direction: column; gap: 0.1em; }
 	.tt-tag { font-size: 0.8em; font-weight: 700; }
 	.tt-people { font-size: 0.85em; }
+	.tt-desk[data-show-translated="true"] .tt-title-orig,
+	.tt-desk[data-show-translated="false"] .tt-title-tr,
+	.tt-desk[data-show-translated="false"] .tt-tr-note { display: none; }
 
 	.tt-foot { margin-top: 0.6em; font-size: 0.8em; }
 

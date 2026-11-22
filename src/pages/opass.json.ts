@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { pretalx, site } from '../config';
+import { site } from '../config';
 import { getSessions, localizedName, type Session } from '../data/sessions';
 import { fetchSchedule, scheduleBreaks } from '../data/timetable';
 import { getLocalizedPath } from '../i18n/utils';
@@ -54,7 +54,7 @@ export const GET: APIRoute = async () => {
 		new Set(all.filter((other) => bilingual(other.title) === bilingual(slot.title)).map((other) => other.start)).size === 1);
 	const events = [...new Map(once.map((slot) => [bilingual(slot.title), slot])).values()].map((slot) => ({
 		id: `break-${slot.id}`,
-		room: String(once.filter((other) => bilingual(other.title) === bilingual(slot.title)).length > 1 ? pretalx.everyRoom : slot.room),
+		room: once.filter((other) => bilingual(other.title) === bilingual(slot.title)).length > 1 ? 'all' : String(slot.room),
 		start: kst(slot.start),
 		end: kst(slot.end),
 		...both({ title: bilingual(slot.title), description: '' }),
@@ -68,14 +68,19 @@ export const GET: APIRoute = async () => {
 		...both({ name: speaker.name, bio: speaker.biography }),
 	}]));
 
+	const rooms = (data?.rooms ?? []).toSorted((a, b) => a.id - b.id).map((room) => ({
+		id: String(room.id),
+		...both({ name: localizedName(room.name, 'ko') }),
+	}));
+	if (events.some((event) => event.room === 'all')) {
+		rooms.push({ id: 'all', ...both({ name: '전체 (All rooms)' }) });
+	}
+
 	return Response.json({
 		sessions: [...talks, ...events].sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime()),
 		speakers: [...speakers.values()],
 		session_types: ko.groups.map((group) => ({ id: String(group.id), ...both({ name: bilingual({ ko: group.name, en: typeNames.get(group.id) ?? group.name }) }) })),
-		rooms: (data?.rooms ?? []).toSorted((a, b) => a.id - b.id).map((room) => ({
-			id: String(room.id),
-			...both({ name: room.id === pretalx.everyRoom ? '전체 (All rooms)' : localizedName(room.name, 'ko') }),
-		})),
+		rooms,
 		tags: (data?.tracks ?? []).map((track) => ({ id: String(track.id), ...both({ name: bilingual(track.name) }) })),
 	});
 };

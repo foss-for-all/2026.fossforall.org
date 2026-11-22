@@ -1,6 +1,7 @@
 import { pretalx } from '../config';
 import type { Locale } from '../i18n/config';
 import { getSessions, localizedName } from './sessions';
+import { getSessionTitleTranslation } from './translations';
 
 type LocalizedName = string | Record<string, string>;
 export interface WidgetSlot {
@@ -30,6 +31,7 @@ export interface TimetableCell {
 	columnEnd: number;
 	start: string;
 	title: string;
+	translatedTitle?: string;
 	talk: boolean;
 	keynote: boolean;
 	speakers: string;
@@ -51,6 +53,9 @@ export const timetableLabels = {
 		keynote: '기조연설',
 		other: 'EN',
 		otherLegend: '영어 발표',
+		showTranslated: '기계 번역',
+		showOriginal: '원문 보기',
+		translatedNote: '영어 제목은 기계 번역되었습니다.',
 		note: '일정은 바뀔 수 있습니다. 최신 일정',
 		pending: '일정표는 일정이 확정되면 공개됩니다. 그동안 세션 목록을 확인해 주세요.',
 		unavailable: '일정을 불러올 수 없습니다. Pretalx에서 일정을 확인해 주세요.',
@@ -65,6 +70,9 @@ export const timetableLabels = {
 		keynote: 'Keynote',
 		other: 'KO',
 		otherLegend: 'Talk in Korean',
+		showTranslated: 'Show AI translation',
+		showOriginal: 'Show original',
+		translatedNote: 'Korean titles are AI-translated.',
 		note: 'The schedule may change. Latest schedule',
 		pending: 'The schedule will be published once it is finalized. In the meantime, check out the session list.',
 		unavailable: 'The schedule is currently unavailable. Please check it on Pretalx.',
@@ -85,12 +93,11 @@ export async function fetchSchedule(): Promise<WidgetSchedule | null> {
 
 const at = (value: string) => new Date(value).getTime();
 
-// Breaks that sit under talks only reserve the room in Pretalx, like "Opening + Keynote" over the keynotes.
+// Breaks that sit under talks only reserve the room in Pretalx.
 export function scheduleBreaks(data: WidgetSchedule): WidgetSlot[] {
-	const rooms = (room: number) => room === pretalx.everyRoom ? data.rooms.map(({ id }) => id) : [room];
 	const talks = data.talks.filter((slot) => slot.code);
 	return data.talks.filter((slot) => !slot.code && !talks.some((talk) =>
-		at(slot.start) < at(talk.end) && at(talk.start) < at(slot.end) && rooms(slot.room).some((room) => rooms(talk.room).includes(room))));
+		at(slot.start) < at(talk.end) && at(talk.start) < at(slot.end) && slot.room === talk.room));
 }
 
 export async function getTimetable(locale: Locale): Promise<{ timetable: Timetable | null; unavailable: boolean }> {
@@ -109,8 +116,8 @@ export async function getTimetable(locale: Locale): Promise<{ timetable: Timetab
 	const time = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: data.timezone });
 
 	// Pretalx lists rooms in no stable order; ids follow creation order.
-	const rooms = data.rooms.filter(({ id }) => id !== pretalx.everyRoom).sort((a, b) => a.id - b.id);
-	const columnsOf = (room: number) => room === pretalx.everyRoom ? rooms.map((_, i) => i) : [rooms.findIndex(({ id }) => id === room)].filter((i) => i >= 0);
+	const rooms = [...data.rooms].sort((a, b) => a.id - b.id);
+	const columnOf = (room: number) => rooms.findIndex(({ id }) => id === room);
 	const talks = data.talks.filter((slot) => slot.code);
 	const breaks = scheduleBreaks(data);
 
@@ -119,13 +126,25 @@ export async function getTimetable(locale: Locale): Promise<{ timetable: Timetab
 	for (const slot of [...talks, ...breaks]) {
 		const key = slot.code ?? `${localizedName(slot.title, locale)}|${at(slot.start)}|${at(slot.end)}`;
 		if (!items.has(key)) items.set(key, { slot, columns: new Set() });
-		for (const column of columnsOf(slot.room)) items.get(key)!.columns.add(column);
+		const column = columnOf(slot.room);
+		if (column >= 0) items.get(key)!.columns.add(column);
 	}
 
-	const bounds = [...new Set([...items.values()].flatMap(({ slot }) => [at(slot.start), at(slot.end)]))].sort((a, b) => a - b);
+	// Uncontested slots (opening, keynotes, closing) span every room column.
+	const entries = [...items.values()];
+	for (const entry of entries) {
+		if (!entry.columns.size) continue;
+		const start = at(entry.slot.start);
+		const end = at(entry.slot.end);
+		if (!entries.some((other) => other !== entry && at(other.slot.start) < end && start < at(other.slot.end))) {
+			for (let i = 0; i < rooms.length; i++) entry.columns.add(i);
+		}
+	}
+
+	const bounds = [...new Set(entries.flatMap(({ slot }) => [at(slot.start), at(slot.end)]))].sort((a, b) => a - b);
 	const row = (value: string) => bounds.indexOf(at(value));
 	const cells: TimetableCell[] = [];
-	for (const { slot, columns } of items.values()) {
+	for (const { slot, columns } of entries) {
 		const sorted = [...columns].sort((a, b) => a - b);
 		const runs = sorted.reduce<number[][]>((all, column) => {
 			const last = all.at(-1);
@@ -134,6 +153,8 @@ export async function getTimetable(locale: Locale): Promise<{ timetable: Timetab
 			return all;
 		}, []);
 		const session = slot.code ? pages.get(slot.code) : undefined;
+		const title = localizedName(slot.title, locale);
+		const translatedTitle = slot.code ? getSessionTitleTranslation(slot.code, title, locale)?.text || undefined : undefined;
 		for (const run of runs) {
 			cells.push({
 				row: row(slot.start),
@@ -141,7 +162,8 @@ export async function getTimetable(locale: Locale): Promise<{ timetable: Timetab
 				column: run[0],
 				columnEnd: run.at(-1)! + 1,
 				start: time.format(new Date(slot.start)),
-				title: localizedName(slot.title, locale),
+				title,
+				translatedTitle,
 				talk: Boolean(slot.code),
 				keynote: session?.keynote ?? false,
 				speakers: (slot.speakers ?? []).map((code) => data.speakers.find((speaker) => speaker.code === code)?.name).filter(Boolean).join(', '),
