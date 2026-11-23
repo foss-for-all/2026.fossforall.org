@@ -4,22 +4,19 @@ import { getSessions, localizedName } from './sessions';
 import { getSessionTitleTranslation } from './translations';
 
 type LocalizedName = string | Record<string, string>;
-export interface WidgetSlot {
-	id?: number;
+interface WidgetSlot {
 	code?: string;
 	title: LocalizedName;
 	start: string;
 	end: string;
 	room: number;
-	track?: number | null;
 	speakers?: string[];
 	content_locale?: string | null;
 	slot_type?: string;
 }
-export interface WidgetSchedule {
+interface WidgetSchedule {
 	talks: WidgetSlot[];
 	rooms: { id: number; name: LocalizedName }[];
-	tracks: { id: number; name: LocalizedName }[];
 	speakers: { code: string; name: string }[];
 	timezone: string;
 }
@@ -84,20 +81,11 @@ export const timetableLabels = {
 const scheduleUrl = `${pretalx.baseUrl}/${pretalx.eventSlug}/schedule/widgets/schedule.json`;
 
 // 404 means no schedule is released yet; any other failure throws so CI keeps the deployed site.
-export async function fetchSchedule(): Promise<WidgetSchedule | null> {
+async function fetchSchedule(): Promise<WidgetSchedule | null> {
 	const response = await fetch(scheduleUrl, { signal: AbortSignal.timeout(15000) });
 	if (response.status === 404) return null;
 	if (!response.ok) throw new Error(`Pretalx schedule returned ${response.status}`);
 	return response.json();
-}
-
-const at = (value: string) => new Date(value).getTime();
-
-// Breaks that sit under talks only reserve the room in Pretalx.
-export function scheduleBreaks(data: WidgetSchedule): WidgetSlot[] {
-	const talks = data.talks.filter((slot) => slot.code);
-	return data.talks.filter((slot) => !slot.code && !talks.some((talk) =>
-		at(slot.start) < at(talk.end) && at(talk.start) < at(slot.end) && slot.room === talk.room));
 }
 
 export async function getTimetable(locale: Locale): Promise<{ timetable: Timetable | null; unavailable: boolean }> {
@@ -118,8 +106,11 @@ export async function getTimetable(locale: Locale): Promise<{ timetable: Timetab
 	// Pretalx lists rooms in no stable order; ids follow creation order.
 	const rooms = [...data.rooms].sort((a, b) => a.id - b.id);
 	const columnOf = (room: number) => rooms.findIndex(({ id }) => id === room);
+	const at = (value: string) => new Date(value).getTime();
 	const talks = data.talks.filter((slot) => slot.code);
-	const breaks = scheduleBreaks(data);
+	// Breaks that sit under talks only reserve the room in Pretalx.
+	const breaks = data.talks.filter((slot) => !slot.code && !talks.some((talk) =>
+		at(slot.start) < at(talk.end) && at(talk.start) < at(slot.end) && slot.room === talk.room));
 
 	// One cell per run of adjacent columns, so a break held in every room becomes one row.
 	const items = new Map<string, { slot: WidgetSlot; columns: Set<number> }>();

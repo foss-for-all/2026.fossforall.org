@@ -31,9 +31,6 @@ show a localized message and link to Pretalx.
 black-and-white A4 page for printing. Uncontested time slots (opening, keynotes, closing)
 span all room columns automatically.
 
-`/opass.json` serves the same schedule to the [OPass](https://opass.app/) app, in the format of
-[CCIP-App/schedule-json-validator](https://github.com/CCIP-App/schedule-json-validator).
-
 Calendar, app and feed links point at Pretalx exports (`schedule.ics`, `schedule.xml`,
 `talk/<code>.ics`, `schedule/feed.xml`) and the forum's `conf-2026` tag RSS; nothing is
 generated locally.
