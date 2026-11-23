@@ -1,5 +1,4 @@
 ---
-import { badgeVariants } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { getSessions, sessionLabels } from '../data/sessions';
@@ -49,16 +48,11 @@ const otherLocale: Locale = locale === 'en' ? 'ko' : 'en';
 						<SpeakerAvatar speaker={speaker} size={128} />
 						<span class="text-lg font-semibold break-keep">{speaker.name}</span>
 						{translatedTitle ? (
-							<>
-								<span class="flex flex-col items-center gap-1 break-keep [overflow-wrap:anywhere]">
-									<span class="tr-translated text-sm font-medium text-foreground/90" lang={locale}>{translatedTitle}</span>
-									<span class="tr-orig-sub text-xs leading-snug text-muted-foreground" lang={sourceLocale}>{session.title}</span>
-									<span class="tr-original text-sm text-muted-foreground" lang={sourceLocale}>{session.title}</span>
-								</span>
-								<span class={cn(badgeVariants({ variant: 'outline' }), 'tr-translated tr-badge mt-auto border-dashed font-normal text-muted-foreground')}>
-									{labels.aiTag}
-								</span>
-							</>
+							<span class="flex flex-col items-center gap-1 break-keep [overflow-wrap:anywhere]">
+								<span class="tr-translated text-sm font-medium text-foreground/90" lang={locale}>{translatedTitle}</span>
+								<span class="tr-orig-sub text-xs leading-snug text-muted-foreground" lang={sourceLocale}>{session.title}</span>
+								<span class="tr-original text-sm text-muted-foreground" lang={sourceLocale}>{session.title}</span>
+							</span>
 						) : (
 							<span class="text-sm text-muted-foreground break-keep">{session.title}</span>
 						)}
@@ -66,6 +60,9 @@ const otherLocale: Locale = locale === 'en' ? 'ko' : 'en';
 				));
 			})}
 		</div>
+		{hasTranslations && (
+			<p class="tr-translated mt-3 text-right text-xs text-muted-foreground">{labels.titlesTranslatedFootnote}</p>
+		)}
 	</section>
 )}
 

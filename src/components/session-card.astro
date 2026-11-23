@@ -1,6 +1,5 @@
 ---
-import { Badge, badgeVariants } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
 import { sessionLabels, type Session } from '../data/sessions';
 import type { Locale } from '../i18n/config';
 import { getLocalizedPath } from '../i18n/utils';
@@ -38,11 +37,6 @@ const sourceLocale = session.translation?.title?.sourceLocale ?? (locale === 'en
 	<div class="flex flex-wrap gap-2">
 		{session.track && <Badge variant="secondary" className="h-auto max-w-full text-left whitespace-normal">{session.track}</Badge>}
 		{session.language && <Badge variant="outline">{languages.of(session.language) ?? session.language}</Badge>}
-		{translatedTitle && (
-			<span class={cn(badgeVariants({ variant: 'outline' }), 'tr-translated tr-badge border-dashed font-normal text-muted-foreground')}>
-				{labels.aiTag}
-			</span>
-		)}
 	</div>
 </a>
 

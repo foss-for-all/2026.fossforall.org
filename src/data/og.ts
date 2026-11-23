@@ -103,25 +103,13 @@ const labelTop = 176;
 const titleTop = 224;
 const nameTop = 468;
 
-function labelRow(locale: Locale, label: string, translated: boolean | undefined, { top, left, fontSize, borderWidth, tagSize, tagPadding, gap }: {
-	top: number; left: number; fontSize: number; borderWidth: number; tagSize: number; tagPadding: string; gap: number;
-}): Node {
-	return h('div', { display: 'flex', alignItems: 'center', gap, position: 'absolute', top, left }, [
-		h('div', { fontSize, fontWeight: 700, color: '#262626', paddingBottom: 6, borderBottom: `${borderWidth}px solid #262626` }, label),
-		...(translated ? [h('div', {
-			fontSize: tagSize, fontWeight: 400, color: '#525252',
-			padding: tagPadding, border: '1.5px solid #d4d4d4', borderRadius: 999, marginBottom: borderWidth,
-		}, sessionLabels[locale].aiTag)] : []),
-	]);
-}
-
 export async function renderCard({ locale, title: rawTitle, people: rawPeople, label, avatar, translated }: Card): Promise<Buffer> {
 	const title = drawable(rawTitle);
 	const people = drawable(rawPeople);
 	const t = useTranslations(locale);
 	const image = avatar && await photo(avatar);
 	const size = fit(title, [104, 92, 80, 70, 62, 56, 50, 44, 40, 36], 4, nameTop - 20 - titleTop);
-	const peopleSize = fit(people, [54, 48, 42, 38, 34, 30, 28, 26, 24], 3, 104);
+	const peopleSize = fit(people, [54, 48, 42, 38, 34, 30, 28, 26, 24], 3, 96);
 	const border = 12;
 	const tree = h('div', { display: 'flex', width: ogSize.width, height: ogSize.height, background: '#ffffff', color: '#000000', fontFamily: 'Pretendard' }, [
 		h('div', { display: 'flex', alignItems: 'center', gap: 20, position: 'absolute', top: 52, left: 60 }, [
@@ -131,11 +119,12 @@ export async function renderCard({ locale, title: rawTitle, people: rawPeople, l
 				h('div', { fontSize: 33, color: '#525252' }, `${t.event.date}, ${t.event.venue}`),
 			]),
 		]),
-		labelRow(locale, label, translated, { top: labelTop, left: 60, fontSize: 36, borderWidth: 4, tagSize: 22, tagPadding: '4px 12px', gap: 16 }),
+		h('div', { position: 'absolute', top: labelTop, left: 60, fontSize: 36, fontWeight: 700, color: '#262626', paddingBottom: 6, borderBottom: '4px solid #262626' }, label),
 		h('div', { display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'absolute', top: titleTop, left: 60, width: textWidth, height: nameTop - 20 - titleTop }, [
 			h('div', { fontSize: size, fontWeight: 700, lineHeight: 1.18, letterSpacing: -1, lineClamp: 4, display: 'block' }, words(title, size)),
 		]),
 		h('div', { position: 'absolute', top: nameTop, left: 60, width: textWidth, fontSize: peopleSize, fontWeight: 700, lineHeight: 1.18, color: '#333333', lineClamp: 3, display: 'block' }, words(people, peopleSize)),
+		...(translated ? [h('div', { position: 'absolute', left: 60, bottom: 32, fontSize: 22, color: '#737373' }, sessionLabels[locale].titleTranslatedFootnote)] : []),
 		h('div', { display: 'flex', flexDirection: 'column', alignItems: 'flex-end', position: 'absolute', right: 64, bottom: 32, fontSize: 24, color: '#737373' }, [
 			h('div', {}, ui.ko.hero.subtitle),
 			h('div', {}, ui.en.hero.subtitle),
@@ -170,7 +159,7 @@ export async function renderSquareCard({ locale, title: rawTitle, people: rawPeo
 				h('div', { fontSize: 34, color: '#525252' }, `${t.event.date}, ${t.event.venue}`),
 			]),
 		]),
-		labelRow(locale, label, translated, { top: 226, left: 64, fontSize: 40, borderWidth: 5, tagSize: 24, tagPadding: '5px 14px', gap: 18 }),
+		h('div', { position: 'absolute', top: 226, left: 64, fontSize: 40, fontWeight: 700, color: '#262626', paddingBottom: 6, borderBottom: '5px solid #262626' }, label),
 		h('div', { display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'absolute', top: titleTop, left: 64, width: titleWidth, height: titleBottom - titleTop }, [
 			h('div', { fontSize: size, fontWeight: 700, lineHeight: 1.16, letterSpacing: -1, lineClamp: 4, display: 'block' }, words(title, size, titleWidth)),
 		]),
@@ -179,6 +168,7 @@ export async function renderSquareCard({ locale, title: rawTitle, people: rawPeo
 			h('div', {}, ui.ko.hero.subtitle),
 			h('div', {}, ui.en.hero.subtitle),
 		]),
+		...(translated ? [h('div', { position: 'absolute', left: 64, bottom: 26, fontSize: 22, color: '#737373' }, sessionLabels[locale].titleTranslatedFootnote)] : []),
 		// A bordered <img> is clipped as a rounded square at 2x, so the photo sits on a blue disc instead.
 		image
 			? h('div', { ...circleStyle, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#2979ff' }, [
