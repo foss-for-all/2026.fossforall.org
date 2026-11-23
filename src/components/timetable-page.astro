@@ -85,9 +85,9 @@ const empty = timetable ? Array.from({ length: rowCount }, (_, row) => timetable
 					</footer>
 				</article>
 				{hasTranslations && (
-					<script is:inline>
+					<script is:inline define:vars={{ locale }}>
 						(() => {
-							const key = 'f4a-show-translated';
+							const key = `f4a-show-translated-${locale}`;
 							const btn = document.querySelector('[data-tt-toggle]');
 							const root = btn?.closest('[data-show-translated]');
 							if (!btn || !root) return;

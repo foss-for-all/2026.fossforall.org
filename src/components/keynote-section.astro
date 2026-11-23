@@ -67,9 +67,9 @@ const otherLocale: Locale = locale === 'en' ? 'ko' : 'en';
 )}
 
 {hasTranslations && (
-	<script is:inline>
+	<script is:inline define:vars={{ locale }}>
 		(() => {
-			const key = 'f4a-show-translated';
+			const key = `f4a-show-translated-${locale}`;
 			const apply = (value) => {
 				for (const scope of document.querySelectorAll('[data-translation-scope]')) {
 					scope.setAttribute('data-show-translated', value);

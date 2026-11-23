@@ -14,7 +14,6 @@ const labels = {
 		subscribe: '캘린더 구독',
 		google: 'Google 캘린더',
 		sessions: '세션 목록 보기',
-		translationHint: ['번역된 제목은 ', '인쇄용 시간표', ' 또는 ', '세션 목록', '에서 볼 수 있습니다.'],
 		noscript: '일정표를 보려면 JavaScript가 필요합니다. JavaScript 없이 보려면',
 		here: '여기를 누르세요',
 	},
@@ -25,7 +24,6 @@ const labels = {
 		subscribe: 'Subscribe in calendar',
 		google: 'Google Calendar',
 		sessions: 'View sessions',
-		translationHint: ['For AI-translated titles, see the ', 'printable timetable', ' or ', 'sessions list', '.'],
 		noscript: 'JavaScript is disabled in your browser. To access our schedule without JavaScript,',
 		here: 'click here',
 	},
@@ -61,9 +59,11 @@ const released = await fetch(`${eventUrl}schedule/widgets/schedule.json`, { meth
 		<p class="!my-0">
 			<strong>{labels.links}:</strong> {links.map(([label, href], i) => <>{i > 0 && ' · '}<a href={href}>{label}</a></>)}
 		</p>
-		<p class="!my-0 text-muted-foreground">
-			{labels.translationHint[0]}<a href={timetablePath}>{labels.translationHint[1]}</a>{labels.translationHint[2]}<a href={sessionsPath}>{labels.translationHint[3]}</a>{labels.translationHint[4]}
-		</p>
+		{locale === 'en' && (
+			<p class="!my-0 text-muted-foreground">
+				For AI-translated titles, see the <a href={timetablePath}>printable timetable</a> or <a href={sessionsPath}>sessions list</a>.
+			</p>
+		)}
 	</div>
 )}
 

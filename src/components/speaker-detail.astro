@@ -20,10 +20,12 @@ const bioSourceLocale = speaker.translation?.biography?.sourceLocale ?? otherLoc
 const hasTranslatedSessions = speaker.sessions.some((session) => Boolean(session.translation?.title?.text));
 const hasTranslation = Boolean(translatedBio || hasTranslatedSessions);
 const bilingualOnly = !hasTranslation && Boolean(speaker.translation?.biography?.bilingual);
+const defaultShowTranslated = locale === 'en';
 const translatedNotice = translatedBio ? labels.translatedNotice : labels.translatedSessionTitlesNotice;
-const previewBio = translatedBioText ?? (speaker.translation?.biography?.bilingual ? extractLocaleSummary(speaker.biography, locale) : speaker.biography);
+const previewBio = (defaultShowTranslated ? translatedBioText : undefined)
+	?? (speaker.translation?.biography?.bilingual ? extractLocaleSummary(speaker.biography, locale) : speaker.biography);
 const previewDescription = (await summarize(previewBio))
-	|| speaker.sessions.map((session) => session.translation?.title?.text ?? session.title).join(', ')
+	|| speaker.sessions.map((session) => (defaultShowTranslated ? session.translation?.title?.text : undefined) ?? session.title).join(', ')
 	|| undefined;
 ---
 
@@ -31,7 +33,7 @@ const previewDescription = (await summarize(previewBio))
 	<main
 		class="mx-auto max-w-4xl px-6 py-16 lg:px-8"
 		data-translation-scope={hasTranslation ? '' : undefined}
-		data-show-translated={hasTranslation ? 'true' : undefined}
+		data-show-translated={hasTranslation ? String(defaultShowTranslated) : undefined}
 	>
 		<nav class="text-sm text-muted-foreground">
 			<a href={getLocalizedPath(locale, 'sessions')} class="hover:text-foreground hover:underline">{labels.title}</a>
@@ -50,7 +52,7 @@ const previewDescription = (await summarize(previewBio))
 					type="button"
 					class={cn(buttonVariants({ variant: 'outline', size: 'xs' }))}
 					data-translation-toggle
-					aria-pressed="true"
+					aria-pressed={String(defaultShowTranslated)}
 				>
 					<span class="tr-translated">{labels.showOriginal}</span>
 					<span class="tr-original">{labels.translate}</span>
@@ -91,9 +93,9 @@ const previewDescription = (await summarize(previewBio))
 </SiteLayout>
 
 {(hasTranslation || bilingualOnly) && (
-	<script is:inline>
+	<script is:inline define:vars={{ locale }}>
 		(() => {
-			const key = 'f4a-show-translated';
+			const key = `f4a-show-translated-${locale}`;
 			const apply = (value) => {
 				for (const scope of document.querySelectorAll('[data-translation-scope]')) {
 					scope.setAttribute('data-show-translated', value);
