@@ -38,37 +38,31 @@ export type NavigationItem = NavigationLink | NavigationGroup;
 
 const navigation = {
 	ko: [
-    {
-			type: 'group',
-			key: 'about',
-			label: '소개',
-			items: [
-				{ type: 'link', key: 'about', label: '행사 소개', path: 'about' },
-			],
-    },
-    {
+		{ type: 'link', key: 'about', label: '소개', path: 'about' },
+		{
 			type: 'group',
 			key: 'attend',
 			label: '참석하기',
 			items: [
-        { type: 'link', key: 'coc', label: '행동강령', path: 'coc' },
-        { type: 'link', key: 'venue', label: '행사장 안내', path: 'venue' },
+				{ type: 'link', key: 'venue', label: '행사장 안내', path: 'venue' },
+				{ type: 'link', key: 'transportation', label: '교통', path: 'transportation' },
+				{ type: 'link', key: 'coc', label: '행동강령', path: 'coc' },
 				{ type: 'link', key: 'entry-to-korea', label: '한국 입국 요건', path: 'entry-to-korea' },
 				{ type: 'link', key: 'oversea', label: '해외에서 오시는 분들께', path: 'oversea' },
-				{ type: 'link', key: 'transportation', label: '교통', path: 'transportation' },
 				{ type: 'link', key: 'visa-letter-request', label: '사증 초청장 요청', path: 'visa-letter-request' },
 			],
-    },
-    {
+		},
+		{
 			type: 'group',
 			key: 'program',
 			label: '프로그램',
 			items: [
-			  { type: 'link', key: 'schedules', label: '일정표', path: 'schedules' },
+				{ type: 'link', key: 'schedules', label: '일정표', path: 'schedules' },
+				{ type: 'link', key: 'timetable', label: '한눈에 보기 (A4)', path: 'timetable' },
 				{ type: 'link', key: 'sessions', label: '세션 목록', path: 'sessions' },
 			],
-    },
-    {
+		},
+		{
 			type: 'group',
 			key: 'sponsors',
 			label: '후원사 & 개인후원',
@@ -86,37 +80,31 @@ const navigation = {
 		},
 	],
 	en: [
-    {
-			type: 'group',
-			key: 'about',
-			label: 'About',
-			items: [
-				{ type: 'link', key: 'about', label: 'About the event', path: 'about' },
-			],
-    },
-    {
+		{ type: 'link', key: 'about', label: 'About', path: 'about' },
+		{
 			type: 'group',
 			key: 'attend',
 			label: 'Attend',
 			items: [
-			  { type: 'link', key: 'coc', label: 'Code of Conduct', path: 'coc' },
-					{ type: 'link', key: 'venue', label: 'Venue Guide', path: 'venue' },
+				{ type: 'link', key: 'venue', label: 'Venue Guide', path: 'venue' },
+				{ type: 'link', key: 'transportation', label: 'Transportation', path: 'transportation' },
+				{ type: 'link', key: 'coc', label: 'Code of Conduct', path: 'coc' },
 				{ type: 'link', key: 'entry-to-korea', label: 'Entry to Korea', path: 'entry-to-korea' },
 				{ type: 'link', key: 'oversea', label: 'For Visitors from Overseas', path: 'oversea' },
-				{ type: 'link', key: 'transportation', label: 'Transportation', path: 'transportation' },
 				{ type: 'link', key: 'visa-letter-request', label: 'Request Visa Invitation Letter', path: 'visa-letter-request' },
 			],
-    },
-    {
+		},
+		{
 			type: 'group',
 			key: 'program',
 			label: 'Programs',
 			items: [
-			  { type: 'link', key: 'schedules', label: 'Schedules', path: 'schedules' },
+				{ type: 'link', key: 'schedules', label: 'Schedules', path: 'schedules' },
+				{ type: 'link', key: 'timetable', label: 'Timetable (A4)', path: 'timetable' },
 				{ type: 'link', key: 'sessions', label: 'Sessions', path: 'sessions' },
 			],
-    },
-    {
+		},
+		{
 			type: 'group',
 			key: 'sponsors',
 			label: 'Sponsors & Patrons',
