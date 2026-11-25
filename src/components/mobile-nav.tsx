@@ -59,7 +59,7 @@ export function MobileNav({
           <SheetDescription>{description}</SheetDescription>
         </SheetHeader>
 
-        <nav className="mt-4 flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto">
+        <nav className="mt-4 flex flex-1 flex-col gap-2">
           {items.map((item) => (
             item.type === "link" ? (
               <MobileLink item={item} key={item.key} />

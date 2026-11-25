@@ -41,6 +41,7 @@ function SheetContent({
   side = "right",
   showCloseButton = true,
   closeLabel = "Close",
+  onTouchMove,
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Content> & {
   side?: "top" | "right" | "bottom" | "left"
@@ -49,9 +50,9 @@ function SheetContent({
 }) {
   const sideClasses = {
     top: "inset-x-0 top-0 border-b",
-    right: "inset-y-0 right-0 h-full w-3/4 border-l sm:max-w-sm",
+    right: "inset-y-0 right-0 h-dvh w-3/4 border-l sm:max-w-sm",
     bottom: "inset-x-0 bottom-0 border-t",
-    left: "inset-y-0 left-0 h-full w-3/4 border-r sm:max-w-sm",
+    left: "inset-y-0 left-0 h-dvh w-3/4 border-r sm:max-w-sm",
   }
 
   return (
@@ -60,10 +61,17 @@ function SheetContent({
       <SheetPrimitive.Content
         data-slot="sheet-content"
         className={cn(
-          "fixed z-50 flex flex-col gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[state=closed]:animate-out data-[state=open]:animate-in",
+          "fixed z-50 flex flex-col gap-4 overflow-y-auto overscroll-contain bg-background p-6 shadow-lg transition ease-in-out data-[state=closed]:animate-out data-[state=open]:animate-in",
           sideClasses[side],
           className
         )}
+        onTouchMove={(event) => {
+          onTouchMove?.(event)
+          // Stop touchmove before document so react-remove-scroll does not cancel native scroll inside scrollable sheets.
+          if (event.currentTarget.scrollHeight > event.currentTarget.clientHeight) {
+            event.nativeEvent.stopPropagation()
+          }
+        }}
         {...props}
       >
         {children}

@@ -68,7 +68,7 @@ const released = await fetch(`${eventUrl}schedule/widgets/schedule.json`, { meth
 )}
 
 {released ? (
-	<div class="overflow-hidden rounded-2xl border">
+	<div class="overflow-clip rounded-2xl border">
 		<script is:inline src={`${eventUrl}widgets/schedule.js`}></script>
 		<!-- The widget only has a light theme with hard-coded colours, and its dialog relies on UA defaults,
 		     so keep it light and, in dark mode, add a copy of its rules with neutral colours flipped. -->
@@ -134,7 +134,10 @@ const released = await fetch(`${eventUrl}schedule/widgets/schedule.json`, { meth
 				];
 				// The widget adds its stylesheets while it renders, so rebuild whenever one arrives.
 				const build = () => {
-					const rules = [':host([data-dark]) .pretalx-modal { background-color: #171717; color: #ededed; }'];
+					const rules = [
+						':host([data-dark]) .pretalx-modal { background-color: #171717; color: #ededed; }',
+						'.pretalx-modal, .filter-bottom-sheet .sheet-content { overscroll-behavior: contain; }',
+					];
 					for (const sheet of root.styleSheets) if (sheet.ownerNode !== ours) walk(sheet.cssRules, rules);
 					rules.push(...trackContrastRules);
 					ours.textContent = rules.join('\n');
