@@ -60,6 +60,7 @@ const navigation = {
 				{ type: 'link', key: 'schedules', label: '일정표', path: 'schedules' },
 				{ type: 'link', key: 'timetable', label: '한눈에 보기 (A4)', path: 'timetable' },
 				{ type: 'link', key: 'sessions', label: '세션 목록', path: 'sessions' },
+				{ type: 'link', key: 'poster-session', label: '포스터 세션', path: 'poster-session' },
 			],
 		},
 		{
@@ -102,6 +103,7 @@ const navigation = {
 				{ type: 'link', key: 'schedules', label: 'Schedules', path: 'schedules' },
 				{ type: 'link', key: 'timetable', label: 'Timetable (A4)', path: 'timetable' },
 				{ type: 'link', key: 'sessions', label: 'Sessions', path: 'sessions' },
+				{ type: 'link', key: 'poster-session', label: 'Poster session', path: 'poster-session' },
 			],
 		},
 		{
